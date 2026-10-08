@@ -1,0 +1,2021 @@
+. EXACT PROBLEM STATEMENTPS ID[26151]Exact Problem StatementDark web threat actor de-anonymization• Background: The dark web has become a preferred operating space for threat actors in the modern age, mainly because it lets them hide their identity behind Tor hidden services, which makes attribution of threat actors operating on darkweb the main challenge for any investigation. Such threat actors carry out a wide range of unlawful activities such as drugs and arms sale, stolen data and hacking services, money laundering, terror financing, etc. The objective of this problem statement is to build a system for the deanonymization of dark web threat actors and link them to suspect real-world entities.• Description: The system shall deanonymize dark web threat actors by continuously gathering their footprints from a range of sources (marketplaces, forums, deep web etc.) and linking them to the identifying information available on those sources. The system envisages three core capabilities. First, finding misconfigurations in Tor hidden services—such as exposed server-status pages, SSL certificates tied to clearnet domains, default service banners, descriptor inconsistencies, etc and matching them with clearnet infrastructure to point to the likely origin servers. Second, mapping threat actors across multiple marketplaces into a single relationship graph of handles, PGP keys, wallets and trust links. Third, using AI-based analysis, including stylometric persona identification and behavioural profiling, to link rebranded or migrated personas to known threat actors. The system shall provide an analytical front end to query the database across a chosen timeline and shall work in an autonomous mode, drawing on available sources of good quality and reliability.• Expected Solution: An end-to-end system shall be developed for the collection, storage, contextualization and querying (through GUI/dashboards) of dark web threat actor intelligence—covering actor profiles, identifiers (handles, PGP keys, wallets etc.), hidden service infrastructure indicators, persona linkages, attribution confidence, category, last scan date and source. The system shall also provide the facility to export the result set in CSV, JSON and report formats.Answer:What is the PS actually asking us to solve? NTRO wants a centralized intelligence platform (a unified OSINT/threat-intel tool) that scrapes the Dark Web (Tor), analyzes technical mistakes made by server admins, tracks cryptocurrency and PGP footprints, and uses AI to analyze writing styles. The goal is to unmask anonymous criminals and connect their different fake identities to each other and eventually to their real-world identities.What does each important sentence mean?Continuous gathering: Needs automated web scrapers routed through Tor.Misconfigurations: Finding technical flaws (like a server accidentally revealing its real IP address or using a public SSL certificate on a hidden service) to locate the physical server.Mapping actors: Using Graph databases to link a user on Market A to a user on Market B because they used the same Bitcoin wallet or PGP encryption key.AI-based stylometric analysis: Using NLP to prove "HackerX" is the same person as "VendorY" based on how they type, spell, and use grammar.What is the actual problem behind the wording? Law enforcement currently does these steps manually or uses highly fragmented, expensive tools. There is no single open/custom platform that combines infrastructure scanning, graph mapping, and AI linguistics specifically tailored for Indian intelligence agencies.Why does this problem exist? Tor is designed to make tracing impossible by bouncing traffic. Criminals use Tor to operate with impunity.Who is facing this problem? Intelligence agencies (NTRO, RAW, IB), cyber police, and national security organizations.Who is responsible for solving it today? Cyber threat intelligence analysts, OSINT researchers, and specialized law enforcement units.What happens if this problem remains unsolved? Threat actors continue to sell drugs, weapons, and stolen national data without fear of arrest.What outcome does the organization actually want? A dashboard where an analyst can type a username like "DarkLord" and instantly see their connected Bitcoin wallets, their other usernames across 5 different forums, the real IP address of their hidden server (if misconfigured), and a confidence score that they are the same person.What would a successful solution look like? An automated backend engine doing continuous Tor crawling, a Neo4j (or similar) graph database connecting the dots, an AI model scoring writing styles, and a React/Angular frontend displaying intelligence graphs.Findings:A. Explicitly stated by the PS: Must use AI stylometry, must build a relationship graph (PGP/Wallets/Handles), must scan for Tor misconfigurations (SSL/Server-status), must export to CSV/JSON.B. Reasonable inference: The system requires managing Tor proxies to avoid bans, requires a graph database, and needs integration with clearnet datasets (like Shodan/Censys) to match SSL certificates.C. Things that need further research/verification: How to continuously scrape dark web marketplaces without getting blocked by their anti-bot protections (captchas, login walls).2. REAL-WORLD PROBLEMWhat is happening today? Threat actors operate on Dark Web forums (like Exploit, XSS, or former markets like AlphaBay/Silk Road equivalents). They frequently change usernames (rebranding) when a market is shut down by police.Who experiences the problem? Intelligence analysts who have to manually read thousands of forum posts to figure out if a new threat actor is actually an old, known criminal.How frequently does it happen? Daily. The Dark Web ecosystem is highly volatile; markets close and open constantly, causing mass migrations of users.Why is it difficult? The Dark Web has no central search engine. Sites go offline randomly. Threat actors use operational security (OpSec) to hide.What causes it? The cryptographic routing of the Tor network hides IP addresses, and cryptocurrencies pseudo-anonymize finances.What are the consequences? Delayed investigations, unpunished cybercrimes, and national security threats.What resources are currently wasted? Thousands of human man-hours spent manually tracking PGP keys, comparing forum posts, and running individual Python scripts to check server status.Where do delays occur? Manually correlating a Bitcoin wallet found on a Dark Web forum with a clearnet exchange.Where do errors occur? Assuming two actors are different people because they use different usernames.Where is human intervention required? Connecting technical evidence (IPs/Certs) to behavioral evidence (writing style).Where does data become unavailable, duplicated, outdated, or incorrect? Dark web sites frequently undergo DDoS attacks or change onion addresses, making static links dead.Simple Example:A hacker named "Shadow99" sells stolen Indian credit cards on Dark Market A. Market A gets seized by the FBI. Two weeks later, a new user named "NightRider" appears on Market B selling similar credit cards.Currently, an analyst has to manually check if NightRider uses the same PGP key or Bitcoin wallet as Shadow99. If they don't, the trail goes cold.With our system: The AI reads NightRider's posts, notices he uses the exact same rare grammatical errors and slang as Shadow99. The system also notices NightRider's Tor server accidentally exposed an SSL certificate that maps to a real IP address in Eastern Europe. The analyst is instantly notified.3. PROBLEM DECOMPOSITIONMain Problem: De-anonymizing Dark Web threat actors and attributing them to real-world entities.→ Sub-problem 1: Data Collection in a Hostile EnvironmentWhat causes it: Dark web sites use CAPTCHAs, require logins, and block automated scrapers.Current limitation: Standard scrapers fail on Tor.Technology: Tor proxy rotation, headless browsers, CAPTCHA solving.→ Sub-problem 2: Finding Tor Infrastructure MisconfigurationsWhat causes it: Lazy server admins configure Apache/Nginx poorly, leaking their real server IP.Current solution: Manual tools like Nmap, manual Shodan searches.Technology: Automated banner grabbing, SSL certificate parsing, Shodan API integration.→ Sub-problem 3: Identity Fragmentation (Graph Mapping)What causes it: Criminals use different usernames across different sites.Current limitation: Analysts use manual spreadsheets or paid tools like Maltego to draw links.Technology: Graph databases (Neo4j), Entity Resolution algorithms.→ Sub-problem 4: Persona Rebranding (Stylometry)What causes it: Criminals change their names and cryptographic keys to start fresh.Current limitation: Very hard to track without human linguistic analysis.Technology: Natural Language Processing (NLP), Transformer models (BERT) for stylometric embeddings.CORE PROBLEM:Existing intelligence tools are either entirely manual, highly fragmented, or prohibitively expensive, meaning analysts cannot automatically and continuously correlate technical server flaws, financial footprints, and behavioral linguistics into a single, actionable attribution graph.4. CURRENT SYSTEM / CURRENT PROCESSProblem occurs: A new cyberattack occurs, and data is posted on a Dark Web forum.↓Who receives the problem? NTRO / CERT-In / Cyber Police analysts.↓What happens next? Analysts boot up an isolated VM, connect to Tor, and manually browse the forum.↓What data is collected? They copy-paste the threat actor's username, PGP key, Bitcoin address, and post content into a local text file or spreadsheet.↓Which system/tool is used? Tor Browser, Excel, Maltego (manual entry), Python scripts for scraping.↓Who makes the decision? The human analyst manually cross-references the PGP key with open PGP servers.↓What action is taken? The analyst tries to find a clearnet IP using tools like Shodan.↓What is the final outcome? A PDF intelligence report is generated days or weeks later.Major 
+Bottlenecks:Manual Scraping: Tor is slow; manual scraping is impossible to scale.Siloed Analysis: Investigating server IPs (Infrastructure) and investigating user behavior (Stylometry) are currently done by completely different teams using different tools.No Continuous Monitoring: If a server is misconfigured for just 5 minutes, a manual analyst will miss it. An automated system will catch it.5. EXISTING SOLUTIONS — DEEP RESEARCHEXISTING SOLUTION #1Name: MaltegoOrganization / Company: PatervaCountry: South Africa / GlobalType: Commercial Enterprise SystemTarget Users: Intelligence analysts, Law Enforcement, Cybersecurity professionalsWhat is this? A visual link analysis tool that helps map relationships between data points.Why was it created? To visualize complex OSINT (Open Source Intelligence) investigations.What problem does it solve? It draws graphs connecting IPs, domains, email addresses, and social media handles.How does it work? Users drag an "Entity" (e.g., a Bitcoin address) onto a canvas and run "Transforms" (scripts that query APIs) to find linked entities.What technology does it use? Java desktop client, REST APIs for transforms.Who uses it? FBI, RAW, private security firms.What exact part of OUR PS does it solve? Mapping threat actors into a relationship graph (Sub-problem 2).What part of OUR PS does it NOT solve? It is not an automated dark web scraper, nor does it have built-in AI stylometric analysis. It is a visualization tool, not an automated data-gathering pipeline.Strengths: Excellent visualization, thousands of third-party integrations.Weaknesses: Highly manual, requires a human to click and run transforms. Extremely expensive (Enterprise license).Limitations: Cannot easily bypass dark web captchas autonomously.Could we integrate with it? Yes, we could export our data as Maltego graphs (CSV/XML).Is it a competitor? Partial competitor (Visualization layer).Relevance to our PS: High (We need to build a web-based version of this).EXISTING SOLUTION #2Name: DarkOwlOrganization / Company: DarkOwlCountry: USAType: Commercial ProductTarget Users: Enterprise, Defense, IntelligenceWhat is this? A commercial dark web search engine and data feed.Why was it created? To index the dark web like Google indexes the clear web.What problem does it solve? Removes the need for organizations to scrape Tor themselves.How does it work? Uses proprietary distributed crawlers to index Tor, I2P, and ZeroNet constantly.What technology does it use? [UNVERIFIED internals, likely Elasticsearch, Kafka, advanced proxy networks].What exact part of OUR PS does it solve? Continuous gathering of footprints.What part of OUR PS does it NOT solve? Does not natively focus on AI stylometry for persona tracking, and is a paid US-based proprietary tool (India’s NTRO cannot rely solely on foreign black-box intelligence tools for sovereign investigations).Strengths: Massive historical database of dark web content.Weaknesses: Prohibitively expensive, no control over the data pipeline.Is it a competitor? Direct competitor.Relevance to our PS: Very High.EXISTING SOLUTION #3Name: OnionScan (Deprecated) / TorBotOrganization / Company: Open Source (GitHub)Type: Open Source ProjectTarget Users: Security researchersWhat is this? Tools designed to find misconfigurations in Tor hidden services.What problem does it solve? Checks for exposed server-status, EXIF data in images, and SSL cert leaks.What exact part of OUR PS does it solve? Finding misconfigurations in Tor hidden services.What part of OUR PS does it NOT solve? No graph mapping, no AI stylometry, no continuous database.Should we integrate with it or replace it? [RECOMMENDATION] We should study their open-source code to understand how to probe Tor services, but build our own modern scanners in Python/Go.Is it a competitor? Infrastructure/tool.Relevance to our PS: High.6. EXISTING SOLUTION COMPARISONSolutionProviderWhat it solvesPS coverageTechnologyStrengthsWeaknessesMissing capabilityIntegration possible?CompetitionMaltegoPatervaLink analysis30%Java, APIsVisualizationManual, ExpensiveAutomated scraping, AI StylometryYes (Export)PartialDarkOwl VisionDarkOwlDark web search60%Cloud SaaSMassive datasetExpensive, ForeignCustom AI stylometryYes (via API)DirectTorBot / OnionScanOpen SourceTor misconfigs20%Python / GoFree, accessibleUnmaintainedGraphing, AI, UIYes (Code reuse)ToolChainalysisChainalysisCrypto tracing25%SaaSBest in classExtremely expensiveNon-crypto dataNoComplementaryWhich existing solution is closest to our PS? DarkOwl combined with Maltego.Does any existing system already completely solve the problem? No open-source or Indian sovereign system exists that does all three (Infrastructure, Graphing, Stylometry) in one automated platform.What does the PS require that existing systems don't provide? A unified, sovereign (built-in-house), automated pipeline specifically focusing on AI stylometry combined with infrastructure misconfigurations.7. GAP ANALYSISGap #1: Unified Intelligence CorrelationExisting capability: Tools can either trace crypto, scrape dark web, OR check IP misconfigurations.Missing capability: Correlating a Tor misconfiguration directly to a user's writing style in one automated platform.Why it matters: Analysts lose time switching between 5 different tools.Difficulty: High (Requires complex data engineering).Gap #2: AI Stylometry on the Dark WebExisting capability: NLP can do sentiment analysis or translation.Missing capability: Author verification/stylometry specifically trained on Dark Web hacker slang (Russian/English cybercrime terms).Why it matters: Threat actors constantly change usernames; stylometry is the only way to catch them if their OpSec is otherwise perfect.Difficulty: Very High (Requires custom model training).Gap #3: Automated Tor Misconfiguration HuntingExisting capability: Manual tools (OnionScan) check one domain at a time.Missing capability: A continuous cron-job crawler that scans thousands of active .onion links daily looking for changes in SSL certs or exposed /server-status.Difficulty: Medium.THE CORE GAP:"Existing systems can scrape dark web data or visualize manual investigations, but they cannot effectively automate the correlation of Tor misconfigurations, crypto-wallets, and AI-driven linguistic stylometry because the tools are fragmented, closed-source, or lack specialized AI models for hacker personas."8. STAKEHOLDER ANALYSISStakeholderRoleProblemCurrent ProcessRequired CapabilityBenefitNTRO / Intelligence AgenciesPrimary UsersCannot attribute dark web actors to real identitiesFragmented manual OSINT, expensive foreign toolsAutomated graph linking and AI stylometryFaster attribution, sovereign capabilityLaw Enforcement (Cyber Cell)Secondary UsersInvestigating specific cybercrimesManual searchingSearchable UI by username/crypto walletActionable evidence for arrestsSystem Admins / DevOpsOperatorsManaging the scraping infrastructureN/AScalable Tor proxy managementStable, block-resistant scraping9. USER JOURNEYCurrent User JourneyUser (Analyst) ↓ Problem (New threat actor) ↓ Current process (Open Tor Browser) ↓ System/tool (Manual forum browsing) ↓ Human intervention (Copy-paste data to Excel) ↓ Decision (Guess if it's a known actor) ↓ Outcome (Slow, low confidence attribution)Proposed User JourneyUser (Analyst) ↓ Input (Types threat actor handle "DarkLord" into Dashboard) ↓ Our system (Queries Neo4j database of pre-scraped, analyzed data) ↓ Processing (Graphs PGP keys, checks Tor misconfigs, runs Stylometric comparison) ↓ AI/Rules/Algorithm (BERT model outputs 85% match with "Shadow99") ↓ Decision (Analyst reviews highlighted evidence) ↓ Action (Generates PDF report for law enforcement) ↓ Output (Exported intelligence) ↓ Monitoring (System alerts if "DarkLord" posts again).Where our solution improves: We remove the manual browsing, scraping, and correlation phases. The analyst starts directly at the decision phase.10. DATA REQUIREMENTSDataPurposeSourcePublic/PrivateAPIReal-timeHistoricalFormatPrivacyAvailabilityDark Web Forum PostsStylometry, GraphingScraping (.onion sites)Public (Dark Web)NoYesYesHTML/TextNoneHard to getTor Network DataMisconfig scanningTor nodes, HSDirsPublicNoYesNoNetworkNoneHighClearnet IP/SSL DataCorrelating misconfigsShodan/CensysPrivate/PaidYesYesYesJSONNoneHigh (Needs API Key)PGP Public Key ServersIdentity linkingMIT/Ubuntu PGP ServersPublicYesNoYesTextNoneHighHow we can obtain it:Dark Web Data: We must build custom Scrapy spiders routed through Toroxy (Tor proxy networks) to scrape forums like Dread, RaidForums (archives), etc. [FACT: Many datasets of leaked forums exist on the clear web for research purposes].For SIH MVP: [RECOMMENDATION] We should use offline datasets (like the AzSecure Dark Web Forum dataset or scraped dumps from past forums) to train the AI and populate the database to ensure the demo works perfectly without relying on live Tor connections during the pitch.11. API ANALYSISShodan API:Purpose: To match an SSL certificate hash or HTML title found on a Tor hidden service to a clearnet IP address.Input: ssl.cert.serial or http.html.Output: Real IP addresses.SIH Suitability: Perfect for resolving Sub-problem 2. Free tier available for students.Censys API:Purpose: Alternative to Shodan for infrastructure mapping.BitcoinAbuse / Chainabuse API:Purpose: Check if a crypto wallet scraped from a forum has been reported.12. AI / ML ANALYSISCan this problem be solved without AI?Sub-problems 1 and 2 (Scraping and Misconfigurations) do NOT need AI. They require data engineering and rules. Graph linking (PGP/Wallets) requires Graph databases, not necessarily ML.Where can AI genuinely provide value?Stylometric persona identification (Sub-problem 3). This is explicitly requested by the PS.Recommended AI Approach:Task: Authorship Verification (Binary Classification/Similarity Scoring).Model: Fine-tuned RoBERTa or custom Siamesee Network using Transformers.Input: Text from Persona A, Text from Persona B.Processing: Extract linguistic features (n-grams, punctuation frequency, unique vocab) + dense word embeddings.Output: A similarity score (0.0 to 1.0) indicating the probability that both texts were written by the same person.Training data: Publicly available forum datasets (e.g., PAN Authorship Verification datasets, dark web forum archives).Hardware requirements: NVIDIA T4/A100 for training; CPU/small GPU sufficient for inference.13. CYBERSECURITY & PRIVACYIs this relevant? YES. Extremely. This tool will handle highly sensitive intelligence data and interact with hostile networks.OpSec (Operational Security): The scrapers must NEVER leak the IP address of the hosting server. All traffic must go through Tor. DNS leaks must be prevented.Data Security: The database must be encrypted at rest. Access requires strict RBAC (Role-Based Access Control) and 2FA, as requested by an intelligence agency (NTRO).Attack Surface: Malicious threat actors on the Dark Web might try to exploit our web scrapers (e.g., by serving malicious payloads, zip bombs, or XSS in forum posts). Input sanitization is critical before storing scraped data.14. HARDWARE / IoTHardware is not required for the core solution. This is purely a software, cloud, data engineering, and AI problem.15. PROPOSED SOLUTIONTemporary Project Name: Project ShadowGraph"We are building an automated dark web intelligence platform that helps intelligence analysts by continuously scraping hidden services, analyzing server misconfigurations, and using AI stylometry and graph networks to deanonymize threat actors."Objective: Automate the attribution of dark web actors.Core functionality:Crawler Engine: Scrapes Tor forums and markets.Scanner Engine: Probes .onion addresses for SSL/banner leaks and cross-references them with Shodan.Graph Engine: Extracts PGP, Crypto wallets, and handles, dumping them into Neo4j.AI Engine: Analyzes text for stylometric matching.Dashboard: React-based UI for analysts to search and visualize.Key innovation: Combining network infrastructure flaws (Shodan + Tor) with human behavioral flaws (Stylometry) in one single, automated graph.Why it fills the gap: It is a sovereign, custom-built, automated pipeline tailored to the exact workflow of Indian intelligence, unlike expensive, siloed commercial tools.16. WHAT EXACTLY SHOULD WE BUILD?MUST BUILD (P0)Tor scraping script that extracts text, PGP keys, and crypto addresses.Onion Scanner that detects exposed SSL certs/banners.Neo4j database to connect Entities (Username -uses-> PGP -matches-> Username).Dashboard with Search and Visual Graph display.Export to CSV/JSON.SHOULD BUILD (P1)AI Stylometry model to compare two users' text and give a similarity score.Integration with Shodan API to resolve SSL certs to Clearnet IPs.NICE TO HAVE (P2)Live continuous autonomous crawling (hard to demo live due to Tor speeds, better to simulate).Automated translation from Russian/Chinese to English before analysis.DO NOT BUILDOur own Tor client. Use existing Tor daemons.Our own crypto-tracing ledger. Just extract the wallet strings; full blockchain tracing is out of scope for this specific PS.17. SYSTEM WORKFLOWProblem occurs →Data Collection: Python Scrapy bots route through Tor, pulling HTML from target .onion forums. →Validation: System parses HTML, using Regex to extract PGP keys, Bitcoin addresses, and handles. →Processing (Infrastructure): Scanner checks the .onion IP for SSL leaks. Finds a SHA-256 cert hash. Queries Shodan API. Shodan returns real IP in Germany. →Database: Stores all extracted entities in Neo4j (Graph) and raw text in PostgreSQL. →AI / Rules: Stylometry API runs in the background, comparing the new text against known actor texts. →Decision: System calculates a high confidence score for attribution. →Output: Analyst searches for the actor on the UI, sees the graph linking the German IP, the Bitcoin wallet, and the AI stylometric match.18. SYSTEM ARCHITECTUREHigh-Level Architecture:[Dark Web / Tor Network]↓ (Tor Proxies / Privoxy)[Data Pipeline] -> Apache Kafka (Message Queue for scraped data)↓[Processing Microservices]├─ Entity Extractor (Regex for PGP/Wallets)├─ Infrastructure Scanner (OpenSSL, Shodan API)└─ AI Stylometry Engine (PyTorch / FastAPI)↓[Databases]├─ Neo4j (Relationship Graph)└─ PostgreSQL / MongoDB (Raw data, User Profiles)↓[Backend API] -> Node.js or Python FastAPI↓[Frontend] -> React.js / D3.js or Cytoscape.js for graph visualization.MVP ARCHITECTURE (For SIH):Skip Kafka. Use a direct Python script that feeds scraped/simulated offline data into a Neo4j instance. A FastAPI backend serves the data to a React frontend. The AI model runs locally as an API endpoint.19. TECHNOLOGY STACKFrontend: React.js (Component-based, fast), react-force-graph or Cytoscape.js (crucial for visual relationship mapping).Backend: Python (FastAPI). Why? Python is the absolute standard for OSINT, data scraping, and AI integration.Database:Graph: Neo4j. Why? The PS explicitly requires a "relationship graph of handles...". Neo4j uses Cypher query language, perfect for "find all users connected to this PGP key."Document: Elasticsearch or MongoDB (for fast full-text searching of forum posts).AI/ML: PyTorch, HuggingFace Transformers (RoBERTa).Scraping: Scrapy + Tor proxy rotation, Nmap/OpenSSL scripts.RECOMMENDED STACK FOR OUR SIH TEAM:React.js + Python FastAPI + Neo4j + PyTorch.Why: Perfect balance. Python handles the scraping, backend, and AI. React + Cytoscape handles the complex visualization NTRO wants.20. REQUIRED IMPROVEMENTS (Over existing methods)Current Situation: Analysts manually compare user posts.Required Improvement: AI Stylometry.Technology: Transformer-based NLP.Benefit (P0): Automated persona matching.Current Situation: Finding Tor server IPs requires manual command-line hacking.Required Improvement: Automated Misconfig Scanner.Technology: Python OpenSSL wrappers + Shodan API.Benefit (P0): Instantly links Dark Web to Clearnet.21. IMPLEMENTATION PLANPhase 1 — Research & Data (Week 1-2): Download open-source dark web datasets (e.g., from academic researchers) to simulate the database. Get Shodan API key.Phase 2 — Database Setup (Week 3): Install Neo4j, design the schema (Nodes: User, PGP, Wallet, IP, Server. Edges: USED, HOSTED_ON).Phase 3 — Scraping & Scanning (Week 4): Write Python scripts to parse the datasets and extract entities (Regex for Crypto/PGP). Write the Tor Misconfig scanner.Phase 4 — AI/ML (Week 5): Fine-tune a lightweight BERT model for stylometry on forum text.Phase 5 — Backend & Integration (Week 6): Build FastAPI endpoints to query Neo4j and serve the AI model.Phase 6 — UI/UX (Week 7): Build React dashboard, integrate graph visualization.Phase 7 — Demo Polish (Week 8): Create a compelling storyline for the presentation.22. TEAM STRUCTUREAI/ML Developer: Trains the stylometry model, handles NLP.Data Engineer / Backend: Builds the Scrapy bots, writes Regex parsers, sets up Neo4j and FastAPI.Cybersecurity / OSINT Specialist: Designs the Tor misconfiguration scanner, understands Shodan, ensures OpSec of the system.Frontend Developer: Builds the React dashboard and complex graph visualizations.Product / Presentation (Can overlap): Structures the demo, ensures it meets NTRO's exact intelligence requirements.23. MVP (Minimum Viable Prototype)"If we have very limited time, what EXACTLY should we build?"A pre-populated Neo4j database using an offline dataset of fake/archived dark web data. (Live Tor scraping is too slow and risky for a live 5-minute demo).A Python script that takes a .onion URL, finds a fake "leaked" SSL certificate, and uses Shodan API to resolve it to an IP.A local NLP model that takes two blocks of text and outputs a % match.A React UI with a search bar. You search "DarkLord", and it visually shows a graph linking him to a Bitcoin wallet, a real IP, and "Shadow99" via stylometry.24. DEMO STRATEGYSTEP 1: Show the real problem. Show a screenshot of a Dark Web forum. Ask, "Who is this person? Law enforcement has no idea."STEP 2: Introduce Project ShadowGraph.STEP 3: Show system processing. Trigger the "Infrastructure Scanner". Show it analyzing a .onion URL, extracting a leaked SSL cert, hitting the Shodan API, and mapping it to a Clearnet IP in real-time.STEP 4: Show intelligence/automation. Click on a user's text. Run the "AI Persona Match". Show the UI linking it to a completely different username with 92% confidence based on linguistic style.STEP 5: Show the final Graph. The judge sees a beautiful visual web connecting Usernames, Crypto Wallets, IPs, and PGP keys.STEP 6: Click "Export to Report". Show the generated PDF intelligence dossier.Crucial Tip: Do NOT rely on live Tor connections for the demo. Tor is slow and hackathon Wi-Fi blocks it. Use a local simulated Tor environment or cached data.25. IMPACTTime saved: Reduces weeks of manual analyst investigation to milliseconds.Accuracy improvement: AI catches linguistic patterns humans miss.National Security: Enables NTRO to proactively attribute terror financing and data leaks to real-world infrastructure, allowing for physical arrests.Cost saved: Replaces millions of dollars spent on foreign proprietary tools (like DarkOwl/Maltego licenses).26. SCALABILITYPrototype scale: Handling a few thousand offline forum posts and a local Neo4j graph.Real-world scale: The Dark Web generates TBs of text.Database scaling: Neo4j scales well but requires high RAM. Text search requires Elasticsearch clusters.API scaling: Distributed web scrapers (Celery workers) running across multiple IP proxies to avoid rate-limiting and anti-DDoS protections on Tor.AI inference: Batch processing text overnight rather than in real-time, to save GPU costs.27. RISKS & CHALLENGESRiskProbabilityImpactMitigationLive Tor scraping fails during demo due to Wi-Fi blocksHighFatalUse cached/offline datasets for the main demo.AI stylometry is inaccurateMediumMediumFrame it as an "Analyst Assist" confidence score, not absolute proof.CAPTCHAs block scrapersHighHighFocus MVP on the analysis engine, assuming data is already acquired.Neo4j graph becomes visually clutteredHighMediumImplement UI filters (filter by date, entity type) to clean up the graph.28. SIH COMPETITIVENESSFactorScoreReasonProblem Impact10Direct national security application for NTRO.Innovation9Combining Tor misconfigs + Graph + AI Stylometry is highly advanced.Technical Complexity9Requires networking, NLP, graph databases, and web dev.Feasibility7Hard to build live Tor scrapers; but highly feasible to build the analysis engine.Scalability8Standard cloud architecture applies.Social Impact8Prevents cybercrime, drug trafficking, terror financing.Government Value10Sovereignty in intelligence tools is a top priority for India.Data Availability5Genuine dark web data is hard/illegal to acquire live; requires using research datasets.Demo Strength9Visual graphs and AI matching look incredibly impressive.Is this actually a strong SIH problem? Yes, it is one of the elite-tier problems. Winning this will likely lead to direct offers from NTRO/DRDO.Can a student team realistically build it? Yes, IF they scope it correctly. Don't try to build a massive Tor search engine. Build a highly focused analysis tool on a subset of data.What could competing teams do better? Most teams will fail at the AI stylometry part or just build a basic web scraper. The team that masters Neo4j and AI will win.29. WHY WOULD THIS SOLUTION WIN?Why judges might select us: We provide a visually stunning, mathematically backed intelligence platform. We understood that NTRO wants actionable intelligence (graphs/reports), not just a raw data dump.What competitors could do better: Teams with actual cybersecurity backgrounds might build better infrastructure scanners.What our strongest differentiator should be: The AI Stylometry Engine. Most teams will just do regex scraping. Using NLP to prove "Actor A is Actor B" based on syntax is genuine innovation.What should NOT be our selling point: Do not focus heavily on "we built a scraper." Scraping is easy. Correlating the data is the hard part.What should be the central story of our presentation: "From a single anonymous forum post to a real-world IP address and physical identity in 3 seconds."30. FINAL RECOMMENDATIONTHE PROBLEMThreat actors hide on the Dark Web behind Tor, changing identities and selling illegal goods/services with impunity.THE REAL-WORLD PROBLEMIntelligence agencies struggle to link different anonymous usernames together and trace them to real IP addresses because they rely on manual correlation across fragmented tools.CURRENT SYSTEMAnalysts manually browse Tor, copy-paste PGP keys and wallets into Excel, and use expensive visualization tools like Maltego.EXISTING SOLUTIONSMaltego (visualization), DarkOwl (commercial search), OnionScan (open-source misconfig scanner).CLOSEST EXISTING SOLUTIONDarkOwl + Maltego combo.WHAT EXISTING SOLUTIONS DO WELLDarkOwl collects massive data. Maltego provides great visualizations.WHAT THEY CANNOT DOThey are not sovereign, unified platforms that automate Tor infrastructure scanning, graph linking, and AI behavioral stylometry in one pipeline.CORE GAPExisting systems can scrape data or visualize manual links, but they cannot effectively automate the correlation of Tor misconfigs, crypto-wallets, and AI-driven linguistic stylometry because the tools are fragmented and lack specialized cyber-persona AI models.OUR OPPORTUNITYBuild a sovereign, automated threat intelligence graph platform for NTRO.PROPOSED SOLUTIONProject ShadowGraph: An automated OSINT pipeline that ingests Dark Web data, scans for infrastructure leaks, maps entities in a graph database, and uses AI to link rebranded personas.KEY FEATURESAutomated entity extraction, Shodan IP correlation, AI stylometric scoring, Neo4j visual mapping, report generation.REQUIRED DATADark web forum datasets, Shodan API, PGP public key servers.REQUIRED TECHNOLOGYPython, FastAPI, React.js, Cytoscape.js, Neo4j, PyTorch/RoBERTa.ARCHITECTUREData Ingestion Scripts → Fast API backend → Neo4j/Postgres Databases → React Frontend (with AI processing as a background service).IMPLEMENTATIONFocus heavily on the database schema and AI model first using offline data. Build the frontend last.MVPA pre-loaded dashboard demonstrating the 3 core capabilities (Misconfig linking, Graph visualization, Stylometry matching) on a simulated dataset.KEY IMPROVEMENTSTotal automation of correlation. Replaces human guesswork with AI NLP scoring.INNOVATIONMerging network-layer flaws (SSL certs) with human-layer flaws (typing style) to de-anonymize targets.BIGGEST RISKFailing to demo live because of network restrictions. (Mitigation: Fully offline demo capability).SIH POTENTIALExceptional. This is an elite problem statement with high visibility.FINAL VERDICT🟢 HIGHLY RECOMMENDEDExplanation: If your team has strong Python, NLP, and database skills, this problem offers a clear path to victory. The technical requirements are high, but the expected output (a visual intelligence dashboard) is exactly what wins hackathons. Avoid the trap of focusing only on building web scrapers; focus on the analysis and visualization of the data.31. FINAL ONE-PAGE SUMMARYPS: 26151 - Dark web threat actor de-anonymizationProblem: Criminals hide on the Dark Web; attributing them to real identities is extremely difficult.Current Situation: Manual intelligence gathering using Tor browser and Excel, or highly expensive foreign tools.Existing Solutions: Maltego, DarkOwl, SpiderFoot, OnionScan.Closest Existing Tool: DarkOwl + Maltego.Main Gap: Lack of an automated, unified, sovereign tool combining infrastructure flaw scanning, graph mapping, and AI linguistic stylometry.Target Users: Intelligence Analysts (NTRO, Cyber Police).What We Should Build: A visual intelligence platform backed by a graph database and NLP stylometry engine.Why Existing Solutions Are Not Enough: They are either fully manual, lack AI stylometry, or are closed-source foreign commercial products unsuitable for internal sovereign intelligence networks.Main Innovation: Using AI Transformer models to identify users based on typing behavior, combined with automated Tor server misconfiguration scanning.Required Technology: React, Python, Neo4j, PyTorch, Shodan API.Required Data: Archived Dark Web forums, SSL/IP mappings.Important APIs: Shodan/Censys API.MVP: An offline, simulated dashboard showing a successful deanonymization flow from a forum post to a clearnet IP and a linked alias.Implementation Difficulty: High.Main Risk: Getting bogged down trying to build a perfect live Tor scraper instead of focusing on data analysis.SIH Potential: 10/10. Highly impressive if executed well.Final Verdict: 🟢 HIGHLY RECOMMENDED
+
+Absolutely. I’d conduct the SIH research like a **problem-to-solution research pipeline**, not just a general internet search.
+
+### 🔍 Research Strategy
+
+For **each Problem Statement (PS)**, I’ll cover these key areas:
+
+1. **PS Understanding** — What exactly is being asked, the real problem behind the wording, and the intended outcome.
+2. **Current Situation** — How this problem is currently handled and by whom.
+3. **Existing Solutions** — Government initiatives, commercial products, research projects, previous SIH solutions, and open-source systems.
+4. **Gap Analysis** — What existing solutions **cannot do well** and where the actual opportunity lies.
+5. **Stakeholders & Users** — Who faces the problem, who will use the solution, and who benefits from it.
+6. **Technical Feasibility** — Possible technologies, AI/ML, IoT, APIs, datasets, infrastructure, etc., and whether they are realistically buildable by an SIH team.
+7. **Data & Resources** — Required datasets, government/open data, APIs, hardware, and availability of resources.
+8. **Innovation Opportunities** — Features or approaches that could make our solution significantly different from existing solutions.
+9. **Implementation Approach** — A realistic high-level architecture/workflow showing how the proposed system could work.
+10. **SIH Competitiveness** — Scalability, impact, uniqueness, feasibility, judging potential, and possible demo/prototype strength.
+11. **Risks & Challenges** — Technical, operational, legal, data, adoption, and scalability issues.
+12. **Final Opportunity** — My conclusion: **Is this PS worth pursuing? What should we build? And what could give us an edge?**
+
+### 🎯 Research Output
+
+For every PS, I'll ultimately give you something like:
+
+**PS → Reality → Existing Solutions → Gaps → Opportunity → Proposed Direction → Technology → Feasibility → Innovation → SIH Potential → Verdict**
+
+I’ll also distinguish between **facts found through research** and **our strategic recommendations**, so we don't accidentally treat assumptions as facts.
+
+Most importantly, I won't immediately jump to "here's an app." **First we'll understand the problem deeply, then identify the gap, and only then design the solution.**
+
+Send me the **first SIH Problem Statement**, preferably with its **PS ID + exact wording**, and we'll start the research.
+
+
+
+
+
+Problem Statement ID26151
+Problem Statement TitleDark web threat actor de-anonymization
+Description• Background The dark web has become a preferred operating space for threat actors in the modern age, mainly because it lets them hide their identity behind Tor hidden services, which makes attribution of threat actors operating on darkweb the main challenge for any investigation. Such threat actors carry out a wide range of unlawful activities such as drugs and arms sale, stolen data and hacking services, money laundering, terror financing, etc. The objective of this problem statement is to build a system for the deanonymization of dark web threat actors and link them to suspect real-world entities.
+
+• Description The system shall deanonymize dark web threat actors by continuously gathering their footprints from a range of sources (marketplaces, forums, deep web etc.) and linking them to the identifying information available on those sources. The system envisages three core capabilities. First, finding misconfigurations in Tor hidden servicesâ€”such as exposed server-status pages, SSL certificates tied to clearnet domains, default service banners, descriptor inconsistencies, etc and matching them with clearnet infrastructure to point to the likely origin servers. Second, mapping threat actors across multiple marketplaces into a single relationship graph of handles, PGP keys, wallets and trust links. Third, using AI-based analysis, including stylometric persona identification and behavioural profiling, to link rebranded or migrated personas to known threat actors. The system shall provide an analytical front end to query the database across a chosen timeline and shall work in an autonomous mode, drawing on available sources of good quality and reliability.
+
+• Expected Solution An end-to-end system shall be developed for the collection, storage, contextualization and querying (through GUI/dashboards) of dark web threat actor intelligenceâ€”covering actor profiles, identifiers (handles, PGP keys, wallets etc.), hidden service infrastructure indicators, persona linkages, attribution confidence, category, last scan date and source. The system shall also provide the facility to export the result set in CSV, JSON and report formats.
+OrganizationNational Technical Research Organisation (NTRO)DepartmentNational Technical Research Organisation (NTRO)CategorySoftwareThemeBlockchain & CybersecurityYoutube LinkDataset LinkContact info
+
+Yes — this PS is substantially deeper than a normal “dark-web monitoring dashboard.” The important point is that NTRO is asking for an attribution/investigation platform, where multiple weak signals are combined into an evidence-backed relationship between a pseudonymous actor and potentially identifiable infrastructure/persona.
+
+I researched the current technical landscape, existing open-source systems, recent academic work, datasets, and the Tor architecture. Here is the problem-to-solution research pipeline for SIH PS 26151.
+
+SIH 26151 — Dark Web Threat Actor De-anonymization
+
+Organization: National Technical Research Organisation (NTRO)
+Theme: Blockchain & Cybersecurity
+Core challenge: Connect fragmented dark-web identities and infrastructure into an evidence-backed actor profile.
+
+1. PS Understanding — What is NTRO actually asking?
+
+The PS has three major attribution pillars:
+
+Pillar A — Infrastructure attribution
+
+Find technical information accidentally exposed by an onion service and correlate it with clearnet infrastructure.
+
+Examples mentioned by the PS:
+
+exposed server-status pages
+SSL/TLS certificates
+default server banners
+configuration inconsistencies
+infrastructure fingerprints
+clearnet domains/IPs
+reused hosting infrastructure
+
+The goal isn't simply:
+
+.onion → IP
+
+It is closer to:
+
+.onion → technical fingerprint → candidate infrastructure → corroborating evidence → attribution confidence
+
+This distinction is extremely important.
+
+Tor onion services are specifically designed to hide the service's location/IP address. Modern v3 onion services also use cryptographic mechanisms to protect descriptors and introduction information.
+
+Therefore, breaking Tor cryptography is not the intended solution.
+
+The opportunity is finding operator mistakes, reused infrastructure, public metadata and cross-source correlations.
+
+2. Pillar B — Cross-marketplace Actor Mapping
+
+Suppose the same actor appears as:
+
+Forum A
+username = ShadowX
+
+Marketplace B
+username = XShadow
+
+Forum C
+PGP key = ABC123
+
+Marketplace D
+wallet = bc1....
+
+Telegram
+handle = ShadowX
+
+Individually, these aren't necessarily enough.
+
+But together:
+
+ShadowX
+   |
+   +---- PGP Key
+   |
+   +---- Wallet
+   |
+   +---- Writing style
+   |
+   +---- Vendor profile
+   |
+   +---- Forum account
+   |
+   +---- Reused contact
+
+can form an actor relationship graph.
+
+This is essentially an entity-resolution problem.
+
+3. Pillar C — AI-based Persona Analysis
+
+The third component is much more interesting.
+
+The system should ask:
+
+“Are these two apparently different accounts potentially operated by the same persona?”
+
+Signals could include:
+
+Stylometric signals
+sentence length
+punctuation habits
+vocabulary
+spelling patterns
+repeated phrases
+function-word frequencies
+emoji patterns
+formatting habits
+language switching
+writing-time patterns
+Behavioural signals
+posting schedule
+active hours
+marketplace categories
+preferred services
+response patterns
+vendor behaviour
+migration patterns
+interaction networks
+
+Academic research has specifically explored stylometry for linking users who migrate between darknet forums. The SYSML research reported improvements over prior approaches on its evaluated datasets, but this should be treated as research evidence rather than proof that stylometry can identify a real person.
+
+There is also important contrary evidence: research on darknet-market vendors found stylometry can be difficult when descriptions are short and repetitive.
+
+So your system should never say:
+
+“AI identified the criminal.”
+
+It should say:
+
+“The available evidence produces an X% attribution confidence, with these supporting and contradictory indicators.”
+
+That's a much more defensible design.
+
+4. Current Situation
+
+Today, investigation data is fragmented.
+
+An investigator may have:
+
+Tor service
+      ↓
+Forum posts
+      ↓
+Marketplace accounts
+      ↓
+PGP keys
+      ↓
+Cryptocurrency addresses
+      ↓
+Clearnet websites
+      ↓
+Social handles
+      ↓
+Infrastructure
+
+But these sources often exist independently.
+
+The major problem is therefore:
+
+Correlation, not merely collection.
+
+There are already mature technologies for individual parts of this problem.
+
+For example:
+
+OnionScan investigates onion services for operational-security leaks and configuration issues.
+MISP provides structured threat-intelligence storage, correlation, visualization and sharing.
+OpenCTI provides a threat-intelligence knowledge graph and relationship-based investigation interface.
+Blockchain-analysis platforms can investigate cryptocurrency flows.
+Academic research has demonstrated stylometric approaches to darknet persona linking.
+Therefore your innovation shouldn't be:
+
+“We made another dark-web crawler.”
+
+It should be:
+
+“We created an evidence-fusion engine that combines infrastructure, identity, behavioural, cryptographic and blockchain indicators into explainable actor-attribution hypotheses.”
+
+That's a much stronger interpretation of the PS.
+
+5. Existing Solutions
+A. OnionScan
+
+OnionScan is directly relevant.
+
+It already performs security analysis of onion services and looks for things such as:
+
+email addresses
+cryptocurrency addresses
+social links
+analytics identifiers
+EXIF information
+server headers
+Apache mod_status
+SSL/TLS problems
+private keys and other leaks
+
+The modern rewrite also supports Tor v3 and multiple output formats.
+
+Gap
+
+OnionScan is primarily an onion-service security/investigation scanner.
+
+Your PS goes further:
+
+OnionScan-type findings
+          ↓
+Cross-source correlation
+          ↓
+Actor graph
+          ↓
+Persona similarity
+          ↓
+Wallet relationships
+          ↓
+Attribution confidence
+          ↓
+Investigator report
+6. Existing Solution — OpenCTI
+
+OpenCTI is probably the most important architectural reference.
+
+OpenCTI is built around a knowledge graph, where:
+
+Entities = nodes
+Relationships = edges
+
+and uses STIX 2.1 for threat-intelligence representation.
+
+It already supports:
+
+threat actors
+infrastructure
+indicators
+observables
+relationships
+reports
+dashboards
+investigations
+inference
+data connectors
+
+OpenCTI can also automatically infer some relationships from existing relationships.
+
+Gap
+
+OpenCTI is a general CTI platform.
+
+Your project can specialize it for:
+
+Dark-Web Actor Attribution
+
+with entities such as:
+
+Actor
+ ├── Alias
+ ├── Forum Account
+ ├── Marketplace Account
+ ├── PGP Key
+ ├── Wallet
+ ├── Onion Service
+ ├── Clearnet Domain
+ ├── Certificate
+ ├── Server Fingerprint
+ ├── Writing Style
+ └── Behaviour Profile
+7. Existing Solution — MISP
+
+MISP already provides:
+
+structured threat intelligence
+correlation
+visualization
+taxonomies
+ATT&CK information
+STIX/OpenIOC export
+automated correlation and sharing.
+Gap
+
+Again, MISP is broader CTI infrastructure.
+
+Your specialization would be:
+
+Dark-Web Intelligence → Entity Resolution → Attribution
+
+rather than generic IOC sharing.
+
+8. Existing Research — Stylometry
+
+This is one of the strongest research foundations for your AI module.
+
+The EMNLP 2021 SYSML study specifically investigated darknet forum migrants and attempted to link apparently different users across forums using stylometry plus interaction/graph information.
+
+This means your AI component isn't just a random “AI feature.”
+
+It has a legitimate research basis.
+
+But there is an important limitation:
+
+Short text = weak evidence.
+
+Darknet marketplace descriptions can be:
+
+short
+templated
+copied
+deliberately altered
+
+which can reduce stylometric reliability.
+
+Therefore:
+
+Don't build
+Text A
+ ↓
+AI
+ ↓
+Same person = YES
+
+Build:
+
+Text A ─────┐
+            │
+Text B ─────┤
+            ↓
+      Stylometry Model
+            ↓
+      Similarity Score
+            ↓
++ Behaviour Similarity
++ Account Similarity
++ PGP Evidence
++ Wallet Evidence
++ Infrastructure Evidence
+            ↓
+      Evidence Fusion
+            ↓
+ Attribution Confidence
+9. Recent Dataset Opportunity
+
+There is now a particularly useful public research resource.
+
+A 2026 Zenodo dataset provides a PII-redacted DarkForums corpus containing:
+
+forum threads
+posts
+usernames/handles
+timestamps
+categories
+post content
+
+and is specifically intended for dark-web threat-intelligence/NLP research.
+
+Another 2026 Mendeley dataset contains labelled cybersecurity events from dark-web and surface-web forums for CTI/ML research.
+
+There are also older/research datasets such as DarkPT-BR containing labelled dark-web posts.
+
+This is very useful for your prototype.
+
+You don't need to collect massive amounts of live dark-web data just to demonstrate the AI pipeline.
+
+10. Proposed Architecture
+
+I would structure the system into 7 layers.
+
+                  ┌───────────────────────┐
+                  │      DATA SOURCES     │
+                  └───────────┬───────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        ↓                     ↓                     ↓
+   Dark Web              Clearnet             Blockchain
+   Sources                Sources               Data
+        │                     │                     │
+        └─────────────────────┼─────────────────────┘
+                              ↓
+                  ┌───────────────────────┐
+                  │   COLLECTION LAYER    │
+                  │ Crawlers / Connectors │
+                  └───────────┬───────────┘
+                              ↓
+                  ┌───────────────────────┐
+                  │ NORMALIZATION + NLP   │
+                  │ Entity Extraction     │
+                  └───────────┬───────────┘
+                              ↓
+                  ┌───────────────────────┐
+                  │ ENTITY RESOLUTION     │
+                  │ Handle/PGP/Wallet/etc │
+                  └───────────┬───────────┘
+                              ↓
+                  ┌───────────────────────┐
+                  │   KNOWLEDGE GRAPH     │
+                  │ Neo4j / Graph DB      │
+                  └───────────┬───────────┘
+                              ↓
+           ┌──────────────────┴─────────────────┐
+           ↓                                    ↓
+ ┌────────────────────┐              ┌────────────────────┐
+ │ AI ATTRIBUTION     │              │ INFRASTRUCTURE     │
+ │ Stylometry         │              │ CORRELATION        │
+ │ Behaviour          │              │ Certificates       │
+ │ Persona matching   │              │ Banners            │
+ └──────────┬─────────┘              └──────────┬─────────┘
+            └────────────────┬──────────────────┘
+                             ↓
+                  ┌───────────────────────┐
+                  │ EVIDENCE FUSION       │
+                  │ Confidence Engine     │
+                  └───────────┬───────────┘
+                              ↓
+                  ┌───────────────────────┐
+                  │ INVESTIGATOR GUI      │
+                  │ Timeline / Graph /    │
+                  │ Actor Profile / Map   │
+                  └───────────┬───────────┘
+                              ↓
+                    CSV / JSON / REPORT
+11. The Most Important Component: Evidence Graph
+
+This should be the heart of your project.
+
+Example:
+
+                 ┌──────────────┐
+                 │   Actor A    │
+                 └──────┬───────┘
+                        │
+          ┌─────────────┼─────────────┐
+          ↓             ↓             ↓
+      Handle X       PGP Key       Wallet W1
+          │             │             │
+          ↓             ↓             ↓
+      Forum A       Marketplace    Transaction
+          │             │             │
+          └──────┬──────┘             │
+                 ↓                    ↓
+            Actor Profile        Wallet Cluster
+                 │
+                 ↓
+          Writing Signature
+                 │
+                 ↓
+          Persona Match
+
+Each edge should have:
+
+{
+  "relationship": "possibly_same_actor",
+  "confidence": 0.82,
+  "source": "forum_17",
+  "timestamp": "2026-08-20",
+  "evidence_type": "stylometry",
+  "analyst_status": "machine_generated"
+}
+
+This makes your system explainable.
+
+12. Don't Use One Giant AI Model
+
+A common student-project mistake would be:
+
+“We will give all dark-web data to an LLM and it will identify the hacker.”
+
+Don't do that.
+
+Instead use specialized modules.
+
+Module 1 — Entity extraction
+
+Extract:
+
+Username
+Email
+PGP fingerprint
+Wallet
+Domain
+IP
+.onion
+Telegram handle
+Social account
+Organization
+Date
+Location mention
+Module 2 — Entity normalization
+
+For example:
+
+Shadow-X
+shadow_x
+ShadowX
+shadowx2026
+
+become candidate aliases.
+
+Module 3 — Similarity engine
+
+Compare:
+
+Handle similarity
+PGP similarity
+Wallet relationship
+Writing similarity
+Behaviour similarity
+Infrastructure similarity
+Temporal similarity
+Module 4 — Graph engine
+
+Store everything in:
+
+Neo4j
+
+Example:
+
+(:Actor)-[:USES]->(:Handle)
+
+(:Actor)-[:CONTROLS]->(:PGPKey)
+
+(:Actor)-[:USES]->(:Wallet)
+
+(:Actor)-[:POSTED_ON]->(:Forum)
+
+(:OnionService)-[:HOSTED_ON]->(:Infrastructure)
+
+(:Actor)-[:POSSIBLY_SAME_AS]->(:Actor)
+13. Attribution Confidence Model
+
+This can become one of your biggest innovations.
+
+Instead of:
+
+“Actor A = Actor B”
+
+use:
+
+Evidence matrix
+Evidence	Strength	Example
+Exact PGP fingerprint	Very strong	Same key
+Same unique wallet + corroboration	Strong	Repeated transaction relationship
+Reused unique handle	Medium	Same username
+Infrastructure fingerprint	Medium/Strong	Certificate/banner correlation
+Stylometry	Medium	Similar writing style
+Posting time	Weak/Medium	Same activity pattern
+Generic vocabulary	Weak	Common phrases
+
+Then calculate an attribution confidence.
+
+But don't present this as a mathematically proven probability unless you have a calibrated statistical model.
+
+Better:
+
+ATTRIBUTION CONFIDENCE
+        82 / 100
+
+Supporting evidence:
+✓ Same PGP fingerprint
+✓ Wallet relationship
+✓ Strong stylometric similarity
+✓ Same vendor category
+
+Contradictory evidence:
+⚠ Different activity periods
+
+Sources:
+12
+
+Last observed:
+2026-09-14
+
+This is much more realistic.
+
+14. Very Important: Evidence Provenance
+
+Every finding should answer:
+
+Where did this information come from?
+
+For example:
+
+Finding:
+PGP fingerprint associated with Handle X
+
+Source:
+Forum Alpha
+
+Observed:
+2026-08-13
+
+Collection method:
+Authorized/public source
+
+Confidence:
+High
+
+Evidence hash:
+SHA256: ....
+
+Analyst:
+Automated
+
+This is extremely useful for an intelligence platform.
+
+15. Timeline
+
+Your dashboard should have a timeline:
+
+2024
+ │
+ ├── Forum Account A created
+ │
+2025
+ │
+ ├── Marketplace X account appears
+ │
+ ├── PGP key published
+ │
+2026
+ │
+ ├── Marketplace X disappears
+ │
+ ├── Marketplace Y account appears
+ │
+ ├── Similar writing detected
+ │
+ └── Same wallet observed
+
+Then the investigator can visually see:
+
+migration → rebranding → continued activity
+
+This directly addresses the PS's requirement for querying data across a chosen timeline.
+
+16. Infrastructure Attribution Module
+
+This should have a separate dashboard.
+
+For example:
+
+ONION SERVICE
+     │
+     ├── TLS Certificate
+     │
+     ├── Server Headers
+     │
+     ├── Technology Stack
+     │
+     ├── Banner
+     │
+     ├── Favicon Hash
+     │
+     ├── Configuration Metadata
+     │
+     └── Historical Observations
+              │
+              ↓
+        Clearnet Correlation
+              │
+       ┌──────┴──────┐
+       ↓             ↓
+   Domain A        IP Range
+       │             │
+       └──────┬──────┘
+              ↓
+       Candidate Infrastructure
+
+Research has documented real-world attribution opportunities arising from exposed Apache mod_status pages on onion services.
+
+Tor's own documentation also explicitly warns that onion-service operators need to avoid leaking information through their web-server configuration, and points to OnionScan as a tool for identifying such leaks.
+
+17. Blockchain Module
+
+For Bitcoin-like UTXO chains, you can represent:
+
+Wallet A
+   ↓
+Transaction 1
+   ↓
+Wallet B
+   ↓
+Transaction 2
+   ↓
+Exchange
+
+The graph can identify candidate clusters, but this must remain probabilistic.
+
+For example, common-input ownership is a useful blockchain-analysis heuristic, but CoinJoin and collaborative transactions can violate the assumption. Therefore:
+
+wallet cluster ≠ confirmed real-world person
+
+This is another reason your evidence-fusion approach is better than claiming direct deanonymization.
+
+18. AI Layer
+
+I'd divide AI into four models.
+
+Model A — NER
+
+Extract entities from posts:
+
+PGP
+Wallet
+Handle
+Organization
+CVE
+Malware
+Domain
+Email
+Location
+Model B — Stylometry
+
+Input:
+
+Post A
+Post B
+
+Output:
+
+Stylometric similarity: 0.78
+Model C — Behavioural similarity
+
+Features:
+
+posting hours
+frequency
+forum categories
+vendor behaviour
+migration patterns
+language
+interaction network
+
+Output:
+
+Behaviour similarity: 0.72
+Model D — Evidence Fusion
+
+Input:
+
+Stylometry       0.78
+Behaviour        0.72
+PGP              1.00
+Wallet           0.85
+Handle           0.65
+Infrastructure   0.81
+
+Output:
+
+ATTRIBUTION HYPOTHESIS
+
+Confidence: HIGH
+
+Reasons:
+1. Same PGP fingerprint
+2. Correlated wallet activity
+3. Infrastructure overlap
+4. Similar writing profile
+19. Data Sources
+
+For your prototype, don't depend on live unrestricted dark-web crawling.
+
+Use:
+
+Public/research datasets
+2026 DarkForums safe corpus
+Mendeley dark-web cybersecurity-event dataset
+DarkPT-BR dataset
+historical darknet datasets used in academic research
+Controlled synthetic data
+
+Create:
+
+Actor_001
+ ├── Handle_A
+ ├── PGP_A
+ ├── Wallet_A
+ └── Posts_A
+
+and:
+
+Actor_002
+ ├── Handle_B
+ ├── PGP_B
+ ├── Wallet_B
+ └── Posts_B
+
+Then deliberately create some relationships.
+
+This gives you a safe ground-truth environment for demonstrating the attribution algorithm.
+
+20. Database Design
+
+I would use:
+
+PostgreSQL
+
+For:
+
+Users
+Sources
+Raw documents
+Observations
+Reports
+Audit logs
+Neo4j
+
+For:
+
+Actors
+Handles
+PGP
+Wallets
+Onion services
+Domains
+Infrastructure
+Relationships
+Evidence
+Object storage
+
+For:
+
+HTML
+screenshots
+JSON
+reports
+evidence artifacts
+21. Recommended Tech Stack
+Backend
+Python
+FastAPI
+Celery
+Redis
+AI/ML
+Python
+scikit-learn
+PyTorch
+Transformers
+spaCy
+sentence-transformers
+Graph
+Neo4j
+Cypher
+Database
+PostgreSQL
+Frontend
+React
+TypeScript
+Tailwind CSS
+Graph visualization
+React Flow
+Cytoscape.js
+or
+D3.js
+Threat intelligence format
+STIX 2.1
+
+STIX 2.1 provides standardized structures for domain objects, relationships, cyber observables and patterning.
+
+22. Proposed Product
+
+I would give the system a name like:
+
+DARKTRACE
+Dark Web Threat Actor Intelligence & Attribution Engine
+
+or:
+
+ARGUS
+Autonomous Relationship Graph for Underground Intelligence & Attribution
+
+The name is less important than the architecture.
+
+23. Core Dashboard
+
+Your UI could look like:
+
+┌─────────────────────────────────────────────────────────┐
+│ DARKTRACE                                NTRO ANALYTICS │
+├───────────┬─────────────────────────────────────────────┤
+│           │                                             │
+│ Dashboard │   THREAT ACTORS                             │
+│           │                                             │
+│ Actors    │   Active Actors       1,284                │
+│           │   Linked Personas       327                │
+│ Services  │   Infrastructure        692                │
+│           │   Wallets              4,821                │
+│ PGP Keys  │                                             │
+│           │   Recent Activity                           │
+│ Wallets   │   ─────────────────────────────             │
+│           │   Actor A → Forum X                         │
+│ Forums    │   Actor B → Wallet                         │
+│           │   Actor C → Onion Service                   │
+│ Timeline  │                                             │
+│           │                                             │
+│ Graph     │                                             │
+│           │                                             │
+│ Reports   │                                             │
+└───────────┴─────────────────────────────────────────────┘
+24. Actor Investigation Page
+
+This is where your demo can become impressive.
+
+┌─────────────────────────────────────────────────────────┐
+│ ACTOR PROFILE                                           │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│ Alias: ShadowX                                          │
+│ Category: Cybercrime                                   │
+│ First observed: 2025-03-14                             │
+│ Last observed: 2026-09-12                              │
+│                                                         │
+│ Attribution Confidence: 82/100                         │
+│                                                         │
+├─────────────────────────────────────────────────────────┤
+│ IDENTIFIERS                                             │
+│                                                         │
+│ Handles: 4                                              │
+│ PGP Keys: 2                                             │
+│ Wallets: 6                                              │
+│ Onion Services: 3                                      │
+│ Forums: 5                                               │
+│                                                         │
+├─────────────────────────────────────────────────────────┤
+│ EVIDENCE GRAPH                                          │
+│                                                         │
+│        Handle A                                         │
+│           │                                             │
+│      ┌────┴────┐                                        │
+│      ↓         ↓                                        │
+│    PGP       Wallet                                     │
+│      │         │                                        │
+│      └────┬────┘                                        │
+│           ↓                                             │
+│        Actor A                                          │
+│                                                         │
+├─────────────────────────────────────────────────────────┤
+│ EVIDENCE                                               │
+│                                                         │
+│ ✓ Same PGP fingerprint                                 │
+│ ✓ Wallet relationship                                  │
+│ ✓ Similar writing style                                │
+│ ⚠ Infrastructure evidence inconclusive                 │
+└─────────────────────────────────────────────────────────┘
+25. The Key Innovation
+
+Your strongest innovation shouldn't be:
+
+“AI analyzes the dark web.”
+
+That's too generic.
+
+Your innovation should be:
+
+Multi-Modal Evidence Fusion for Dark-Web Persona Attribution
+
+Meaning:
+
+Infrastructure
+       +
+Identity
+       +
+Cryptographic identifiers
+       +
+Blockchain
+       +
+Stylometry
+       +
+Behaviour
+       +
+Temporal patterns
+       ↓
+Evidence Graph
+       ↓
+Explainable Attribution Hypothesis
+
+This is much closer to the actual PS.
+
+26. What Existing Solutions Still Don't Solve Well
+
+Based on the current landscape, the opportunity is the integration layer.
+
+Capability	Existing tools/research	Your opportunity
+Onion scanning	OnionScan	Integrate results into actor graph
+CTI graph	OpenCTI	Dark-web-specific entity model
+Threat intelligence	MISP	Attribution-oriented correlation
+Stylometry	Academic research	Combine with non-text evidence
+Blockchain analysis	Existing platforms/research	Connect wallet evidence to persona graph
+Timeline	Various CTI tools	Actor migration/rebranding timeline
+Attribution	Usually fragmented	Unified evidence fusion
+Explainability	Varies	Evidence → confidence → reason
+Export	Existing tools	Unified CSV/JSON/report package
+27. Biggest Technical Challenge
+
+The hardest problem is not crawling.
+
+It is:
+
+False attribution.
+
+For example:
+
+Same username
+        ↓
+Does NOT necessarily mean
+        ↓
+same person
+
+Likewise:
+
+Similar writing
+        ↓
+Does NOT necessarily mean
+        ↓
+same person
+
+And:
+
+Same wallet
+        ↓
+Does NOT automatically mean
+        ↓
+known individual
+
+Therefore the architecture should explicitly model:
+
+Evidence
+Confidence
+Contradiction
+Source reliability
+Temporal validity
+Analyst verification
+28. Source Reliability Model
+
+This could be another innovative feature.
+
+Every evidence source gets a reliability category:
+
+A — Direct/strong evidence
+B — Corroborated evidence
+C — Supporting evidence
+D — Weak/indirect evidence
+
+Example:
+
+Same PGP fingerprint
+→ A
+
+Same unique wallet
+→ B
+
+Same rare username
+→ C
+
+Similar writing style
+→ C
+
+Similar vocabulary
+→ D
+
+Then your engine doesn't simply count evidence.
+
+It weights evidence according to quality.
+
+29. Autonomous Mode
+
+The PS explicitly asks for autonomous operation.
+
+Build:
+
+Scheduler
+     ↓
+Source connectors
+     ↓
+New data
+     ↓
+Entity extraction
+     ↓
+Deduplication
+     ↓
+Entity resolution
+     ↓
+Graph update
+     ↓
+New relationship detection
+     ↓
+Confidence recalculation
+     ↓
+Alert
+
+Example:
+
+NEW POTENTIAL LINK DETECTED
+
+Actor: ShadowX
+
+New observation:
+Marketplace Y
+
+Matching signals:
+✓ Handle similarity
+✓ PGP relationship
+✓ Writing similarity
+
+Confidence:
+76 → 84
+
+Action:
+Analyst review required
+
+That directly addresses the autonomous-mode requirement.
+
+30. Legal/Ethical Design
+
+This needs to be explicitly included in your presentation.
+
+The prototype should emphasize:
+
+Passive/authorized intelligence collection
+
+Not:
+
+attacking Tor
+exploiting live servers
+unauthorized access
+credential harvesting
+targeting private individuals
+attempting to compromise infrastructure
+
+Instead:
+
+Public/research datasets
++
+Authorized sources
++
+Synthetic investigation environment
++
+Passive metadata analysis
+
+For a student prototype, this is both safer and easier to demonstrate.
+
+31. SIH Prototype Strategy
+
+Don't try to build the entire production system.
+
+Build one convincing vertical slice.
+
+Demo scenario
+
+Create:
+
+5 fake threat actors
+20 forum accounts
+10 PGP keys
+30 wallets
+15 onion services
+50 posts
+10 infrastructure records
+
+Then deliberately create:
+
+Actor A
+ ├── Forum_A
+ ├── PGP_A
+ ├── Wallet_A
+ └── Onion_A
+
+↓ migration
+
+Actor A'
+ ├── Forum_B
+ ├── PGP_A
+ ├── Wallet_B
+ └── Onion_B
+
+Your system discovers:
+
+Forum_A
+      ↓
+PGP_A
+      ↓
+Forum_B
+      ↓
+Stylometric similarity
+      ↓
+Wallet relationship
+      ↓
+Infrastructure correlation
+      ↓
+Potential same actor
+
+Then show the investigator dashboard.
+
+32. Your 5-Minute SIH Demo
+
+I'd structure the live demo like this:
+
+0:00–0:30 — Problem
+
+Dark-web actors continuously change handles, marketplaces and infrastructure.
+
+0:30–1:15 — Data ingestion
+
+Show:
+
+Forum
+Marketplace
+Blockchain
+Infrastructure
+1:15–2:00 — Entity extraction
+
+Show:
+
+Handle
+PGP
+Wallet
+Domain
+Onion
+
+automatically extracted.
+
+2:00–3:00 — Graph
+
+Show:
+
+Actor
+ ↓
+Handle
+ ↓
+PGP
+ ↓
+Wallet
+ ↓
+Forum
+ ↓
+Onion
+3:00–4:00 — AI attribution
+
+Show:
+
+Stylometry
++
+Behaviour
++
+Infrastructure
++
+Cryptographic evidence
+
+producing an attribution hypothesis.
+
+4:00–5:00 — Investigator report
+
+Export:
+
+PDF
+JSON
+CSV
+
+with:
+
+evidence
+sources
+timeline
+relationships
+confidence
+contradictions
+33. What Will Make the Project Stand Out
+
+I would focus your innovation around these six things:
+
+1. Evidence Fusion
+
+Not just one signal.
+
+2. Explainable Attribution
+
+Show why two identities were linked.
+
+3. Temporal Intelligence
+
+Show how actors migrate/rebrand.
+
+4. Graph-Based Investigation
+
+Everything connected visually.
+
+5. Confidence + Contradiction
+
+Don't pretend AI is always correct.
+
+6. Autonomous Monitoring
+
+New evidence automatically updates the graph.
+
+34. Final Opportunity
+
+The PS can be reduced to:
+
+Collect → Normalize → Correlate → Link → Analyze → Attribute → Explain → Report
+
+The biggest conceptual mistake would be treating it as a dark-web crawler.
+
+The stronger interpretation is:
+
+An AI-assisted Dark-Web Intelligence & Entity-Resolution Platform
+
+with:
+
+                 DARKTRACE / ARGUS
+                       │
+          ┌────────────┼────────────┐
+          ↓            ↓            ↓
+     Infrastructure  Identity    Behaviour
+          │            │            │
+          ↓            ↓            ↓
+      Certificates   PGP        Stylometry
+      Banners        Handles    Activity
+      Domains        Wallets    Timing
+          │            │            │
+          └────────────┼────────────┘
+                       ↓
+                KNOWLEDGE GRAPH
+                       ↓
+              EVIDENCE FUSION
+                       ↓
+             ATTRIBUTION HYPOTHESIS
+                       ↓
+              INVESTIGATOR DASHBOARD
+                       ↓
+              CSV / JSON / REPORT
+My assessment of the PS
+
+Technically feasible as an SIH prototype: Yes — if you build a controlled/synthetic dataset and demonstrate the complete pipeline rather than attempting internet-scale collection.
+
+Most difficult component: reliable attribution and avoiding false positives.
+
+Most defensible innovation: explainable multi-source evidence fusion.
+
+Best technical foundation: Python + FastAPI + PostgreSQL + Neo4j + React + NLP/ML + STIX 2.1.
+
+Best prototype strategy: build the graph + entity-resolution + evidence engine first, then add stylometry and infrastructure correlation.
+
+Biggest demo advantage: when the judges click an actor and can see exactly which handles, PGP keys, wallets, posts, infrastructure indicators and timeline events caused the system to form the attribution hypothesis.
+
+And importantly, current tools such as OnionScan, MISP and OpenCTI mean you should not claim that the individual components are completely new. Your differentiator is the specialized integration and evidence-fusion workflow for dark-web actor attribution.
+
+Suggested next research step
+
+For PS 26151, the next thing I'd do is a deep competitor/previous-SIH analysis: identify existing GitHub projects, research papers, OnionScan/CARONTE/OpenCTI/MISP capabilities, previous SIH implementations, and then create a feature-by-feature gap matrix showing exactly what your team should build that existing systems don't already provide. That will give you the foundation for your SIH solution, innovation slide, architecture, and judging pitch.
+
+Sources
+yes
+
+Yes. I did the next-level check, and there is one very important discovery before you start building.
+
+🚨 First: the competitive landscape has changed
+
+I found multiple public GitHub repositories already targeting SIH 26151 specifically, including projects called Argus and TRACEFORGE. One Argus implementation already combines infrastructure analysis, Neo4j relationship graphs, stylometry, wallet clustering, evidence/provenance, and a dashboard.
+
+So if your team builds simply:
+
+“Dark-web crawler + Neo4j + AI + dashboard”
+
+you risk looking very similar to existing public implementations.
+
+That actually makes the research more valuable: we need to differentiate the architecture and innovation before writing your solution.
+
+1. Competitive Landscape
+
+I found these major categories of existing work.
+
+Existing system/research	What it does	Relevant to 26151	Gap/opportunity
+OnionScan	Onion-service security/misconfiguration analysis	Very high	Needs integration with actor attribution
+OpenCTI	CTI knowledge graph	High	General CTI rather than dark-web attribution
+MISP	Threat intelligence + correlation	High	Not specialized for actor deanonymization
+Bitcoin deanonymization research	Links blockchain addresses with public identities	High	Doesn't provide complete multi-source investigation
+Stylometry research	Links writing/personas	High	Weak when text is short/copied
+Argus SIH project	Infra + graph + stylometry + wallets + dashboard	Very high	Direct competitor
+TRACEFORGE SIH project	Evidence-centric attribution + CTI	Very high	Direct competitor
+
+The original PS itself explicitly requires the combination of infrastructure indicators, relationship graphs, AI persona analysis, timeline querying, autonomous collection and export.
+
+2. Direct Competitor: ARGUS
+
+This is the most important one I found.
+
+The public Argus repository describes itself as:
+
+“dark web threat actor de-anonymization and attribution platform”
+
+It already has:
+
+infrastructure fingerprinting
+SSL/certificate analysis
+banner grabbing
+Neo4j graph
+stylometric analysis
+wallet clustering
+actor profiles
+evidence/provenance
+FastAPI
+PostgreSQL
+Neo4j
+Redis
+Celery
+React dashboard
+synthetic dataset
+mock misconfigured Tor service
+CSV/report-style investigation functionality.
+
+This is extremely close to the PS.
+
+Their architecture is essentially:
+Infrastructure
+      +
+Graph
+      +
+Stylometry
+      +
+Wallet clustering
+      ↓
+Actor Attribution
+      ↓
+Dashboard
+
+So we should not copy this architecture and merely rename it.
+
+3. Another Competitor: TRACEFORGE
+
+I also found a project explicitly describing itself as:
+
+Evidence-Centric Dark Web Threat Actor Attribution & CTI Platform
+
+It focuses on:
+
+multi-source intelligence
+blockchain
+server infrastructure
+evidence provenance
+confidence scoring
+attribution
+CTI investigation.
+
+Again, very close.
+
+So there is already competition at the “evidence + attribution” level too.
+
+4. What This Means for Your Team
+
+Don't panic.
+
+It actually gives us a very clear direction.
+
+Instead of asking:
+
+“What feature can we add?”
+
+we should ask:
+
+“What fundamental problem in actor attribution are existing systems still handling poorly?”
+
+And I think there is a strong answer.
+
+5. The Real Unsolved Problem: Evidence Quality
+
+Consider:
+
+Same username
+       ↓
+Possible match
+
+But:
+
+Same username ≠ same actor
+
+Likewise:
+
+Similar writing
+       ↓
+Possible match
+
+doesn't mean:
+
+Same writing = same person
+
+And:
+
+Same wallet
+       ↓
+Possible relationship
+
+doesn't automatically prove identity.
+
+Even academic work demonstrating Bitcoin-based deanonymization relies on publicly exposed address relationships and transaction history rather than a magical ability to “break Tor.”
+
+6. Our Proposed Differentiator
+
+I would change the fundamental architecture to:
+
+Evidence-Centric Multi-Stage Attribution
+
+Instead of:
+
+Data
+ ↓
+AI
+ ↓
+Score
+
+use:
+
+RAW OBSERVATION
+       ↓
+EVIDENCE EXTRACTION
+       ↓
+EVIDENCE VALIDATION
+       ↓
+ENTITY RESOLUTION
+       ↓
+RELATIONSHIP GRAPH
+       ↓
+CONTRADICTION ANALYSIS
+       ↓
+MULTI-SIGNAL CORRELATION
+       ↓
+ATTRIBUTION HYPOTHESIS
+       ↓
+HUMAN REVIEW
+       ↓
+FINAL INTELLIGENCE REPORT
+
+This is a significant conceptual difference.
+
+7. Add a Contradiction Engine
+
+This is the feature I would particularly push.
+
+Most systems focus on:
+
+Why are these two accounts related?
+
+Your system should additionally ask:
+
+What evidence argues against this relationship?
+
+For example:
+
+Candidate relationship
+Actor A
+     ↕
+Actor B
+
+Confidence: 78%
+Supporting evidence
+✓ Same PGP fingerprint
+✓ Similar writing style
+✓ Related wallet
+✓ Similar activity schedule
+Contradictory evidence
+⚠ Different language pattern
+⚠ Different timezone activity
+⚠ Wallet relationship uncertain
+⚠ One identifier appears publicly reused
+
+Then:
+
+Final status:
+
+POTENTIAL LINK
+Requires analyst verification
+
+This makes your system much more realistic for intelligence analysis.
+
+8. Introduce an Evidence Ledger
+
+Every relationship should have its own evidence record.
+
+For example:
+
+RELATIONSHIP
+Actor_A ───── POSSIBLY_SAME_AS ───── Actor_B
+
+Click it:
+
+┌───────────────────────────────────────┐
+│ RELATIONSHIP EVIDENCE                 │
+├───────────────────────────────────────┤
+│ Evidence ID: EV-000381                │
+│ Created: 16 Sep 2026                  │
+│                                       │
+│ Supporting Evidence                   │
+│ ✓ PGP fingerprint match               │
+│ ✓ Behaviour similarity                │
+│ ✓ Wallet correlation                  │
+│                                       │
+│ Contradictions                        │
+│ ⚠ Different posting language          │
+│                                       │
+│ Sources: 7                            │
+│ Reliability: HIGH                     │
+│                                       │
+│ Attribution status:                  │
+│       POTENTIAL LINK                  │
+└───────────────────────────────────────┘
+9. Add Source Reliability
+
+Don't treat every source equally.
+
+For example:
+
+Evidence	Reliability
+Exact PGP fingerprint	Very high
+Direct wallet reuse	High
+Unique infrastructure fingerprint	High
+Corroborated handle	Medium-high
+Stylometry	Medium
+Behavioural similarity	Medium
+Generic phrase similarity	Low
+
+Then the system considers evidence quality, not just evidence quantity.
+
+10. Add Temporal Reasoning
+
+This is another area where you can make the system more sophisticated.
+
+Suppose:
+
+2019
+Handle A
+
+2020
+PGP Key X
+
+2021
+Marketplace A
+
+2022
+Marketplace A disappears
+
+2023
+Handle B appears
+
+2024
+Wallet X appears
+
+2025
+Forum B
+
+Instead of simply connecting everything:
+
+A ─ B
+
+your system constructs:
+
+Actor Migration Timeline
+        2019        2020        2021
+         │           │           │
+       Handle A ── PGP X ── Marketplace A
+                              │
+                              │
+                              ↓
+                       Marketplace closes
+                              │
+                              ↓
+        2023 ───── Handle B
+                     │
+        2024 ───── Wallet X
+                     │
+        2025 ───── Forum B
+
+Then the investigator can ask:
+
+“Show all identities potentially associated with this actor between 2019–2025.”
+
+That directly fits the PS requirement for timeline querying.
+
+11. Introduce "Identity Lifecycle"
+
+This could become one of your strongest presentation concepts.
+
+Instead of seeing:
+
+Account A
+Account B
+Account C
+
+the system sees:
+
+          ACTOR
+            │
+     ┌──────┼──────┐
+     ↓      ↓      ↓
+   Birth  Migration Rebrand
+     │      │       │
+     ↓      ↓       ↓
+ Handle   Forum    Marketplace
+Lifecycle:
+
+Creation → Activity → Migration → Rebranding → Dormancy → Reappearance
+
+This is much more intelligence-oriented than simply “username matching.”
+
+12. Add Confidence Decay
+
+This is an interesting additional idea.
+
+Suppose evidence is from 2021:
+
+Same wallet
+Same PGP
+Same handle
+
+It shouldn't necessarily remain equally useful forever.
+
+Your system can display:
+
+Evidence age:
+
+2021 ──────────────── 2026
+████████████████░░░░
+
+Current relevance: Medium
+
+But strong permanent identifiers such as a PGP fingerprint can have different treatment than temporary behavioural patterns.
+
+This gives you a more realistic temporal evidence model.
+
+13. New Architecture
+
+I would now change our previous architecture to:
+
+                    DATA SOURCES
+                         │
+       ┌─────────────────┼─────────────────┐
+       ↓                 ↓                 ↓
+    Forums          Infrastructure      Blockchain
+       │                 │                 │
+       └─────────────────┼─────────────────┘
+                         ↓
+                  COLLECTION ENGINE
+                         ↓
+                 NORMALIZATION
+                         ↓
+                 ENTITY EXTRACTION
+                         ↓
+                ENTITY RESOLUTION
+                         ↓
+                  EVIDENCE STORE
+                         │
+              ┌──────────┼──────────┐
+              ↓          ↓          ↓
+         Identity    Behaviour   Infrastructure
+         Analysis     Analysis      Analysis
+              │          │          │
+              └──────────┼──────────┘
+                         ↓
+                 KNOWLEDGE GRAPH
+                         ↓
+              ┌──────────┴──────────┐
+              ↓                     ↓
+       CORRELATION ENGINE    CONTRADICTION ENGINE
+              │                     │
+              └──────────┬──────────┘
+                         ↓
+                 TEMPORAL ENGINE
+                         ↓
+              ATTRIBUTION HYPOTHESIS
+                         ↓
+                  HUMAN REVIEW
+                         ↓
+              INVESTIGATION REPORT
+14. This Changes Your Product Positioning
+
+Don't pitch:
+
+“AI-powered dark web deanonymization.”
+
+That sounds like a generic AI cybersecurity project.
+
+Pitch:
+
+“An evidence-centric intelligence platform for explainable dark-web actor attribution.”
+
+Then explain:
+
+It does not claim to magically break Tor anonymity. Instead, it correlates infrastructure leakage, persistent identifiers, blockchain relationships, behavioural patterns and stylometric evidence to generate explainable attribution hypotheses with source provenance, contradictions and temporal context.
+
+That is much more technically credible.
+
+15. Existing Research Supports This Direction
+
+Recent research continues to emphasize that practical deanonymization opportunities can arise from operator mistakes and configuration weaknesses rather than breaking Tor's cryptography. A 2026 experimental study specifically examined service misconfiguration and showed how incorrect web-server configuration can expose identifying information.
+
+A 2026 taxonomy paper similarly organizes Tor hidden-service deanonymization risks across network, application, side-channel, operational-security and ecosystem layers, emphasizing that research is fragmented across different techniques.
+
+That fragmentation is exactly where your evidence-fusion architecture can be positioned.
+
+16. Feature Comparison
+
+Here's how I'd now position your project against what I found.
+
+Feature	OnionScan	OpenCTI	MISP	Argus	TRACEFORGE	Your proposed system
+Onion infrastructure analysis	✅	Partial	Partial	✅	✅	✅
+Threat-intel graph	❌	✅	✅	✅	✅	✅
+PGP/handle relationships	Partial	✅	✅	✅	✅	✅
+Wallet analysis	❌	Partial	Partial	✅	✅	✅
+Stylometry	❌	❌	❌	✅	Partial	✅
+Behaviour analysis	❌	Partial	Partial	✅	✅	✅
+Timeline	Partial	✅	✅	✅	✅	Advanced
+Evidence provenance	Partial	✅	✅	✅	✅	Advanced
+Contradiction analysis	❌	Limited	Limited	Not core	Limited	✅ Core
+Evidence reliability	Limited	Partial	Partial	Partial	Partial	✅ Core
+Evidence aging/decay	❌	Limited	Limited	Not core	Not core	✅
+Actor lifecycle	❌	Partial	Partial	Partial	Partial	✅ Core
+Explainable attribution	Partial	Partial	Partial	✅	✅	✅ Core
+Human analyst review	Limited	✅	✅	✅	✅	✅
+Autonomous updates	Partial	✅	✅	✅	✅	✅
+
+Important: this table is a strategic comparison based on publicly described capabilities; it is not a formal benchmark of the systems.
+
+17. What NOT to Build
+
+This is equally important.
+
+Don't spend your SIH time trying to build:
+
+❌ a full Tor network scanner
+❌ a massive dark-web crawler
+❌ a custom blockchain
+❌ your own LLM
+❌ a “hack Tor” mechanism
+❌ an AI that claims to identify a real person from writing alone
+❌ hundreds of decorative dashboard charts
+
+Those are poor uses of your limited prototype time.
+
+18. What You SHOULD Build
+
+I'd prioritize:
+
+Phase 1 — Core
+Synthetic/research dataset
+        ↓
+Entity extraction
+        ↓
+Neo4j graph
+        ↓
+Actor profiles
+Phase 2 — Attribution
+Handle
+PGP
+Wallet
+Infrastructure
+Stylometry
+Behaviour
+Phase 3 — Intelligence
+Evidence scoring
++
+Source reliability
++
+Contradictions
++
+Timeline
++
+Actor lifecycle
+Phase 4 — UI
+Investigator dashboard
+Actor profile
+Relationship graph
+Timeline
+Evidence panel
+Report generation
+19. Your Killer Demo
+
+Imagine the judge gives you:
+
+Search:
+
+ShadowX
+
+Your system returns:
+
+Actor Cluster
+POTENTIAL ACTOR CLUSTER
+
+Confidence: 84%
+
+4 Handles
+2 PGP keys
+5 Wallets
+3 Forums
+2 Onion services
+
+Then click:
+
+“Why?”
+SUPPORTING
+
+✓ PGP fingerprint match
+✓ Wallet correlation
+✓ Infrastructure similarity
+✓ Stylometric similarity
+
+CONTRADICTORY
+
+⚠ Activity gap of 11 months
+⚠ Different language in 2 posts
+
+SOURCE QUALITY
+
+High: 4
+Medium: 6
+Low: 2
+
+Then click:
+
+“Timeline”
+2019 ─ Handle A
+2020 ─ PGP X
+2021 ─ Marketplace A
+2022 ─ Marketplace A closes
+2023 ─ Handle B
+2024 ─ Wallet X
+2025 ─ Forum B
+2026 ─ Onion Service C
+
+Then:
+
+“Generate Investigation Report”
+PDF
+CSV
+JSON
+
+That is a much stronger SIH demonstration than simply showing a dark-web dashboard.
+
+20. One More Important Discovery
+
+The public SIH mirror currently lists SIH26151 with no dataset link and no contact information, which means you should plan the prototype around research/synthetic/authorized data rather than assuming NTRO will provide a ready-made training dataset.
+
+Also, the existence of multiple public repositories already implementing this PS means your team should establish a clearly documented differentiator before committing to development.
+
+🎯 My recommended final concept
+
+If this were your team's PS, I'd define the solution as:
+
+ARGUS-X / TRACEINTEL
+Evidence-Centric Dark-Web Threat Actor Attribution & Intelligence Platform
+
+Core innovation:
+
+Multi-source evidence fusion + contradiction analysis + temporal actor lifecycle + explainable attribution.
+
+Four pillars:
+┌─────────────────────────────────────────┐
+│        DARK-WEB INTELLIGENCE            │
+├────────────┬────────────┬───────────────┤
+│Infrastructure│ Identity │ Behaviour/AI │
+│ Correlation  │ Graph    │ Analysis     │
+└────────────┴────────────┴───────────────┘
+                 ↓
+        ┌────────────────────┐
+        │ EVIDENCE ENGINE    │
+        │                    │
+        │ Reliability        │
+        │ Correlation        │
+        │ Contradictions     │
+        │ Temporal context   │
+        └─────────┬──────────┘
+                  ↓
+       EXPLAINABLE ATTRIBUTION
+                  ↓
+          ANALYST VALIDATION
+                  ↓
+        INTELLIGENCE REPORT
+
+This is the direction I'd recommend developing further—not because it is a “better” political or institutional choice, but because it directly addresses the technical gaps revealed by the current research and public implementations.
+
+Next step
+
+The most useful thing now is to go one level deeper: I can build a full PS 26151 competitor matrix covering 10–20 actual GitHub/research projects, including OnionScan, CARONTE, OpenCTI, MISP, Argus, TRACEFORGE and academic systems, with columns for technology, features, architecture, dataset, limitations, what they already solved, and exactly what your team can claim as innovation. That should become the basis of your SIH research document + “Existing Solutions & Innovation Gap” PPT slides.
