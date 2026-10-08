@@ -46,22 +46,52 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
     return () => observer.disconnect()
   }, [])
 
+    const [nodes, setNodes] = useState<any[]>(ctiNodes)
+  const [edges, setEdges] = useState<any[]>(ctiEdges)
+  const [isLive, setIsLive] = useState(false)
+
+  useEffect(() => {
+    async function loadGraphData() {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/api/v1/graph/data")
+        if (res.ok) {
+          const json = await res.json()
+          if (json.data?.nodes && json.data.nodes.length > 0) {
+            setNodes(json.data.nodes)
+            setEdges(
+              json.data.edges.map((e: any) => ({
+                from: e.source,
+                to: e.target,
+                label: e.label,
+                ...e,
+              }))
+            )
+            setIsLive(true)
+          }
+        }
+      } catch (err) {
+        // Fallback to local demo datasets
+      }
+    }
+    loadGraphData()
+  }, [])
+
   const visibleNodes = useMemo(
-    () => ctiNodes.filter((n) => (hideWallets ? n.type !== "wallet" : true)),
-    [hideWallets],
+    () => nodes.filter((n) => (hideWallets ? n.type !== "wallet" : true)),
+    [nodes, hideWallets],
   )
   const visibleIds = useMemo(() => new Set(visibleNodes.map((n) => n.id)), [visibleNodes])
   
   const visibleEdges = useMemo(
     () =>
-      ctiEdges
+      edges
         .filter((e) => visibleIds.has(e.from) && visibleIds.has(e.to))
         .map((e) => ({
           ...e,
           source: e.from,
           target: e.to,
         })),
-    [visibleIds],
+    [edges, visibleIds],
   )
 
   const graphData = useMemo(
