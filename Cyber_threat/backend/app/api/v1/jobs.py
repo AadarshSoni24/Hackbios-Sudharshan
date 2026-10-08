@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, BackgroundTasks
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
 from app.models.database import get_db, ScrapeJob
 from app.services.extractor import extract_entities_from_text, calculate_sha256
 from app.api.v1.graph import MOCK_GRAPH_DB
+from app.services.scraper_service import run_integrated_scan
 
 router = APIRouter(prefix="/jobs", tags=["Crawler & Extraction Ops"])
 
@@ -20,6 +21,20 @@ class TestTextExtractionRequest(BaseModel):
 
 class ScraperDataIngestRequest(BaseModel):
     records: list[dict]
+
+class ScanRequest(BaseModel):
+    url: str
+
+def background_scan_task(url: str):
+    """Runs the scraper and ingests data into the mock DB."""
+    records = run_integrated_scan(url)
+    if records:
+        # Re-use the existing ingestion logic internally
+        req = ScraperDataIngestRequest(records=records)
+        ingest_scraper_data(req, db=None)
+        print(f"[+] Background scan finished for {url}. Inserted {len(records)} records into Mock DB.")
+    else:
+        print(f"[-] Background scan failed or found no records for {url}.")
 
 @router.post("/ingest")
 def create_ingest_job(req: IngestJobRequest, db: Session = Depends(get_db)):
@@ -154,4 +169,13 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
         "success": True,
         "message": f"Successfully received {total_records} records.",
         "records_processed": total_records
+    }
+
+@router.post("/scan")
+def start_scan(req: ScanRequest, background_tasks: BackgroundTasks):
+    """Triggers the integrated Python scraper in the background."""
+    background_tasks.add_task(background_scan_task, req.url)
+    return {
+        "success": True,
+        "message": f"Background scan started for {req.url}. Graph will update automatically."
     }

@@ -1,11 +1,33 @@
 "use client"
 
+import { useState } from "react"
+
 interface HeaderBarProps {
   searchQuery?: string
   onSearchChange?: (value: string) => void
 }
 
 export function HeaderBar({ searchQuery = "", onSearchChange }: HeaderBarProps) {
+  const [scanUrl, setScanUrl] = useState("")
+  const [isScanning, setIsScanning] = useState(false)
+
+  const handleScan = async () => {
+    if (!scanUrl.trim()) return
+    setIsScanning(true)
+    try {
+      await fetch("http://localhost:8000/api/v1/jobs/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: scanUrl })
+      })
+      // Clear input after starting
+      setScanUrl("")
+    } catch (e) {
+      console.error("Scan failed to start", e)
+    } finally {
+      setIsScanning(false)
+    }
+  }
   return (
     <header className="flex h-14 shrink-0 items-center justify-between border-b border-[#1F2937] bg-[#111827] px-5 gap-4">
       <div className="flex items-center gap-3 shrink-0">
@@ -19,22 +41,41 @@ export function HeaderBar({ searchQuery = "", onSearchChange }: HeaderBarProps) 
       </div>
 
       {/* Top Navigation Search Input */}
-      <div className="relative mx-auto w-full max-w-md flex-1">
+      <div className="relative mx-auto w-full max-w-sm flex-1 hidden md:block">
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange?.(e.target.value)}
-          placeholder="Search Handle, BTC Address, PGP Fingerprint, or IP..."
-          className="w-full border border-[#1F2937] bg-[#080D16] px-3.5 py-1.5 font-mono text-[14px] font-medium tracking-normal text-slate-200 placeholder:text-slate-500 outline-none transition focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE] rounded-md"
+          placeholder="Filter Handle, BTC..."
+          className="w-full border border-[#1F2937] bg-[#080D16] px-3.5 py-1.5 font-mono text-[13px] font-medium tracking-normal text-slate-200 placeholder:text-slate-500 outline-none transition focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE] rounded-md"
         />
         {searchQuery && (
           <button
             onClick={() => onSearchChange?.("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-[12px] font-semibold text-slate-400 hover:text-[#22D3EE]"
+            className="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-[11px] font-semibold text-slate-400 hover:text-[#22D3EE]"
           >
             CLEAR
           </button>
         )}
+      </div>
+
+      {/* New Live Scan Input */}
+      <div className="relative mx-auto w-full max-w-md flex-1 flex gap-2">
+        <input
+          type="text"
+          value={scanUrl}
+          onChange={(e) => setScanUrl(e.target.value)}
+          placeholder="Enter .onion URL or Path to scan..."
+          className="flex-1 border border-[#1F2937] bg-[#080D16] px-3 py-1.5 font-mono text-[13px] font-medium tracking-normal text-[#22D3EE] placeholder:text-slate-500 outline-none transition focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE] rounded-md"
+          onKeyDown={(e) => e.key === 'Enter' && handleScan()}
+        />
+        <button
+          onClick={handleScan}
+          disabled={isScanning || !scanUrl}
+          className="px-4 py-1.5 font-sans text-[13px] font-bold text-[#080D16] bg-[#22D3EE] hover:bg-[#06B6D4] disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors whitespace-nowrap"
+        >
+          {isScanning ? "INITIATING..." : "SCAN"}
+        </button>
       </div>
 
       <div className="flex items-center gap-2 border border-[#1F2937] bg-[#080D16] px-3 py-1 rounded-md shrink-0">
