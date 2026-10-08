@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, BackgroundTasks
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
-from app.models.database import get_db, ScrapeJob
+from app.models.database import get_db, ScrapeJob, Actor, Entity, InfraFinding
 from app.services.extractor import extract_entities_from_text, calculate_sha256
 from app.api.v1.graph import MOCK_GRAPH_DB
 from app.services.scraper_service import run_integrated_scan
@@ -25,13 +25,17 @@ class ScraperDataIngestRequest(BaseModel):
 class ScanRequest(BaseModel):
     url: str
 
+from app.models.database import SessionLocal
+
 def background_scan_task(url: str):
-    """Runs the scraper and ingests data into the mock DB."""
+    """Runs the scraper and ingests data into the mock DB and SQLite DB."""
     records = run_integrated_scan(url)
     if records:
-        # Re-use the existing ingestion logic internally
+        # Connect to DB for background task
+        db = SessionLocal()
         req = ScraperDataIngestRequest(records=records)
-        ingest_scraper_data(req, db=None)
+        ingest_scraper_data(req, db=db)
+        db.close()
         print(f"[+] Background scan finished for {url}. Inserted {len(records)} records into Mock DB.")
     else:
         print(f"[-] Background scan failed or found no records for {url}.")
@@ -110,6 +114,14 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
                 })
 
         primary_actor = actor_ids[0]
+        
+        # DB Integration for Actors
+        if db:
+            for act_id in actor_ids:
+                handle_lbl = handle if handles else "Unknown Actor"
+                # Check if exists
+                if not db.query(Actor).filter(Actor.id == act_id).first():
+                    db.add(Actor(id=act_id, display_handle=handle_lbl, category="UNKNOWN", risk_level="HIGH", origin_badge="SCRAPER"))
 
         # 2. Add Wallets
         for w_type in ["bitcoin_wallets", "ethereum_wallets", "monero_wallets"]:
@@ -124,6 +136,11 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
                     })
                 # Add edge
                 MOCK_GRAPH_DB["edges"].append({"source": primary_actor, "target": wallet, "label": "OWNS_WALLET"})
+                
+                # DB Integration
+                if db:
+                    wtype = "WALLET_" + w_type.split("_")[0].upper()
+                    db.add(Entity(actor_id=primary_actor, type=wtype, value=wallet))
 
         # 3. Add PGP Keys
         for pgp in identifiers.get("pgp_keys", []):
@@ -137,6 +154,10 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
                     "risk": "high"
                 })
             MOCK_GRAPH_DB["edges"].append({"source": primary_actor, "target": pgp_short, "label": "USES_KEY"})
+            
+            # DB Integration
+            if db:
+                db.add(Entity(actor_id=primary_actor, type="PGP_KEY", value=pgp_short))
 
         # 4. Add Emails as IPs (for visual variety in mock)
         for email in identifiers.get("emails", []):
@@ -164,6 +185,23 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
                     "risk": "critical"
                 })
             MOCK_GRAPH_DB["edges"].append({"source": primary_actor, "target": infra_id, "label": "HOSTED_ON"})
+            
+            # DB Integration
+            if db:
+                db.add(InfraFinding(
+                    onion_address=source[:50],
+                    finding_type="SERVER_BANNER_LEAK",
+                    banner=server,
+                    candidate_host=infra_id,
+                    strength="STRONG"
+                ))
+
+    if db:
+        try:
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            print("DB Insert Error:", e)
 
     return {
         "success": True,
