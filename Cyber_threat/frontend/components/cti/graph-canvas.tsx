@@ -20,28 +20,6 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
   const fgRef = useRef<any>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 })
-  const [apiNodes, setApiNodes] = useState<any[]>([])
-  const [apiEdges, setApiEdges] = useState<any[]>([])
-
-  // Fetch live graph data from FastAPI
-  useEffect(() => {
-    const fetchGraph = async () => {
-      try {
-        const res = await fetch("http://localhost:8000/api/v1/graph/data")
-        const json = await res.json()
-        if (json.success && json.data.nodes.length > 0) {
-          setApiNodes(json.data.nodes)
-          setApiEdges(json.data.edges)
-        }
-      } catch (err) {
-        console.warn("Failed to fetch live graph data, falling back to dummy data", err)
-      }
-    }
-    fetchGraph()
-    // Poll every 5 seconds for new scraper data
-    const interval = setInterval(fetchGraph, 5000)
-    return () => clearInterval(interval)
-  }, [])
 
   // ResizeObserver for dynamic graph auto-expansion on panel collapse
   useEffect(() => {
@@ -68,25 +46,52 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
     return () => observer.disconnect()
   }, [])
 
-  const activeNodes = apiNodes.length > 0 ? apiNodes : ctiNodes
-  const activeEdges = apiEdges.length > 0 ? apiEdges : ctiEdges
+    const [nodes, setNodes] = useState<any[]>(ctiNodes)
+  const [edges, setEdges] = useState<any[]>(ctiEdges)
+  const [isLive, setIsLive] = useState(false)
+
+  useEffect(() => {
+    async function loadGraphData() {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/api/v1/graph/data")
+        if (res.ok) {
+          const json = await res.json()
+          if (json.data?.nodes && json.data.nodes.length > 0) {
+            setNodes(json.data.nodes)
+            setEdges(
+              json.data.edges.map((e: any) => ({
+                from: e.source,
+                to: e.target,
+                label: e.label,
+                ...e,
+              }))
+            )
+            setIsLive(true)
+          }
+        }
+      } catch (err) {
+        // Fallback to local demo datasets
+      }
+    }
+    loadGraphData()
+  }, [])
 
   const visibleNodes = useMemo(
-    () => activeNodes.filter((n) => (hideWallets ? n.type !== "wallet" : true)),
-    [activeNodes, hideWallets],
+    () => nodes.filter((n) => (hideWallets ? n.type !== "wallet" : true)),
+    [nodes, hideWallets],
   )
   const visibleIds = useMemo(() => new Set(visibleNodes.map((n) => n.id)), [visibleNodes])
   
   const visibleEdges = useMemo(
     () =>
-      activeEdges
-        .filter((e) => visibleIds.has(e.from || e.source) && visibleIds.has(e.to || e.target))
+      edges
+        .filter((e) => visibleIds.has(e.from) && visibleIds.has(e.to))
         .map((e) => ({
           ...e,
-          source: e.from || e.source,
-          target: e.to || e.target,
+          source: e.from,
+          target: e.to,
         })),
-    [activeEdges, visibleIds],
+    [edges, visibleIds],
   )
 
   const graphData = useMemo(

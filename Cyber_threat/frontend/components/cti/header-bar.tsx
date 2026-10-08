@@ -20,7 +20,6 @@ export function HeaderBar({ searchQuery = "", onSearchChange }: HeaderBarProps) 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: scanUrl })
       })
-      // Clear input after starting
       setScanUrl("")
     } catch (e) {
       console.error("Scan failed to start", e)
