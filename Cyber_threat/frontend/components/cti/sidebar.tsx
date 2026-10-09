@@ -11,7 +11,6 @@ import {
   Clock,
   FileCheck2,
   Terminal,
-  ShieldAlert,
   LogOut
 } from "lucide-react"
 
@@ -30,15 +29,15 @@ export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-64 bg-[#0D0D0D] border-r border-[#1F2937] flex flex-col justify-between h-screen shrink-0 select-none">
+    <aside className="w-64 bg-[#3F3F3F] border-r border-white/10 flex flex-col justify-between h-screen shrink-0 select-none shadow-2xl">
       <div>
         {/* Brand Header */}
-        <div className="h-14 px-4 border-b border-[#1F2937] flex items-center">
+        <div className="h-14 px-4 border-b border-white/10 flex items-center bg-[#3A3A3A]">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-500 to-sky-500 flex items-center justify-center font-mono font-bold text-slate-950 text-sm shadow-lg shadow-emerald-500/20">
               SG
             </div>
-            <span className="font-mono text-sm font-bold text-slate-100 tracking-wider">
+            <span className="font-mono text-sm font-bold text-white tracking-wider">
               SUDHARSHAN
             </span>
           </div>
@@ -55,16 +54,16 @@ export function Sidebar() {
                 href={item.href}
                 className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
                   isActive
-                    ? "bg-[#0F172A] text-emerald-400 border border-emerald-500/30 shadow-md shadow-emerald-500/5 font-semibold"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-[#0F172A]/60"
+                    ? "bg-[#2A2A2A] text-emerald-300 border border-emerald-400/40 shadow-md font-bold"
+                    : "text-zinc-200 hover:text-white hover:bg-white/10"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Icon className={`h-4 w-4 ${isActive ? "text-emerald-400" : "text-slate-500"}`} />
+                  <Icon className={`h-4 w-4 ${isActive ? "text-emerald-300" : "text-zinc-300"}`} />
                   <span>{item.label}</span>
                 </div>
                 {item.badge && (
-                  <span className="px-1.5 py-0.5 text-[10px] font-mono rounded bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                  <span className="px-1.5 py-0.5 text-[10px] font-mono rounded bg-amber-500/20 text-amber-300 border border-amber-400/30 font-bold">
                     {item.badge}
                   </span>
                 )}
@@ -75,17 +74,19 @@ export function Sidebar() {
       </div>
 
       {/* Footer / Officer Badge */}
-      <div className="p-3 border-t border-[#1F2937] bg-[#0B111E]">
-        <div className="flex items-center justify-between p-2 rounded bg-[#0D0D0D] border border-[#1F2937]">
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <div>
-              <div className="text-[11px] font-mono text-slate-200 font-semibold">INV-4091</div>
-              <div className="text-[9px] text-slate-500">ANALYST CLEARANCE</div>
+      <div className="p-3 border-t border-white/10 bg-[#353535]">
+        <div className="flex items-center justify-between p-2 rounded-xl bg-[#2A2A2A] border border-white/10">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="h-7 w-7 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center font-mono font-bold text-xs text-emerald-300 shrink-0">
+              N
+            </div>
+            <div className="min-w-0">
+              <div className="text-[11px] font-mono text-white font-bold leading-none truncate">INV-4091</div>
+              <div className="text-[9px] text-zinc-300 font-medium tracking-wide mt-1 truncate">ANALYST CLEARANCE</div>
             </div>
           </div>
-          <Link href="/login" className="text-slate-500 hover:text-rose-400 transition-colors p-1" title="Officer Logout">
-            <LogOut className="h-3.5 w-3.5" />
+          <Link href="/login" className="text-zinc-400 hover:text-rose-400 transition-colors p-1.5 shrink-0" title="Officer Logout">
+            <LogOut className="h-4 w-4" />
           </Link>
         </div>
       </div>
