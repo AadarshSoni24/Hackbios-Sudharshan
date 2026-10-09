@@ -56,33 +56,33 @@ export default function OverviewPage() {
       <Sidebar />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        {/* Top Header */}
-        <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#0D0D0D]/90 backdrop-blur sticky top-0 z-10">
+        {/* Top Header Bar with Silver Outline */}
+        <header className="h-14 border-b border-[#CBCBCB] px-6 flex items-center justify-between bg-[#1C1C1C]/95 backdrop-blur-md sticky top-0 z-10 shadow-sm">
           <div className="flex items-center">
-            <h1 className="text-sm font-mono font-bold tracking-wider text-slate-100">EXECUTIVE THREAT OVERVIEW</h1>
+            <h1 className="text-sm font-mono font-bold tracking-wider text-white">EXECUTIVE THREAT OVERVIEW</h1>
           </div>
           <div className="flex items-center gap-3">
-            {/* Live Scan Input */}
-            <div className="relative flex gap-2 w-[350px]">
+            {/* Live Scan Input with Silver Outline */}
+            <div className="relative flex gap-2 w-[370px]">
               <input
                 type="text"
                 value={scanUrl}
                 onChange={(e) => setScanUrl(e.target.value)}
                 placeholder="Enter .onion URL to scan..."
-                className="flex-1 border border-white/10 bg-[#13151D] px-3 py-1.5 font-mono text-[11px] font-medium tracking-normal text-[#22D3EE] placeholder:text-slate-500 outline-none transition focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE] rounded-lg"
+                className="flex-1 border border-[#CBCBCB] bg-[#121212] px-3.5 py-1.5 font-mono text-xs font-medium text-white placeholder:text-zinc-500 outline-none transition focus:ring-1 focus:ring-[#CBCBCB] rounded-lg"
                 onKeyDown={(e) => e.key === 'Enter' && handleScan()}
               />
               <button
                 onClick={handleScan}
                 disabled={isScanning || !scanUrl}
-                className="px-3 py-1.5 font-sans text-[11px] font-bold text-[#0D0D0D] bg-[#22D3EE] hover:bg-[#06B6D4] disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors whitespace-nowrap"
+                className="px-4 py-1.5 font-mono text-xs font-bold text-zinc-950 bg-[#CBCBCB] hover:bg-white border border-[#CBCBCB] disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-all whitespace-nowrap shadow-sm"
               >
                 {isScanning ? "SCANNING..." : "SCAN TARGET"}
               </button>
             </div>
 
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-mono text-emerald-400">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#121212] border border-[#CBCBCB]/60 text-xs font-mono text-emerald-400 shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
               TOR SOCKS5: ACTIVE (127.0.0.1:9050)
             </span>
           </div>

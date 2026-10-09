@@ -32,7 +32,7 @@ export function Sidebar() {
     <aside className="w-64 bg-[#3F3F3F] border-r border-white/10 flex flex-col justify-between h-screen shrink-0 select-none shadow-2xl">
       <div>
         {/* Brand Header */}
-        <div className="h-14 px-4 border-b border-white/10 flex items-center bg-[#3A3A3A]">
+        <div className="h-14 px-4 border-b border-[#CBCBCB] flex items-center bg-[#3A3A3A]">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-500 to-sky-500 flex items-center justify-center font-mono font-bold text-slate-950 text-sm shadow-lg shadow-emerald-500/20">
               SG
