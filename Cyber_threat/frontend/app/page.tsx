@@ -18,6 +18,28 @@ import {
 export default function OverviewPage() {
   const [actors, setActors] = useState<any[]>([])
   const [recentFeed, setRecentFeed] = useState<any[]>([])
+  
+  const [scanUrl, setScanUrl] = useState("")
+  const [isScanning, setIsScanning] = useState(false)
+
+  const handleScan = async () => {
+    if (!scanUrl.trim()) return
+    setIsScanning(true)
+    try {
+      await fetch("http://localhost:8000/api/v1/jobs/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: scanUrl })
+      })
+      setScanUrl("")
+      // Give a tiny delay for backend processing, then refresh data
+      setTimeout(() => window.location.reload(), 2000)
+    } catch (e) {
+      console.error("Scan failed to start", e)
+    } finally {
+      setIsScanning(false)
+    }
+  }
 
   useEffect(() => {
     async function loadData() {
@@ -46,6 +68,25 @@ export default function OverviewPage() {
             <p className="text-[11px] text-slate-400">Autonomous Dark Web Threat Attribution Console · PS 26151</p>
           </div>
           <div className="flex items-center gap-3">
+            {/* Live Scan Input */}
+            <div className="relative flex gap-2 w-[350px]">
+              <input
+                type="text"
+                value={scanUrl}
+                onChange={(e) => setScanUrl(e.target.value)}
+                placeholder="Enter .onion URL to scan..."
+                className="flex-1 border border-[#1F2937] bg-[#080D16] px-3 py-1.5 font-mono text-[11px] font-medium tracking-normal text-[#22D3EE] placeholder:text-slate-500 outline-none transition focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE] rounded-md"
+                onKeyDown={(e) => e.key === 'Enter' && handleScan()}
+              />
+              <button
+                onClick={handleScan}
+                disabled={isScanning || !scanUrl}
+                className="px-3 py-1.5 font-sans text-[11px] font-bold text-[#080D16] bg-[#22D3EE] hover:bg-[#06B6D4] disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors whitespace-nowrap"
+              >
+                {isScanning ? "SCANNING..." : "SCAN TARGET"}
+              </button>
+            </div>
+
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#0F172A] border border-emerald-500/30 text-[11px] font-mono text-emerald-400">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
               TOR SOCKS5: ACTIVE (127.0.0.1:9050)
