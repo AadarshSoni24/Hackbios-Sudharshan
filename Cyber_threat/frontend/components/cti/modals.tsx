@@ -11,7 +11,7 @@ function ModalShell({
 }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#080D16]/80 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0D0D0D]/80 backdrop-blur-sm p-4"
       onClick={onClose}
     >
       <div
@@ -53,7 +53,7 @@ export function StylometryModal({ onClose }: { onClose: () => void }) {
           { name: "Shadow99", platform: "Dread Forum" },
           { name: "GhostRider", platform: "Exploit.in" },
         ].map((p) => (
-          <div key={p.name} className="border-l-4 border-l-slate-600 border-y border-r border-[#1F2937] bg-[#080D16] p-4 rounded-r-lg">
+          <div key={p.name} className="border-l-4 border-l-slate-600 border-y border-r border-[#1F2937] bg-[#0D0D0D] p-4 rounded-r-lg">
             <div className="mb-2 flex items-center justify-between">
               <span className="font-sans text-[15px] font-bold text-[#EF4444]">{p.name}</span>
               <span className="font-sans text-[12px] text-slate-400">{p.platform}</span>
@@ -85,7 +85,7 @@ export function MisconfigModal({ onClose }: { onClose: () => void }) {
           Hidden service leaking Clearnet IP via server headers.
         </span>
       </div>
-      <div className="border-l-4 border-l-slate-600 border-y border-r border-[#1F2937] bg-[#080D16] p-4 rounded-r-lg">
+      <div className="border-l-4 border-l-slate-600 border-y border-r border-[#1F2937] bg-[#0D0D0D] p-4 rounded-r-lg">
         <p className="mb-2 font-sans text-[12px] font-semibold uppercase tracking-wider text-[#94A3B8]">
           RAW HTTP RESPONSE HEADERS
         </p>

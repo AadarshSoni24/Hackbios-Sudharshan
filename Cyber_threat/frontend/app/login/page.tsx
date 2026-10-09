@@ -16,7 +16,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#080D16] flex items-center justify-center p-4 font-sans text-slate-100">
+    <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center p-4 font-sans text-slate-100">
       <div className="w-full max-w-md bg-[#0F172A] border border-[#1F2937] rounded-2xl p-8 space-y-6 shadow-2xl relative overflow-hidden">
         {/* Glow corner */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl" />
@@ -36,7 +36,7 @@ export default function LoginPage() {
               type="text"
               value={badge}
               onChange={(e) => setBadge(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#080D16] border border-[#1F2937] rounded-lg text-xs font-mono text-slate-100 focus:outline-none focus:border-emerald-400"
+              className="w-full px-3.5 py-2.5 bg-[#0D0D0D] border border-[#1F2937] rounded-lg text-xs font-mono text-slate-100 focus:outline-none focus:border-emerald-400"
             />
           </div>
 
@@ -46,7 +46,7 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#080D16] border border-[#1F2937] rounded-lg text-xs font-mono text-slate-100 focus:outline-none focus:border-emerald-400"
+              className="w-full px-3.5 py-2.5 bg-[#0D0D0D] border border-[#1F2937] rounded-lg text-xs font-mono text-slate-100 focus:outline-none focus:border-emerald-400"
             />
           </div>
 
@@ -60,7 +60,7 @@ export default function LoginPage() {
               onChange={(e) => setTotp(e.target.value)}
               placeholder="123456"
               maxLength={6}
-              className="w-full px-3.5 py-2.5 bg-[#080D16] border border-[#1F2937] rounded-lg text-xs font-mono tracking-widest text-emerald-400 font-bold focus:outline-none focus:border-emerald-400"
+              className="w-full px-3.5 py-2.5 bg-[#0D0D0D] border border-[#1F2937] rounded-lg text-xs font-mono tracking-widest text-emerald-400 font-bold focus:outline-none focus:border-emerald-400"
             />
           </div>
 

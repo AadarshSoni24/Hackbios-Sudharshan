@@ -16,12 +16,12 @@ export default function GraphExplorerPage() {
   const [showMisconfig, setShowMisconfig] = useState(false)
 
   return (
-    <div className="flex h-screen bg-[#080D16] text-slate-100 overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#0D0D0D] text-slate-100 overflow-hidden font-sans">
       <Sidebar />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Graph Header */}
-        <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#080D16]">
+        <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#0D0D0D]">
           <div>
             <h1 className="text-sm font-mono font-bold tracking-wider text-slate-100">INTERACTIVE GRAPH TOPOLOGY</h1>
             <p className="text-[11px] text-slate-400">Multi-Vector 2D Force Attribution Canvas · Cytoscape / D3 Physics</p>
@@ -48,7 +48,7 @@ export default function GraphExplorerPage() {
             isRightCollapsed ? "grid-cols-1 lg:grid-cols-[1fr_auto]" : "grid-cols-1 lg:grid-cols-[1fr_380px]"
           }`}
         >
-          <div className="relative min-h-[300px] bg-[#080D16] overflow-hidden flex-1">
+          <div className="relative min-h-[300px] bg-[#0D0D0D] overflow-hidden flex-1">
             <GraphCanvas
               selectedId={selectedId}
               onSelect={(id) => {

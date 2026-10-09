@@ -164,7 +164,7 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
     [searchQuery],
   )
 
-  // Draw node canvas object (clean high-contrast tactical rendering on #080D16)
+  // Draw node canvas object (clean high-contrast tactical rendering on #0D0D0D)
   const drawNode = useCallback(
     (node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
       const isSelected = selectedId === node.id
@@ -269,14 +269,14 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
   )
 
   return (
-    <div ref={containerRef} className="relative h-full w-full overflow-hidden bg-[#080D16]">
+    <div ref={containerRef} className="relative h-full w-full overflow-hidden bg-[#0D0D0D]">
       {/* Dynamic react-force-graph-2d */}
       <ForceGraph2D
         ref={fgRef}
         width={dimensions.width}
         height={dimensions.height}
         graphData={graphData}
-        backgroundColor="#080D16"
+        backgroundColor="#0D0D0D"
         nodeRelSize={8}
         nodeCanvasObject={drawNode}
         nodeCanvasObjectMode={() => "replace"}

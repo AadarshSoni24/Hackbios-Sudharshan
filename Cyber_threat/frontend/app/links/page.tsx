@@ -36,11 +36,11 @@ export default function LinksReviewPage() {
   }
 
   return (
-    <div className="flex h-screen bg-[#080D16] text-slate-100 overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#0D0D0D] text-slate-100 overflow-hidden font-sans">
       <Sidebar />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#080D16]/90 backdrop-blur sticky top-0 z-10">
+        <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#0D0D0D]/90 backdrop-blur sticky top-0 z-10">
           <div>
             <h1 className="text-sm font-mono font-bold tracking-wider text-slate-100">PERSONA LINK REVIEW QUEUE</h1>
             <p className="text-[11px] text-slate-400">Human-In-The-Loop Verification Deck · Rule: Algorithm Proposes, Analyst Confirms</p>
@@ -88,7 +88,7 @@ export default function LinksReviewPage() {
                 </div>
 
                 {/* Evidence Details */}
-                <div className="bg-[#080D16] border border-[#1F2937] rounded-lg p-3 text-xs font-mono text-slate-300">
+                <div className="bg-[#0D0D0D] border border-[#1F2937] rounded-lg p-3 text-xs font-mono text-slate-300">
                   <span className="text-slate-500 block mb-1">CORROBORATING EVIDENCE TRAIL:</span>
                   {link.evidence}
                 </div>

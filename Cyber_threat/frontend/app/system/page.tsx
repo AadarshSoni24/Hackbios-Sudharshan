@@ -46,11 +46,11 @@ export default function SystemPage() {
   }
 
   return (
-    <div className="flex h-screen bg-[#080D16] text-slate-100 overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#0D0D0D] text-slate-100 overflow-hidden font-sans">
       <Sidebar />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#080D16]/90 backdrop-blur sticky top-0 z-10">
+        <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#0D0D0D]/90 backdrop-blur sticky top-0 z-10">
           <div>
             <h1 className="text-sm font-mono font-bold tracking-wider text-slate-100">SYSTEM OPERATIONS & AUDIT TRAIL</h1>
             <p className="text-[11px] text-slate-400">Tor Ingestion Operations (Scraper.py) & Immutable Officer Logs</p>
@@ -72,7 +72,7 @@ export default function SystemPage() {
                 type="text"
                 value={crawlUrl}
                 onChange={(e) => setCrawlUrl(e.target.value)}
-                className="flex-1 px-4 py-2 bg-[#080D16] border border-[#1F2937] rounded-lg text-xs font-mono text-slate-100 focus:outline-none focus:border-emerald-400"
+                className="flex-1 px-4 py-2 bg-[#0D0D0D] border border-[#1F2937] rounded-lg text-xs font-mono text-slate-100 focus:outline-none focus:border-emerald-400"
               />
               <button
                 onClick={triggerCrawl}
@@ -84,7 +84,7 @@ export default function SystemPage() {
             </div>
 
             {crawlStatus && (
-              <div className="p-3 bg-[#080D16] border border-emerald-500/30 text-emerald-300 text-xs font-mono rounded-lg">
+              <div className="p-3 bg-[#0D0D0D] border border-emerald-500/30 text-emerald-300 text-xs font-mono rounded-lg">
                 {crawlStatus}
               </div>
             )}
@@ -102,7 +102,7 @@ export default function SystemPage() {
               <span className="text-xs font-mono text-slate-400">LOG ENTRIES: {auditLogs.length}</span>
             </div>
 
-            <div className="bg-[#080D16] border border-[#1F2937] rounded-lg overflow-hidden">
+            <div className="bg-[#0D0D0D] border border-[#1F2937] rounded-lg overflow-hidden">
               <table className="w-full text-left text-xs font-mono">
                 <thead className="bg-[#0B111E] border-b border-[#1F2937] text-[10px] text-slate-400">
                   <tr>

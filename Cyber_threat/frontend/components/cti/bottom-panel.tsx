@@ -77,7 +77,7 @@ export function BottomPanel({
       </div>
 
       {isExpanded && (
-        <div className="max-h-[38vh] space-y-4 overflow-y-auto px-5 py-4 bg-[#080D16]">
+        <div className="max-h-[38vh] space-y-4 overflow-y-auto px-5 py-4 bg-[#0D0D0D]">
           {/* Timeline */}
           <div className="flex items-center gap-0 overflow-x-auto pb-1">
             {timeline.map((ev, i) => (
@@ -148,7 +148,7 @@ export function BottomPanel({
           <div className="overflow-x-auto border border-[#1F2937] bg-[#111827] rounded-lg">
             <table className="w-full min-w-[640px] border-collapse text-left font-sans">
               <thead>
-                <tr className="border-b border-[#1F2937] bg-[#080D16] text-[12px] uppercase tracking-wider font-semibold text-[#94A3B8]">
+                <tr className="border-b border-[#1F2937] bg-[#0D0D0D] text-[12px] uppercase tracking-wider font-semibold text-[#94A3B8]">
                   <th className="px-4 py-3 font-semibold">Timestamp</th>
                   <th className="px-4 py-3 font-semibold">Source</th>
                   <th className="px-4 py-3 font-semibold">Actor</th>

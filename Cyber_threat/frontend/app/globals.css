@@ -42,14 +42,14 @@
 
 :root {
   color-scheme: dark;
-  --background: #080D16;
+  --background: #0D0D0D;
   --foreground: #F8FAFC;
   --card: #111827;
   --card-foreground: #F8FAFC;
   --popover: #111827;
   --popover-foreground: #F8FAFC;
   --primary: #22D3EE;
-  --primary-foreground: #080D16;
+  --primary-foreground: #0D0D0D;
   --secondary: #1E293B;
   --secondary-foreground: #F8FAFC;
   --muted: #1E293B;
@@ -67,10 +67,10 @@
   * {
     border-color: #1F2937;
     scrollbar-width: thin;
-    scrollbar-color: #1F2937 #080D16;
+    scrollbar-color: #1F2937 #0D0D0D;
   }
   html, body {
-    background-color: #080D16 !important;
+    background-color: #0D0D0D !important;
     color: #F8FAFC;
     font-family: var(--font-sans), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
@@ -85,7 +85,7 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #080D16;
+  background: #0D0D0D;
 }
 ::-webkit-scrollbar-thumb {
   background: #1F2937;

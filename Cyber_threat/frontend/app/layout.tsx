@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: 'dark',
-  themeColor: '#080D16',
+  themeColor: '#0D0D0D',
 }
 
 export default function RootLayout({
@@ -38,7 +38,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${jetbrainsMono.variable} ${plusJakartaSans.variable} dark`}>
-      <body className="bg-[#080D16] text-slate-100 font-sans antialiased">
+      <body className="bg-[#0D0D0D] text-slate-100 font-sans antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

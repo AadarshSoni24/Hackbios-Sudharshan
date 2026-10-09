@@ -21,11 +21,11 @@ export default function ReportsPage() {
   }, [])
 
   return (
-    <div className="flex h-screen bg-[#080D16] text-slate-100 overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#0D0D0D] text-slate-100 overflow-hidden font-sans">
       <Sidebar />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#080D16]/90 backdrop-blur sticky top-0 z-10">
+        <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#0D0D0D]/90 backdrop-blur sticky top-0 z-10">
           <div>
             <h1 className="text-sm font-mono font-bold tracking-wider text-slate-100">INTELLIGENCE DOSSIER GENERATOR</h1>
             <p className="text-[11px] text-slate-400">Court-Admissible Evidence Certificate Under Section 65B Indian Evidence Act</p>
@@ -49,7 +49,7 @@ export default function ReportsPage() {
               </div>
 
               {/* Case Metadata Grid */}
-              <div className="grid grid-cols-2 gap-4 text-xs bg-[#080D16] p-4 rounded-lg border border-[#1F2937]">
+              <div className="grid grid-cols-2 gap-4 text-xs bg-[#0D0D0D] p-4 rounded-lg border border-[#1F2937]">
                 <div>
                   <span className="text-slate-500 block">CASE REFERENCE:</span>
                   <span className="text-sky-400 font-bold">{dossier.case_reference}</span>

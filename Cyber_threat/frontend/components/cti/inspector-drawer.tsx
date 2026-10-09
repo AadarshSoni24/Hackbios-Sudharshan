@@ -59,7 +59,7 @@ export function InspectorDrawer({
           </button>
         </div>
         <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
-          <div className="border border-dashed border-[#1F2937] bg-[#080D16]/50 p-6 rounded-lg font-sans text-[14px] text-slate-400 max-w-[240px]">
+          <div className="border border-dashed border-[#1F2937] bg-[#0D0D0D]/50 p-6 rounded-lg font-sans text-[14px] text-slate-400 max-w-[240px]">
             SELECT A THREAT NODE TO INSPECT
           </div>
         </div>
@@ -102,7 +102,7 @@ export function InspectorDrawer({
             </span>
           </div>
 
-          <div className="mt-3 flex items-center gap-4 border border-[#1F2937] bg-[#080D16] p-3.5 rounded-md">
+          <div className="mt-3 flex items-center gap-4 border border-[#1F2937] bg-[#0D0D0D] p-3.5 rounded-md">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-[#22D3EE]/40 bg-[#22D3EE]/10 rounded-md">
               <span className="font-sans text-[28px] font-extrabold text-[#22D3EE] leading-none">
                 {detail.personaMatch}%
@@ -168,7 +168,7 @@ function IdentifierRow({
     }
   }
   return (
-    <div className="flex items-center justify-between gap-2 border-l-4 border-l-slate-600 border-y border-r border-[#1F2937] bg-[#080D16] p-3 rounded-r-md transition hover:border-[#1F2937]">
+    <div className="flex items-center justify-between gap-2 border-l-4 border-l-slate-600 border-y border-r border-[#1F2937] bg-[#0D0D0D] p-3 rounded-r-md transition hover:border-[#1F2937]">
       <div className="min-w-0 flex-1">
         <p className="font-sans text-[12px] font-semibold uppercase tracking-wider text-[#94A3B8]">{label}</p>
         <p className="truncate font-mono text-[14px] font-medium tracking-normal text-slate-100 mt-0.5">{value}</p>

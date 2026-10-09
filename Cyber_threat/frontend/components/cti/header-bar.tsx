@@ -46,7 +46,7 @@ export function HeaderBar({ searchQuery = "", onSearchChange }: HeaderBarProps) 
           value={searchQuery}
           onChange={(e) => onSearchChange?.(e.target.value)}
           placeholder="Filter Handle, BTC..."
-          className="w-full border border-[#1F2937] bg-[#080D16] px-3.5 py-1.5 font-mono text-[13px] font-medium tracking-normal text-slate-200 placeholder:text-slate-500 outline-none transition focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE] rounded-md"
+          className="w-full border border-[#1F2937] bg-[#0D0D0D] px-3.5 py-1.5 font-mono text-[13px] font-medium tracking-normal text-slate-200 placeholder:text-slate-500 outline-none transition focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE] rounded-md"
         />
         {searchQuery && (
           <button
@@ -65,19 +65,19 @@ export function HeaderBar({ searchQuery = "", onSearchChange }: HeaderBarProps) 
           value={scanUrl}
           onChange={(e) => setScanUrl(e.target.value)}
           placeholder="Enter .onion URL or Path to scan..."
-          className="flex-1 border border-[#1F2937] bg-[#080D16] px-3 py-1.5 font-mono text-[13px] font-medium tracking-normal text-[#22D3EE] placeholder:text-slate-500 outline-none transition focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE] rounded-md"
+          className="flex-1 border border-[#1F2937] bg-[#0D0D0D] px-3 py-1.5 font-mono text-[13px] font-medium tracking-normal text-[#22D3EE] placeholder:text-slate-500 outline-none transition focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE] rounded-md"
           onKeyDown={(e) => e.key === 'Enter' && handleScan()}
         />
         <button
           onClick={handleScan}
           disabled={isScanning || !scanUrl}
-          className="px-4 py-1.5 font-sans text-[13px] font-bold text-[#080D16] bg-[#22D3EE] hover:bg-[#06B6D4] disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors whitespace-nowrap"
+          className="px-4 py-1.5 font-sans text-[13px] font-bold text-[#0D0D0D] bg-[#22D3EE] hover:bg-[#06B6D4] disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors whitespace-nowrap"
         >
           {isScanning ? "INITIATING..." : "SCAN"}
         </button>
       </div>
 
-      <div className="flex items-center gap-2 border border-[#1F2937] bg-[#080D16] px-3 py-1 rounded-md shrink-0">
+      <div className="flex items-center gap-2 border border-[#1F2937] bg-[#0D0D0D] px-3 py-1 rounded-md shrink-0">
         <span className="relative flex h-2 w-2">
           <span className="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-[#10B981] opacity-75" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-[#10B981]" />

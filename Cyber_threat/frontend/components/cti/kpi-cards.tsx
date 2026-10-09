@@ -69,7 +69,7 @@ export function KpiCards() {
   }, [])
 
   return (
-    <div className="grid grid-cols-2 gap-4 px-5 py-3 lg:grid-cols-4 bg-[#080D16]">
+    <div className="grid grid-cols-2 gap-4 px-5 py-3 lg:grid-cols-4 bg-[#0D0D0D]">
       {kpis.map((kpi) => (
         <div
           key={kpi.label}

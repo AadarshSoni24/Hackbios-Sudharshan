@@ -17,7 +17,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#080D16] flex items-center justify-center p-4 font-sans text-slate-100">
+    <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center p-4 font-sans text-slate-100">
       <div className="w-full max-w-md bg-[#0F172A] border border-[#1F2937] rounded-2xl p-8 space-y-6 shadow-2xl relative overflow-hidden">
         {/* Glow corner */}
         <div className="absolute -top-10 -left-10 w-32 h-32 bg-sky-500/10 rounded-full blur-2xl" />
@@ -38,7 +38,7 @@ export default function SignupPage() {
               value={badge}
               onChange={(e) => setBadge(e.target.value)}
               placeholder="e.g. NTRO-INV-XXXX"
-              className="w-full px-3.5 py-2.5 bg-[#080D16] border border-[#1F2937] rounded-lg text-xs font-mono text-slate-100 focus:outline-none focus:border-sky-400"
+              className="w-full px-3.5 py-2.5 bg-[#0D0D0D] border border-[#1F2937] rounded-lg text-xs font-mono text-slate-100 focus:outline-none focus:border-sky-400"
               required
             />
           </div>
@@ -50,7 +50,7 @@ export default function SignupPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="e.g. officer_name"
-              className="w-full px-3.5 py-2.5 bg-[#080D16] border border-[#1F2937] rounded-lg text-xs font-mono text-slate-100 focus:outline-none focus:border-sky-400"
+              className="w-full px-3.5 py-2.5 bg-[#0D0D0D] border border-[#1F2937] rounded-lg text-xs font-mono text-slate-100 focus:outline-none focus:border-sky-400"
               required
             />
           </div>
@@ -61,7 +61,7 @@ export default function SignupPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#080D16] border border-[#1F2937] rounded-lg text-xs font-mono text-slate-100 focus:outline-none focus:border-sky-400"
+              className="w-full px-3.5 py-2.5 bg-[#0D0D0D] border border-[#1F2937] rounded-lg text-xs font-mono text-slate-100 focus:outline-none focus:border-sky-400"
               required
             />
           </div>

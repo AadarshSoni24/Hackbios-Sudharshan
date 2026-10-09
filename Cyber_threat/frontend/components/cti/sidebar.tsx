@@ -30,7 +30,7 @@ export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-64 bg-[#080D16] border-r border-[#1F2937] flex flex-col justify-between h-screen shrink-0 select-none">
+    <aside className="w-64 bg-[#0D0D0D] border-r border-[#1F2937] flex flex-col justify-between h-screen shrink-0 select-none">
       <div>
         {/* Brand Header */}
         <div className="p-4 border-b border-[#1F2937]">
@@ -77,7 +77,7 @@ export function Sidebar() {
 
       {/* Footer / Officer Badge */}
       <div className="p-3 border-t border-[#1F2937] bg-[#0B111E]">
-        <div className="flex items-center justify-between p-2 rounded bg-[#080D16] border border-[#1F2937]">
+        <div className="flex items-center justify-between p-2 rounded bg-[#0D0D0D] border border-[#1F2937]">
           <div className="flex items-center gap-2">
             <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             <div>

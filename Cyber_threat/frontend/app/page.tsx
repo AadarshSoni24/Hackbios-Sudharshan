@@ -57,12 +57,12 @@ export default function OverviewPage() {
   }, [])
 
   return (
-    <div className="flex h-screen bg-[#080D16] text-slate-100 overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#0D0D0D] text-slate-100 overflow-hidden font-sans">
       <Sidebar />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top Header */}
-        <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#080D16]/90 backdrop-blur sticky top-0 z-10">
+        <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#0D0D0D]/90 backdrop-blur sticky top-0 z-10">
           <div>
             <h1 className="text-sm font-mono font-bold tracking-wider text-slate-100">EXECUTIVE THREAT OVERVIEW</h1>
             <p className="text-[11px] text-slate-400">Autonomous Dark Web Threat Attribution Console</p>
@@ -75,13 +75,13 @@ export default function OverviewPage() {
                 value={scanUrl}
                 onChange={(e) => setScanUrl(e.target.value)}
                 placeholder="Enter .onion URL to scan..."
-                className="flex-1 border border-[#1F2937] bg-[#080D16] px-3 py-1.5 font-mono text-[11px] font-medium tracking-normal text-[#22D3EE] placeholder:text-slate-500 outline-none transition focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE] rounded-md"
+                className="flex-1 border border-[#1F2937] bg-[#0D0D0D] px-3 py-1.5 font-mono text-[11px] font-medium tracking-normal text-[#22D3EE] placeholder:text-slate-500 outline-none transition focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE] rounded-md"
                 onKeyDown={(e) => e.key === 'Enter' && handleScan()}
               />
               <button
                 onClick={handleScan}
                 disabled={isScanning || !scanUrl}
-                className="px-3 py-1.5 font-sans text-[11px] font-bold text-[#080D16] bg-[#22D3EE] hover:bg-[#06B6D4] disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors whitespace-nowrap"
+                className="px-3 py-1.5 font-sans text-[11px] font-bold text-[#0D0D0D] bg-[#22D3EE] hover:bg-[#06B6D4] disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors whitespace-nowrap"
               >
                 {isScanning ? "SCANNING..." : "SCAN TARGET"}
               </button>
@@ -172,7 +172,7 @@ export default function OverviewPage() {
                 <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
               </div>
 
-              <div className="bg-[#080D16] border border-amber-500/30 rounded-lg p-3.5 space-y-2">
+              <div className="bg-[#0D0D0D] border border-amber-500/30 rounded-lg p-3.5 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono font-bold text-slate-200">PhantomOp ↔ NeonSpectre</span>
                   <span className="text-[10px] font-mono bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-500/30">
@@ -200,15 +200,15 @@ export default function OverviewPage() {
                 <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-200">INGESTION PROVENANCE</h2>
               </div>
               <div className="space-y-2 text-xs font-mono">
-                <div className="flex items-center justify-between p-2 rounded bg-[#080D16]">
+                <div className="flex items-center justify-between p-2 rounded bg-[#0D0D0D]">
                   <span className="text-slate-400">Ground Truth Corpus</span>
                   <span className="text-emerald-400 font-bold">[SYNTHETIC M18]</span>
                 </div>
-                <div className="flex items-center justify-between p-2 rounded bg-[#080D16]">
+                <div className="flex items-center justify-between p-2 rounded bg-[#0D0D0D]">
                   <span className="text-slate-400">Tor Crawler Daemon</span>
                   <span className="text-emerald-400 font-bold">127.0.0.1:9050</span>
                 </div>
-                <div className="flex items-center justify-between p-2 rounded bg-[#080D16]">
+                <div className="flex items-center justify-between p-2 rounded bg-[#0D0D0D]">
                   <span className="text-slate-400">Legal Certification</span>
                   <span className="text-sky-400 font-bold">SEC 65B READY</span>
                 </div>
