@@ -45,9 +45,9 @@ const defaultKpis: Kpi[] = [
   {
     label: "NETWORK STATUS",
     sublabel: "SOCKS5 routing daemon active on 127.0.0.1:9050",
-    value: "Tor Online",
+    value: "TOR ONLINE",
     unit: "/Daemon",
-    valueClass: "text-emerald-950",
+    valueClass: "text-[#494950]",
     pulse: true,
     dotColor: "bg-emerald-600 shadow-[0_0_8px_rgba(5,150,105,0.6)]",
     icon: Radio,
@@ -94,9 +94,9 @@ export function KpiCards() {
               {
                 label: "NETWORK STATUS",
                 sublabel: "SOCKS5 routing daemon active on 127.0.0.1:9050",
-                value: "Tor Online",
+                value: "TOR ONLINE",
                 unit: "/Daemon",
-                valueClass: "text-emerald-950",
+                valueClass: "text-[#494950]",
                 pulse: true,
                 dotColor: "bg-emerald-600 shadow-[0_0_8px_rgba(5,150,105,0.6)]",
                 icon: Radio,
