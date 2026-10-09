@@ -34,7 +34,7 @@ export function Sidebar() {
         {/* Brand Header */}
         <div className="h-14 px-4 border-b border-[#CBCBCB] flex items-center bg-[#3A3A3A]">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-500 to-sky-500 flex items-center justify-center font-mono font-bold text-slate-950 text-sm shadow-lg shadow-emerald-500/20">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#383838] via-[#242424] to-[#121212] border border-[#CBCBCB]/60 flex items-center justify-center font-mono font-bold text-white text-xs shadow-md shadow-black/50">
               SG
             </div>
             <span className="font-mono text-sm font-bold text-white tracking-wider">
