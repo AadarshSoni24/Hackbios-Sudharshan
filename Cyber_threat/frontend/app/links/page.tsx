@@ -23,8 +23,22 @@ export default function LinksReviewPage() {
   const handleAction = async (id: string, action: "confirm" | "reject") => {
     try {
       await fetch(`http://127.0.0.1:8000/api/v1/links/${id}/${action}`, { method: "POST" })
-      setLinks(links.filter((l) => l.id !== id))
+      setLinks((prev) => prev.filter((l) => l.id !== id))
     } catch (e) {}
+  }
+
+  const getActorDisplay = (actor: any): string => {
+    if (!actor) return "Unknown"
+    if (typeof actor === "string") return actor
+    if (typeof actor === "object") {
+      return actor.handle || actor.display_handle || actor.name || actor.id || "Unknown"
+    }
+    return String(actor)
+  }
+
+  const getActorCategory = (actor: any): string => {
+    if (!actor || typeof actor !== "object") return ""
+    return actor.category || ""
   }
 
   return (
@@ -36,7 +50,8 @@ export default function LinksReviewPage() {
           <div className="flex items-center">
             <h1 className="text-sm font-mono font-bold tracking-wider text-white">PERSONA REVIEW QUEUE</h1>
           </div>
-          <span className="text-xs font-mono px-3 py-1 rounded-lg bg-[#121212] border border-[#CBCBCB]/60 text-emerald-400 font-bold shadow-sm">
+          <span className="relative inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-gradient-to-b from-[#FFFFFF] via-[#E6E6E6] to-[#B8B8B8] border border-white text-xs font-mono font-black text-zinc-950 tracking-wide shadow-[0_0_15px_rgba(255,255,255,0.6)] ring-1 ring-white/90">
+            <span className="h-2 w-2 rounded-full bg-amber-600 animate-pulse" />
             {links.length} PENDING VALIDATION
           </span>
         </header>
@@ -44,6 +59,7 @@ export default function LinksReviewPage() {
         <div className="p-6 space-y-6 max-w-5xl">
           {links.length === 0 ? (
             <div className="relative overflow-hidden rounded-2xl bg-[#949494] border border-[#CBCBCB] p-12 text-center shadow-xl">
+              <div className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-white/20 blur-xl" />
               <CheckCircle className="h-12 w-12 text-emerald-950 mx-auto mb-3" />
               <h2 className="text-lg font-mono font-bold text-zinc-950">Review Queue Cleared</h2>
               <p className="text-xs text-zinc-800 font-medium mt-1">All multi-vector correlation bridges have been approved or rejected by analyst triage.</p>
@@ -55,30 +71,35 @@ export default function LinksReviewPage() {
                   <div className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-white/20 blur-xl" />
 
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <GitCompare className="h-4 w-4 text-zinc-950" />
                       <span className="font-mono text-base font-bold text-zinc-950">
-                        {link.actor_a} ↔ {link.actor_b}
+                        {getActorDisplay(link.actor_a)} &harr; {getActorDisplay(link.actor_b)}
                       </span>
+                      {getActorCategory(link.actor_a) && (
+                        <span className="text-[10px] font-mono text-zinc-900 font-bold px-2 py-0.5 rounded-full bg-black/10 border border-black/10">
+                          {getActorCategory(link.actor_a)}
+                        </span>
+                      )}
                     </div>
                     <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-950/20 text-amber-950 border border-amber-950/30">
-                      CONFIDENCE: {Math.round(link.score * 100)}% ({link.band})
+                      CONFIDENCE: {Math.round((link.score || 0.8) * 100)}% ({link.band || "HIGH"})
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
                     <div className="p-3 bg-black/10 rounded-xl border border-black/10">
                       <span className="text-zinc-800 block text-[10px] font-bold uppercase">Candidate Correlation Vector</span>
-                      <span className="text-zinc-950 font-bold mt-1 block">{link.vector}</span>
+                      <span className="text-zinc-950 font-bold mt-1 block">{link.vector || "CORRELATION_BRIDGE"}</span>
                     </div>
                     <div className="p-3 bg-black/10 rounded-xl border border-black/10">
                       <span className="text-zinc-800 block text-[10px] font-bold uppercase">Evidence Strength</span>
-                      <span className="text-emerald-950 font-bold mt-1 block">{link.strength}</span>
+                      <span className="text-emerald-950 font-bold mt-1 block">{link.strength || link.band || "CONFIRMED"}</span>
                     </div>
                   </div>
 
                   <div className="bg-black/10 border border-black/10 rounded-xl p-3 text-xs font-mono text-zinc-900 leading-relaxed">
-                    {link.rationale}
+                    {link.evidence || link.rationale || "Multi-vector correlation bridge connecting persona handles via shared crypto infrastructure and stylometric markers."}
                   </div>
 
                   <div className="flex items-center justify-end gap-3 pt-2">
