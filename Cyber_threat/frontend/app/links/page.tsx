@@ -2,36 +2,28 @@
 
 import { useState, useEffect } from "react"
 import { Sidebar } from "@/components/cti/sidebar"
-import { GitCompare, CheckCircle2, XCircle, AlertTriangle, ShieldCheck } from "lucide-react"
+import { GitCompare, CheckCircle, XCircle } from "lucide-react"
 
 export default function LinksReviewPage() {
   const [links, setLinks] = useState<any[]>([])
-  const [message, setMessage] = useState<string | null>(null)
-
-  async function loadLinks() {
-    try {
-      const res = await fetch("http://127.0.0.1:8000/api/v1/links")
-      if (res.ok) {
-        const json = await res.json()
-        if (json.data) setLinks(json.data)
-      }
-    } catch (e) {}
-  }
 
   useEffect(() => {
+    async function loadLinks() {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/api/v1/links")
+        if (res.ok) {
+          const json = await res.json()
+          if (json.data) setLinks(json.data)
+        }
+      } catch (e) {}
+    }
     loadLinks()
   }, [])
 
-  async function handleAction(linkId: string, action: "confirm" | "reject") {
+  const handleAction = async (id: string, action: "confirm" | "reject") => {
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/v1/links/${linkId}/${action}`, {
-        method: "POST"
-      })
-      if (res.ok) {
-        setMessage(`Link successfully ${action === "confirm" ? "CONFIRMED and added to Graph!" : "REJECTED as false positive."}`)
-        loadLinks()
-        setTimeout(() => setMessage(null), 4000)
-      }
+      await fetch(`http://127.0.0.1:8000/api/v1/links/${id}/${action}`, { method: "POST" })
+      setLinks(links.filter((l) => l.id !== id))
     } catch (e) {}
   }
 
@@ -40,79 +32,73 @@ export default function LinksReviewPage() {
       <Sidebar />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#0D0D0D]/90 backdrop-blur sticky top-0 z-10">
-          <div>
-            <h1 className="text-sm font-mono font-bold tracking-wider text-slate-100">PERSONA LINK REVIEW QUEUE</h1>
-            <p className="text-[11px] text-slate-400">Human-In-The-Loop Verification Deck · Rule: Algorithm Proposes, Analyst Confirms</p>
+        <header className="h-14 border-b border-[#CBCBCB] px-6 flex items-center justify-between bg-[#1C1C1C]/95 backdrop-blur-md sticky top-0 z-10 shadow-sm">
+          <div className="flex items-center">
+            <h1 className="text-sm font-mono font-bold tracking-wider text-white">PERSONA REVIEW QUEUE</h1>
           </div>
-          <span className="text-xs font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-500/30">
-            PENDING: {links.filter(l => l.status === "PROPOSED").length}
+          <span className="text-xs font-mono px-3 py-1 rounded-lg bg-[#121212] border border-[#CBCBCB]/60 text-emerald-400 font-bold shadow-sm">
+            {links.length} PENDING VALIDATION
           </span>
         </header>
 
-        <div className="p-6 space-y-6">
-          {message && (
-            <div className="p-3 bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-mono rounded-lg flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4" />
-              <span>{message}</span>
+        <div className="p-6 space-y-6 max-w-5xl">
+          {links.length === 0 ? (
+            <div className="relative overflow-hidden rounded-2xl bg-[#949494] border border-[#CBCBCB] p-12 text-center shadow-xl">
+              <CheckCircle className="h-12 w-12 text-emerald-950 mx-auto mb-3" />
+              <h2 className="text-lg font-mono font-bold text-zinc-950">Review Queue Cleared</h2>
+              <p className="text-xs text-zinc-800 font-medium mt-1">All multi-vector correlation bridges have been approved or rejected by analyst triage.</p>
             </div>
-          )}
+          ) : (
+            <div className="grid grid-cols-1 gap-6">
+              {links.map((link) => (
+                <div key={link.id} className="relative overflow-hidden rounded-2xl bg-[#949494] border border-[#CBCBCB] p-6 shadow-xl space-y-4">
+                  <div className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-white/20 blur-xl" />
 
-          <div className="grid grid-cols-1 gap-4">
-            {links.map((link) => (
-              <div
-                key={link.id}
-                className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl p-5 space-y-4 hover:border-slate-700 transition-all"
-              >
-                {/* Header: Persona A <-> Persona B */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#1F2937] pb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="font-mono text-base font-bold text-slate-100">{link.actor_a?.handle || "Target A"}</span>
-                    <GitCompare className="h-4 w-4 text-sky-400" />
-                    <span className="font-mono text-base font-bold text-slate-100">{link.actor_b?.handle || "Target B"}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 text-xs font-mono font-bold bg-sky-950 text-sky-300 border border-sky-500/30 rounded">
-                      VECTOR: {link.vector}
-                    </span>
-                    <span className="px-2 py-0.5 text-xs font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-500/30 rounded">
-                      SCORE: {Math.round(link.score * 100)}% ({link.band})
-                    </span>
-                    <span className={`px-2 py-0.5 text-xs font-mono font-bold rounded uppercase ${
-                      link.status === "CONFIRMED" ? "bg-emerald-900 text-emerald-300" :
-                      link.status === "REJECTED" ? "bg-rose-900 text-rose-300" : "bg-amber-900 text-amber-300"
-                    }`}>
-                      {link.status}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <GitCompare className="h-4 w-4 text-zinc-950" />
+                      <span className="font-mono text-base font-bold text-zinc-950">
+                        {link.actor_a} ↔ {link.actor_b}
+                      </span>
+                    </div>
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-950/20 text-amber-950 border border-amber-950/30">
+                      CONFIDENCE: {Math.round(link.score * 100)}% ({link.band})
                     </span>
                   </div>
-                </div>
 
-                {/* Evidence Details */}
-                <div className="bg-[#0D0D0D] border border-[#1F2937] rounded-lg p-3 text-xs font-mono text-slate-300">
-                  <span className="text-slate-500 block mb-1">CORROBORATING EVIDENCE TRAIL:</span>
-                  {link.evidence}
-                </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+                    <div className="p-3 bg-black/10 rounded-xl border border-black/10">
+                      <span className="text-zinc-800 block text-[10px] font-bold uppercase">Candidate Correlation Vector</span>
+                      <span className="text-zinc-950 font-bold mt-1 block">{link.vector}</span>
+                    </div>
+                    <div className="p-3 bg-black/10 rounded-xl border border-black/10">
+                      <span className="text-zinc-800 block text-[10px] font-bold uppercase">Evidence Strength</span>
+                      <span className="text-emerald-950 font-bold mt-1 block">{link.strength}</span>
+                    </div>
+                  </div>
 
-                {/* Actions */}
-                {link.status === "PROPOSED" && (
+                  <div className="bg-black/10 border border-black/10 rounded-xl p-3 text-xs font-mono text-zinc-900 leading-relaxed">
+                    {link.rationale}
+                  </div>
+
                   <div className="flex items-center justify-end gap-3 pt-2">
                     <button
                       onClick={() => handleAction(link.id, "reject")}
-                      className="px-4 py-2 bg-[#1E293B] hover:bg-rose-950 hover:text-rose-300 hover:border-rose-500/40 text-slate-300 text-xs font-mono font-semibold rounded-lg border border-[#334155] transition-all flex items-center gap-1.5"
+                      className="px-4 py-2 rounded-full border border-rose-950/40 bg-rose-950/10 hover:bg-rose-950/20 text-rose-950 text-xs font-mono font-bold transition-all flex items-center gap-1.5"
                     >
-                      <XCircle className="h-4 w-4" /> Mark as False Lead
+                      <XCircle className="h-3.5 w-3.5" /> Reject Match
                     </button>
                     <button
                       onClick={() => handleAction(link.id, "confirm")}
-                      className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-mono font-bold rounded-lg shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-1.5"
+                      className="px-5 py-2 rounded-full border border-zinc-950/30 bg-zinc-950 hover:bg-zinc-900 text-white text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-md"
                     >
-                      <CheckCircle2 className="h-4 w-4" /> Confirm True Attribution
+                      <CheckCircle className="h-3.5 w-3.5 text-emerald-400" /> Confirm Attribution
                     </button>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>

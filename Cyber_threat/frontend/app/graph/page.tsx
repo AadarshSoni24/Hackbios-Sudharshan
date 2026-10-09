@@ -21,21 +21,21 @@ export default function GraphExplorerPage() {
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Graph Header */}
-        <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#0D0D0D]">
+        <header className="h-14 border-b border-[#CBCBCB] px-6 flex items-center justify-between bg-[#1C1C1C]/95 backdrop-blur-md shadow-sm">
           <div>
-            <h1 className="text-sm font-mono font-bold tracking-wider text-slate-100">INTERACTIVE GRAPH TOPOLOGY</h1>
-            <p className="text-[11px] text-slate-400">Multi-Vector 2D Force Attribution Canvas · Cytoscape / D3 Physics</p>
+            <h1 className="text-sm font-mono font-bold tracking-wider text-white">INTERACTIVE GRAPH TOPOLOGY</h1>
+            <p className="text-[11px] text-zinc-400">Multi-Vector 2D Force Attribution Canvas — Cytoscape / D3 Physics</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <button
               onClick={() => setShowStylometry(true)}
-              className="px-2.5 py-1 text-xs font-mono bg-[#1E293B] hover:bg-slate-700 text-slate-200 rounded border border-[#334155] transition-colors"
+              className="px-3 py-1.5 text-xs font-mono bg-[#CBCBCB] hover:bg-white text-zinc-950 font-bold rounded-lg border border-[#CBCBCB] transition-colors shadow-sm"
             >
               Stylometry Analysis
             </button>
             <button
               onClick={() => setShowMisconfig(true)}
-              className="px-2.5 py-1 text-xs font-mono bg-[#1E293B] hover:bg-slate-700 text-slate-200 rounded border border-[#334155] transition-colors"
+              className="px-3 py-1.5 text-xs font-mono bg-[#CBCBCB] hover:bg-white text-zinc-950 font-bold rounded-lg border border-[#CBCBCB] transition-colors shadow-sm"
             >
               Misconfig Scanner
             </button>
@@ -44,7 +44,7 @@ export default function GraphExplorerPage() {
 
         {/* Graph & Inspector Canvas */}
         <div
-          className={`grid min-h-0 flex-1 border-t border-[#1F2937] transition-all duration-300 ${
+          className={`grid min-h-0 flex-1 border-t border-[#CBCBCB]/40 transition-all duration-300 ${
             isRightCollapsed ? "grid-cols-1 lg:grid-cols-[1fr_auto]" : "grid-cols-1 lg:grid-cols-[1fr_380px]"
           }`}
         >
@@ -59,22 +59,19 @@ export default function GraphExplorerPage() {
             />
           </div>
 
-          <div className="min-h-0">
+          <aside className="border-l border-[#CBCBCB] bg-[#181818] overflow-hidden flex flex-col">
             <InspectorDrawer
               selectedId={selectedId}
-              onClose={() => {
-                setSelectedId(null)
-                setIsRightCollapsed(true)
-              }}
+              onClose={() => setSelectedId(null)}
               onOpenStylometry={() => setShowStylometry(true)}
               onOpenMisconfig={() => setShowMisconfig(true)}
               isCollapsed={isRightCollapsed}
               onToggleCollapse={() => setIsRightCollapsed((v) => !v)}
             />
-          </div>
+          </aside>
         </div>
 
-        {/* Bottom Filter Table */}
+        {/* Bottom Panel */}
         <BottomPanel
           searchQuery={globalSearch}
           onSearchChange={setGlobalSearch}
@@ -85,10 +82,11 @@ export default function GraphExplorerPage() {
             setIsRightCollapsed(false)
           }}
         />
-
-        {showStylometry && <StylometryModal onClose={() => setShowStylometry(false)} />}
-        {showMisconfig && <MisconfigModal onClose={() => setShowMisconfig(false)} />}
       </main>
+
+      {/* Modals */}
+      {showStylometry && <StylometryModal onClose={() => setShowStylometry(false)} />}
+      {showMisconfig && <MisconfigModal onClose={() => setShowMisconfig(false)} />}
     </div>
   )
 }
