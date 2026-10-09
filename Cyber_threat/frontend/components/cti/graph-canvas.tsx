@@ -175,7 +175,7 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
       const nodeColorMap: Record<string, string> = {
         actor: "#EF4444",   // Red for threat actors
         ip: "#10B981",      // Emerald for online status / leaked IP
-        wallet: "#64748B",  // Muted Slate for wallets
+        wallet: "#CBCBCB",  // Shiny Silver for wallets
         pgp: "#22D3EE",     // Cyan for PGP
       }
       const fill = nodeColorMap[node.type] || "#EF4444"
@@ -314,8 +314,8 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
         d3VelocityDecay={0.3}
       />
 
-      {/* Floating Toolbar */}
-      <div className="absolute left-4 top-4 z-20 flex flex-col gap-1.5 rounded-lg border border-[#1F2937] bg-[#111827]/90 backdrop-blur p-1.5 shadow-xl">
+      {/* Floating Toolbar (Silverish Design) */}
+      <div className="absolute left-4 top-4 z-20 flex flex-col gap-1.5 rounded-xl border border-[#CBCBCB] bg-[#1E1E1E]/95 backdrop-blur-md p-1.5 shadow-2xl ring-1 ring-white/20">
         <ToolButton label="Zoom in" onClick={zoomIn}>
           +
         </ToolButton>
@@ -325,7 +325,7 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
         <ToolButton label="Reset view" onClick={resetView}>
           FIT
         </ToolButton>
-        <div className="my-0.5 h-px bg-[#1F2937]" />
+        <div className="my-0.5 h-px bg-[#CBCBCB]/40" />
         <ToolButton
           label={hideWallets ? "Show wallets" : "Hide wallets"}
           onClick={() => setHideWallets((v) => !v)}
@@ -335,15 +335,23 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
         </ToolButton>
       </div>
 
-      {/* Legend */}
-      <div className="absolute bottom-4 left-4 z-20 flex flex-wrap gap-4 rounded-lg border border-[#1F2937] bg-[#111827]/90 backdrop-blur px-4 py-2 shadow-xl">
+      {/* Legend (Silverish Design) */}
+      <div className="absolute bottom-4 left-4 z-20 flex flex-wrap items-center gap-4 rounded-xl border border-[#CBCBCB] bg-[#1E1E1E]/95 backdrop-blur-md px-4 py-2.5 shadow-2xl ring-1 ring-white/20">
         {(["actor", "wallet", "ip", "pgp"] as const).map((t) => (
-          <span key={t} className="flex items-center gap-2 font-sans text-[12px] font-semibold text-slate-300">
+          <span key={t} className="flex items-center gap-2 font-mono text-xs font-bold text-zinc-100">
             <span
               className="h-2.5 w-2.5 rounded-full"
               style={{
                 backgroundColor:
-                  t === "actor" ? "#EF4444" : t === "wallet" ? "#64748B" : t === "ip" ? "#10B981" : "#22D3EE",
+                  t === "actor" ? "#EF4444" : t === "wallet" ? "#CBCBCB" : t === "ip" ? "#10B981" : "#22D3EE",
+                boxShadow:
+                  t === "actor"
+                    ? "0 0 6px rgba(239, 68, 68, 0.8)"
+                    : t === "wallet"
+                      ? "0 0 8px rgba(255, 255, 255, 0.9)"
+                      : t === "ip"
+                        ? "0 0 6px rgba(16, 185, 129, 0.8)"
+                        : "0 0 6px rgba(34, 211, 238, 0.8)",
               }}
             />
             {t === "actor"
@@ -376,10 +384,10 @@ function ToolButton({
       onClick={onClick}
       title={label}
       aria-label={label}
-      className={`flex h-7 px-2.5 items-center justify-center font-sans text-[12px] font-bold rounded border transition ${
+      className={`flex h-7 px-2.5 items-center justify-center font-mono text-xs font-bold rounded-lg border transition-all ${
         active
-          ? "border-[#22D3EE] bg-[#22D3EE]/10 text-[#22D3EE]"
-          : "border-transparent text-slate-400 hover:bg-[#1E293B] hover:text-slate-100"
+          ? "border-[#CBCBCB] bg-[#CBCBCB] text-zinc-950 shadow-[0_0_12px_rgba(255,255,255,0.45)]"
+          : "border-transparent text-zinc-300 hover:bg-[#CBCBCB] hover:text-zinc-950 hover:border-[#CBCBCB]"
       }`}
     >
       {children}
