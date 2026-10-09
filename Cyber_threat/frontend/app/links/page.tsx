@@ -62,7 +62,7 @@ export default function LinksReviewPage() {
             {links.map((link) => (
               <div
                 key={link.id}
-                className="bg-[#0F172A] border border-[#1F2937] rounded-xl p-5 space-y-4 hover:border-slate-700 transition-all"
+                className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl p-5 space-y-4 hover:border-slate-700 transition-all"
               >
                 {/* Header: Persona A <-> Persona B */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#1F2937] pb-3">

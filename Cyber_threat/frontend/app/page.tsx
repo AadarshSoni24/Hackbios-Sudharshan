@@ -100,7 +100,7 @@ export default function OverviewPage() {
         <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Column: High-Risk Threat Actors */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-[#0F172A] border border-[#1F2937] rounded-xl p-5">
+            <div className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl p-5">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <ShieldAlert className="h-4 w-4 text-rose-400" />
@@ -162,7 +162,7 @@ export default function OverviewPage() {
           {/* Right Column: Needs Review Queue & Activity Feed */}
           <div className="space-y-6">
             {/* Review Triage Deck */}
-            <div className="bg-[#0F172A] border border-[#1F2937] rounded-xl p-5">
+            <div className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <GitCompare className="h-4 w-4 text-amber-400" />
@@ -193,7 +193,7 @@ export default function OverviewPage() {
             </div>
 
             {/* Ingestion & Origin Status */}
-            <div className="bg-[#0F172A] border border-[#1F2937] rounded-xl p-5 space-y-3">
+            <div className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl p-5 space-y-3">
               <div className="flex items-center gap-2">
                 <Activity className="h-4 w-4 text-emerald-400" />
                 <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-200">INGESTION PROVENANCE</h2>

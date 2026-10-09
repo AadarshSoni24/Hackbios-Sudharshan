@@ -59,7 +59,7 @@ export default function SystemPage() {
 
         <div className="p-6 space-y-6">
           {/* Crawler Trigger Console */}
-          <div className="bg-[#0F172A] border border-[#1F2937] rounded-xl p-5 space-y-4">
+          <div className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl p-5 space-y-4">
             <div className="flex items-center gap-2">
               <Terminal className="h-4 w-4 text-emerald-400" />
               <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-200">
@@ -91,7 +91,7 @@ export default function SystemPage() {
           </div>
 
           {/* Immutable Audit Trail */}
-          <div className="bg-[#0F172A] border border-[#1F2937] rounded-xl p-5 space-y-4">
+          <div className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl p-5 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Shield className="h-4 w-4 text-sky-400" />

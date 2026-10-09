@@ -73,7 +73,7 @@ export function KpiCards() {
       {kpis.map((kpi) => (
         <div
           key={kpi.label}
-          className="relative bg-[#0F172A] border border-[#1F2937] p-4 lg:p-5 rounded-lg transition-all duration-300 hover:border-[#22C55E]/50 hover:shadow-lg hover:shadow-[#22C55E]/10 group"
+          className="relative bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 p-4 lg:p-5 rounded-lg transition-all duration-300 hover:border-[#CBCBCB] hover:shadow-md hover:shadow-[#CBCBCB]/15 group"
         >
           <div className="flex items-start justify-between">
             <p className="font-sans text-[11px] font-semibold tracking-wider text-slate-400 uppercase">{kpi.label}</p>

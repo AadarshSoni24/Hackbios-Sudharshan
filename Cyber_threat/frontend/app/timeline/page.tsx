@@ -21,7 +21,7 @@ export default function TimelineSearchPage() {
 
         <div className="p-6 space-y-6">
           {/* Query Controls */}
-          <div className="bg-[#0F172A] border border-[#1F2937] rounded-xl p-5 space-y-4">
+          <div className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl p-5 space-y-4">
             <div className="flex flex-col sm:flex-row gap-3 items-center">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
@@ -53,7 +53,7 @@ export default function TimelineSearchPage() {
           </div>
 
           {/* Diurnal Posting Chart Widget */}
-          <div className="bg-[#0F172A] border border-[#1F2937] rounded-xl p-5 space-y-3">
+          <div className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl p-5 space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-200">24-HOUR DIURNAL POSTING ACTIVITY (UTC DISTRIBUTION)</h2>
               <span className="text-xs font-mono text-sky-400">Peak Window: 08:00 - 15:00 UTC (Estimated UTC+05:30)</span>

@@ -18,7 +18,7 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center p-4 font-sans text-slate-100">
-      <div className="w-full max-w-md bg-[#0F172A] border border-[#1F2937] rounded-2xl p-8 space-y-6 shadow-2xl relative overflow-hidden">
+      <div className="w-full max-w-md bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-2xl p-8 space-y-6 shadow-2xl relative overflow-hidden">
         {/* Glow corner */}
         <div className="absolute -top-10 -left-10 w-32 h-32 bg-sky-500/10 rounded-full blur-2xl" />
 

@@ -40,7 +40,7 @@ export default function ReportsPage() {
 
         <div className="p-6 max-w-4xl mx-auto space-y-6">
           {dossier ? (
-            <div className="bg-[#0F172A] border border-[#1F2937] rounded-xl p-8 space-y-6 shadow-2xl font-mono">
+            <div className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl p-8 space-y-6 shadow-2xl font-mono">
               {/* Official Seal Header */}
               <div className="border-b border-slate-700 pb-4 text-center space-y-1">
                 <div className="text-xs font-bold text-emerald-400 tracking-widest">{dossier.statutory_header}</div>

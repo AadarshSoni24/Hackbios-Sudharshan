@@ -36,7 +36,7 @@ export default function InfraPage() {
         </header>
 
         <div className="p-6 space-y-4">
-          <div className="bg-[#0F172A] border border-[#1F2937] rounded-xl overflow-hidden shadow-xl">
+          <div className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl overflow-hidden shadow-xl">
             <table className="w-full text-left text-xs font-sans">
               <thead className="bg-[#0B111E] border-b border-[#1F2937] font-mono text-[11px] text-slate-400">
                 <tr>

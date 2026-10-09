@@ -40,7 +40,7 @@ export default function ActorsPage() {
             <h1 className="text-sm font-mono font-bold tracking-wider text-slate-100">THREAT ACTOR DIRECTORY</h1>
             <p className="text-[11px] text-slate-400">Indexed Target Profiles & Cryptographic Identifiers</p>
           </div>
-          <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#0F172A] border border-[#1F2937] text-slate-300">
+          <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 text-slate-300">
             TOTAL INDEXED: {actors.length}
           </span>
         </header>
@@ -55,7 +55,7 @@ export default function ActorsPage() {
                 placeholder="Search handle, wallet, PGP..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-[#0F172A] border border-[#1F2937] rounded-lg text-xs font-mono text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-400"
+                className="w-full pl-9 pr-4 py-2 bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-lg text-xs font-mono text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-400"
               />
             </div>
 
@@ -64,7 +64,7 @@ export default function ActorsPage() {
               <select
                 value={filterCat}
                 onChange={(e) => setFilterCat(e.target.value)}
-                className="bg-[#0F172A] border border-[#1F2937] rounded-lg text-xs font-mono px-3 py-2 text-slate-200 focus:outline-none focus:border-sky-400"
+                className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-lg text-xs font-mono px-3 py-2 text-slate-200 focus:outline-none focus:border-sky-400"
               >
                 <option value="ALL">All Categories</option>
                 <option value="RANSOMWARE">Ransomware</option>
@@ -78,7 +78,7 @@ export default function ActorsPage() {
           </div>
 
           {/* Data Grid Table */}
-          <div className="bg-[#0F172A] border border-[#1F2937] rounded-xl overflow-hidden shadow-xl">
+          <div className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl overflow-hidden shadow-xl">
             <table className="w-full text-left text-xs font-sans">
               <thead className="bg-[#0B111E] border-b border-[#1F2937] font-mono text-[11px] text-slate-400">
                 <tr>
