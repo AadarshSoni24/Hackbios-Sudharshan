@@ -4,6 +4,12 @@ from app.models.database import get_db, Actor, Entity, InfraFinding, Correlation
 
 router = APIRouter(prefix="/graph", tags=["Graph Visualizer"])
 
+# In-memory store for live scraped nodes/edges
+MOCK_GRAPH_DB = {
+    "nodes": [],
+    "edges": []
+}
+
 @router.get("/data")
 def get_graph_data(db: Session = Depends(get_db)):
     # Build nodes & links formatted for react-force-graph-2d / Cytoscape
@@ -71,6 +77,14 @@ def get_graph_data(db: Session = Depends(get_db)):
                 "strength": lnk.strength,
                 "status": lnk.status
             })
+
+        # Merge live scraped nodes
+    for mn in MOCK_GRAPH_DB.get("nodes", []):
+        if mn["id"] not in node_ids:
+            nodes.append(mn)
+            node_ids.add(mn["id"])
+    for me in MOCK_GRAPH_DB.get("edges", []):
+        edges.append(me)
 
     return {
         "success": True,

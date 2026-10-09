@@ -75,6 +75,13 @@ export default function LoginPage() {
         <div className="pt-4 border-t border-[#1F2937] text-center text-[10px] font-mono text-slate-500">
           SECURE 2FA ENFORCED · SINGLE-ROLE ANALYST ACCESS
         </div>
+
+        <div className="text-center text-[11px] font-mono">
+          <span className="text-slate-500">New Officer? </span>
+          <button onClick={() => router.push("/signup")} className="text-emerald-400 hover:text-emerald-300 font-bold">
+            Register Here
+          </button>
+        </div>
       </div>
     </div>
   )
