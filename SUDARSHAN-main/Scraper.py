@@ -4,6 +4,7 @@ import json
 import re
 import sys
 import time
+import hashlib
 from collections import deque
 from datetime import datetime, timezone
 from pathlib import Path
@@ -28,12 +29,14 @@ PATTERNS = {
         r"\b(?:[13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-zA-HJ-NP-Z0-9]{39,59})\b"
     ),
     "ethereum_wallets": re.compile(r"\b0x[a-fA-F0-9]{40}\b"),
-    "monero_wallets": re.compile(r"\b[48][0-9AB][1-9A-HJ-NP-Za-km-z]{93}\b"),
+    "monero_wallets": re.compile(r"\b[48][0-9ABa-zA-Z]{94}\b"),
     "emails": re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"),
     "pgp_keys": re.compile(
         r"-----BEGIN PGP PUBLIC KEY BLOCK-----[\s\S]*?-----END PGP PUBLIC KEY BLOCK-----"
     ),
     "onion_links": re.compile(r"\b[a-z2-7]{56}\.onion\b", re.IGNORECASE),
+    "handles": re.compile(r"(?:Author|User|Username|Profile|Member):\s*([a-zA-Z0-9_-]{3,20})|@([a-zA-Z0-9_-]{3,20})", re.IGNORECASE),
+    "ipv4_addresses": re.compile(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b")
 }
 
 SUPPORTED_LOCAL_EXTENSIONS = {".html", ".htm", ".txt", ".json", ".tsv", ".csv"}
@@ -46,8 +49,17 @@ def extract_entities(text: str) -> dict:
     }
 
 
-def build_record(source: str, text: str) -> dict:
+def build_record(source: str, text: str, headers: dict = None, sha256_hash: str = None) -> dict:
     entities = extract_entities(text)
+    
+    # Flatten handles since regex returns tuples due to multiple capture groups
+    if "handles" in entities:
+        flat_handles = []
+        for match in entities["handles"]:
+            # extract whichever group matched
+            flat_handles.extend([m for m in match if m])
+        entities["handles"] = sorted(set(flat_handles))
+
     total_identifiers = sum(len(v) for v in entities.values())
 
     return {
@@ -55,14 +67,21 @@ def build_record(source: str, text: str) -> dict:
         "last_scan_date": datetime.now(timezone.utc).isoformat(),
         "category": "unclassified",
         "attribution_confidence": None,
+        "sha256_hash": sha256_hash,
         "identifiers": entities,
         "identifier_count": total_identifiers,
+        "infrastructure": {
+            "server_headers": headers or {}
+        }
     }
 
 
 def html_to_text(raw_html: str) -> str:
     soup = BeautifulSoup(raw_html, "html.parser")
-    return soup.get_text(separator=" ")
+    # Remove script and style elements to avoid junk text
+    for script_or_style in soup(["script", "style", "noscript"]):
+        script_or_style.decompose()
+    return soup.get_text(separator=" ", strip=True)
 
 
 def extract_links(base_url: str, raw_html: str, same_host_only: bool) -> list:
@@ -84,22 +103,37 @@ def extract_links(base_url: str, raw_html: str, same_host_only: bool) -> list:
     return found
 
 
-def fetch_url(url: str) -> tuple[str, str] | tuple[None, None]:
+def fetch_url(url: str, max_retries: int = 3) -> tuple[str, str, dict] | tuple[None, None, None]:
     print(f"[*] Connecting to {url} via Tor...")
-    try:
-        response = requests.get(
-            url, proxies=PROXIES, headers=HEADERS, timeout=TIMEOUT_SECONDS
-        )
-    except requests.exceptions.RequestException as e:
-        print(f"[-] Request failed: {e}")
-        return None, None
+    for attempt in range(1, max_retries + 1):
+        try:
+            response = requests.get(
+                url, proxies=PROXIES, headers=HEADERS, timeout=TIMEOUT_SECONDS
+            )
+            if response.status_code == 200:
+                print(f"[+] Connected (Attempt {attempt}). Status 200, {len(response.content)} bytes received.")
+                
+                # Extract important security/server headers
+                important_headers = {}
+                for key in ["Server", "X-Powered-By", "Via"]:
+                    if key in response.headers:
+                        important_headers[key] = response.headers[key]
+                        
+                raw_text = html_to_text(response.text)
+                digest = hashlib.sha256(response.content).hexdigest()
+                return raw_text, response.text, important_headers, digest
+            else:
+                print(f"[-] Unexpected status code {response.status_code} on attempt {attempt}.")
+                
+        except requests.exceptions.RequestException as e:
+            print(f"[-] Request failed on attempt {attempt}: {e}")
+        
+        if attempt < max_retries:
+            print(f"[*] Retrying in {attempt * 3} seconds...")
+            time.sleep(attempt * 3)
 
-    if response.status_code != 200:
-        print(f"[-] Unexpected status code: {response.status_code}")
-        return None, None
-
-    print(f"[+] Connected. Status 200, {len(response.content)} bytes received.")
-    return html_to_text(response.text), response.text
+    print(f"[-] Max retries ({max_retries}) reached for {url}. Skipping.")
+    return None, None, None
 
 
 def run_url_mode(
@@ -119,11 +153,11 @@ def run_url_mode(
             continue
         visited.add(url)
 
-        text, raw_html = fetch_url(url)
+        text, raw_html, headers, digest = fetch_url(url)
         if text is None:
             continue
 
-        record = build_record(url, text)
+        record = build_record(url, text, headers, digest)
         record["crawl_depth"] = depth
         records.append(record)
         print(f"    [+] {url} (depth {depth}): {record['identifier_count']} identifiers found")
@@ -139,11 +173,13 @@ def run_url_mode(
     return records
 
 
-def read_local_file(path: Path) -> str:
-    raw = path.read_text(encoding="utf-8", errors="ignore")
+def read_local_file(path: Path) -> tuple[str, str]:
+    raw_bytes = path.read_bytes()
+    digest = hashlib.sha256(raw_bytes).hexdigest()
+    raw = raw_bytes.decode("utf-8", errors="ignore")
     if path.suffix.lower() in {".html", ".htm"}:
-        return html_to_text(raw)
-    return raw
+        return html_to_text(raw), digest
+    return raw, digest
 
 
 def run_local_mode(input_path: Path) -> list:
@@ -167,8 +203,8 @@ def run_local_mode(input_path: Path) -> list:
     records = []
     for f in files:
         try:
-            text = read_local_file(f)
-            record = build_record(str(f), text)
+            text, digest = read_local_file(f)
+            record = build_record(str(f), text, sha256_hash=digest)
             records.append(record)
             print(f"    [+] {f.name}: {record['identifier_count']} identifiers found")
         except Exception as e:
@@ -195,6 +231,18 @@ def save_csv(records: list, path: Path) -> None:
                         [record["source"], record["last_scan_date"], record["category"], depth, entity_type, value]
                     )
     print(f"[+] CSV saved -> {path}")
+
+
+def upload_to_api(records: list, api_url: str) -> None:
+    print(f"[*] Uploading {len(records)} records to {api_url} ...")
+    try:
+        response = requests.post(api_url, json={"records": records}, timeout=10)
+        if response.status_code in (200, 201):
+            print("[+] Successfully ingested data to Backend API!")
+        else:
+            print(f"[-] Backend API rejected data (Status {response.status_code}): {response.text}")
+    except requests.exceptions.RequestException as e:
+        print(f"[-] Failed to connect to Backend API: {e}")
 
 
 def main():
@@ -236,6 +284,10 @@ def main():
         default="output",
         help="Where to save JSON/CSV files (default: ./output)",
     )
+    parser.add_argument(
+        "--api-url",
+        help="FastAPI ingest endpoint to send data to (e.g., http://localhost:8000/api/v1/jobs/ingest_scraper_data)",
+    )
     args = parser.parse_args()
 
     if args.url:
@@ -252,7 +304,7 @@ def main():
         file_prefix = "local_intel"
 
     total_identifiers = sum(r["identifier_count"] for r in records)
-    print(f"\n[✓] Done. Total records: {len(records)}, Total identifiers: {total_identifiers}")
+    print(f"\n[+] Done. Total records: {len(records)}, Total identifiers: {total_identifiers}")
 
     if len(records) == 1:
         print(json.dumps(records[0], indent=4, ensure_ascii=False))
@@ -263,6 +315,9 @@ def main():
 
     save_json(records, outdir / f"{file_prefix}_{timestamp_tag}.json")
     save_csv(records, outdir / f"{file_prefix}_{timestamp_tag}.csv")
+    
+    if args.api_url:
+        upload_to_api(records, args.api_url)
 
 
 if __name__ == "__main__":
