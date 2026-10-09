@@ -81,9 +81,14 @@ export default function OverviewPage() {
               </button>
             </div>
 
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#121212] border border-[#CBCBCB]/60 text-xs font-mono text-emerald-400 shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-              TOR SOCKS5: ACTIVE (127.0.0.1:9050)
+            <span className="relative inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-gradient-to-b from-[#FFFFFF] via-[#E6E6E6] to-[#B8B8B8] border border-white text-xs font-mono font-black text-zinc-950 tracking-wide shadow-[0_0_22px_rgba(255,255,255,0.75),0_0_35px_rgba(203,203,203,0.45)] ring-1 ring-white/90 transition-all hover:brightness-110 cursor-default select-none">
+              <span className="relative flex h-2.5 w-2.5 items-center justify-center">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-600 shadow-[0_0_8px_rgba(16,185,129,1)]" />
+              </span>
+              <span className="drop-shadow-[0_1px_0_rgba(255,255,255,0.9)] text-zinc-950 font-extrabold tracking-wider">
+                TOR SOCKS5: ACTIVE (127.0.0.1:9050)
+              </span>
             </span>
           </div>
         </header>
