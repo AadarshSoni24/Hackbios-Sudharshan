@@ -163,14 +163,17 @@ export default function OverviewPage() {
             </div>
 
             {/* Quick Action Banner */}
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-950/40 to-[#13151D] border border-emerald-500/30 p-6 shadow-2xl flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-mono font-bold text-emerald-300">INTERACTIVE GRAPH TOPOLOGY READY</h3>
-                <p className="text-xs text-slate-300 mt-1">22 nodes and 15 multi-vector correlation bridges available in 2D Force View.</p>
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#4D4D4D] to-[#4A4A4A] border border-[#4A4A4A] p-6 shadow-xl flex items-center justify-between group transition-all duration-300 hover:border-[#CBCBCB]/60">
+              {/* Subtle Ambient Sheen */}
+              <div className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-white/10 blur-xl group-hover:bg-white/15 transition-all" />
+
+              <div className="relative z-10">
+                <h3 className="text-sm font-mono font-bold text-zinc-100 tracking-wide">INTERACTIVE GRAPH TOPOLOGY READY</h3>
+                <p className="text-xs text-zinc-300 mt-1 font-sans">22 nodes and 15 multi-vector correlation bridges available in 2D Force View.</p>
               </div>
               <Link
                 href="/graph"
-                className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono text-xs font-bold rounded-full shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-1.5 shrink-0"
+                className="relative z-10 px-5 py-2.5 bg-zinc-950 hover:bg-zinc-900 border border-[#CBCBCB]/40 hover:border-[#CBCBCB] text-zinc-100 font-mono text-xs font-bold rounded-full shadow-lg transition-all flex items-center gap-1.5 shrink-0"
               >
                 Launch Graph Canvas <ArrowUpRight className="h-4 w-4" />
               </Link>
