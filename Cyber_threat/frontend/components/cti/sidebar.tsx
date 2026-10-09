@@ -54,16 +54,16 @@ export function Sidebar() {
                 href={item.href}
                 className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
                   isActive
-                    ? "bg-[#2A2A2A] text-emerald-300 border border-emerald-400/40 shadow-md font-bold"
+                    ? "bg-[#282828] text-white border border-[#CBCBCB] shadow-md shadow-[#CBCBCB]/10 font-bold"
                     : "text-zinc-200 hover:text-white hover:bg-white/10"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Icon className={`h-4 w-4 ${isActive ? "text-emerald-300" : "text-zinc-300"}`} />
+                  <Icon className={`h-4 w-4 ${isActive ? "text-[#CBCBCB]" : "text-zinc-300"}`} />
                   <span>{item.label}</span>
                 </div>
                 {item.badge && (
-                  <span className="px-1.5 py-0.5 text-[10px] font-mono rounded bg-amber-500/20 text-amber-300 border border-amber-400/30 font-bold">
+                  <span className="px-2 py-0.5 text-[10px] font-mono rounded-md bg-[#423115] text-[#DFB15B] border border-[#8C6226] font-bold shadow-sm">
                     {item.badge}
                   </span>
                 )}
