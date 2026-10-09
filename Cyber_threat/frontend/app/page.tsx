@@ -7,17 +7,16 @@ import { KpiCards } from "@/components/cti/kpi-cards"
 import { 
   ShieldAlert, 
   ArrowUpRight, 
-  ExternalLink, 
   GitCompare, 
-  Server, 
   Activity,
-  Flame,
-  CheckCircle2
+  Check,
+  Shield,
+  Radio,
+  FileCheck2
 } from "lucide-react"
 
 export default function OverviewPage() {
   const [actors, setActors] = useState<any[]>([])
-  const [recentFeed, setRecentFeed] = useState<any[]>([])
   
   const [scanUrl, setScanUrl] = useState("")
   const [isScanning, setIsScanning] = useState(false)
@@ -32,7 +31,6 @@ export default function OverviewPage() {
         body: JSON.stringify({ url: scanUrl })
       })
       setScanUrl("")
-      // Give a tiny delay for backend processing, then refresh data
       setTimeout(() => window.location.reload(), 2000)
     } catch (e) {
       console.error("Scan failed to start", e)
@@ -74,19 +72,19 @@ export default function OverviewPage() {
                 value={scanUrl}
                 onChange={(e) => setScanUrl(e.target.value)}
                 placeholder="Enter .onion URL to scan..."
-                className="flex-1 border border-[#1F2937] bg-[#0D0D0D] px-3 py-1.5 font-mono text-[11px] font-medium tracking-normal text-[#22D3EE] placeholder:text-slate-500 outline-none transition focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE] rounded-md"
+                className="flex-1 border border-white/10 bg-[#13151D] px-3 py-1.5 font-mono text-[11px] font-medium tracking-normal text-[#22D3EE] placeholder:text-slate-500 outline-none transition focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE] rounded-lg"
                 onKeyDown={(e) => e.key === 'Enter' && handleScan()}
               />
               <button
                 onClick={handleScan}
                 disabled={isScanning || !scanUrl}
-                className="px-3 py-1.5 font-sans text-[11px] font-bold text-[#0D0D0D] bg-[#22D3EE] hover:bg-[#06B6D4] disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors whitespace-nowrap"
+                className="px-3 py-1.5 font-sans text-[11px] font-bold text-[#0D0D0D] bg-[#22D3EE] hover:bg-[#06B6D4] disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors whitespace-nowrap"
               >
                 {isScanning ? "SCANNING..." : "SCAN TARGET"}
               </button>
             </div>
 
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#0F172A] border border-emerald-500/30 text-[11px] font-mono text-emerald-400">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-mono text-emerald-400">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
               TOR SOCKS5: ACTIVE (127.0.0.1:9050)
             </span>
@@ -100,29 +98,44 @@ export default function OverviewPage() {
         <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Column: High-Risk Threat Actors */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl p-5">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <ShieldAlert className="h-4 w-4 text-rose-400" />
-                  <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-200">PRIORITY THREAT ACTORS UNDER SURVEILLANCE</h2>
+            <div className="relative overflow-hidden rounded-2xl bg-[#13151D] border border-white/[0.08] p-6 lg:p-7 shadow-2xl transition-all duration-300 hover:border-white/20 group">
+              {/* Top-Right Ambient Highlight Sheen (Reference Style) */}
+              <div className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full bg-white/[0.04] blur-2xl group-hover:bg-white/[0.07] transition-all" />
+
+              {/* Faint Background Watermark Emblem */}
+              <ShieldAlert className="pointer-events-none absolute -bottom-10 -right-10 h-44 w-44 text-white/[0.02] group-hover:text-white/[0.04] transition-all" />
+
+              {/* Card Header: Glowing Pill Dot + Title */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="h-2.5 w-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)] shrink-0" />
+                    <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-100">
+                      PRIORITY THREAT ACTORS UNDER SURVEILLANCE
+                    </h2>
+                  </div>
+                  <p className="mt-1 text-[11px] font-sans text-slate-400 leading-relaxed">
+                    Continuous dark web correlation across marketplaces, forums, and leak repositories
+                  </p>
                 </div>
-                <Link href="/actors" className="text-xs font-mono text-sky-400 hover:text-sky-300 flex items-center gap-1">
+                <Link href="/actors" className="text-xs font-mono text-sky-400 hover:text-sky-300 flex items-center gap-1 shrink-0">
                   View All (10) <ArrowUpRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
 
-              <div className="divide-y divide-[#1F2937]">
+              {/* Actor Rows with Dividers */}
+              <div className="mt-5 divide-y divide-white/[0.06]">
                 {(actors.length > 0 ? actors : [
                   { id: "1", handle: "Shadow99", category: "RANSOMWARE", risk_level: "CRITICAL", confidence_score: 0.91, primary_wallet: "1BoatSLR2mWMbt2kXNxC5v7gC28b96F" },
                   { id: "2", handle: "SilkRouteX", category: "DATA_LEAKS", risk_level: "HIGH", confidence_score: 0.82, primary_wallet: "1BoatSLR2mWMbt2kXNxC5v7gC28b96F" },
                   { id: "3", handle: "DarkVendor_01", category: "EXPLOIT_VENDOR", risk_level: "HIGH", confidence_score: 0.88, primary_wallet: "888tNkZrPN6JsEgekjMn..." },
                   { id: "4", handle: "PhantomOp", category: "APT_PERSISTENT", risk_level: "CRITICAL", confidence_score: 0.94, primary_wallet: "phantom_opsec@mail2tor.com" }
                 ]).map((actor) => (
-                  <div key={actor.handle} className="py-3 flex items-center justify-between hover:bg-[#131D31]/40 px-2 rounded-lg transition-colors">
+                  <div key={actor.handle} className="py-3.5 flex items-center justify-between hover:bg-white/[0.02] px-2 rounded-xl transition-colors">
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-sm font-bold text-slate-100">{actor.handle}</span>
-                        <span className={`px-1.5 py-0.5 text-[9px] font-mono rounded font-semibold ${
+                        <span className={`px-2 py-0.5 text-[9px] font-mono rounded-full font-semibold ${
                           actor.risk_level === "CRITICAL" ? "bg-rose-950/80 text-rose-400 border border-rose-500/30" : "bg-amber-950/80 text-amber-400 border border-amber-500/30"
                         }`}>
                           {actor.risk_level}
@@ -142,17 +155,25 @@ export default function OverviewPage() {
                   </div>
                 ))}
               </div>
+
+              {/* Bottom Outline Pill Button (Reference Style) */}
+              <Link
+                href="/actors"
+                className="mt-5 w-full py-2.5 px-4 rounded-full border border-white/15 bg-white/[0.02] hover:bg-white/10 hover:border-white/30 text-slate-200 text-xs font-semibold tracking-wide text-center block transition-all"
+              >
+                View Complete Threat Actor Directory
+              </Link>
             </div>
 
             {/* Quick Action Banner */}
-            <div className="bg-gradient-to-r from-emerald-950/40 to-sky-950/40 border border-emerald-500/30 rounded-xl p-5 flex items-center justify-between">
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-950/40 to-[#13151D] border border-emerald-500/30 p-6 shadow-2xl flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-mono font-bold text-emerald-300">INTERACTIVE GRAPH TOPOLOGY READY</h3>
                 <p className="text-xs text-slate-300 mt-1">22 nodes and 15 multi-vector correlation bridges available in 2D Force View.</p>
               </div>
               <Link
                 href="/graph"
-                className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono text-xs font-bold rounded-lg shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-1.5"
+                className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono text-xs font-bold rounded-full shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-1.5 shrink-0"
               >
                 Launch Graph Canvas <ArrowUpRight className="h-4 w-4" />
               </Link>
@@ -162,56 +183,95 @@ export default function OverviewPage() {
           {/* Right Column: Needs Review Queue & Activity Feed */}
           <div className="space-y-6">
             {/* Review Triage Deck */}
-            <div className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl p-5">
-              <div className="flex items-center justify-between mb-3">
+            <div className="relative overflow-hidden rounded-2xl bg-[#13151D] border border-white/[0.08] p-6 shadow-2xl transition-all duration-300 hover:border-white/20 group">
+              {/* Top-Right Ambient Sheen */}
+              <div className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-white/[0.04] blur-2xl group-hover:bg-white/[0.07] transition-all" />
+
+              {/* Faint Watermark */}
+              <GitCompare className="pointer-events-none absolute -bottom-6 -right-6 h-36 w-36 text-white/[0.02] group-hover:text-white/[0.04] transition-all" />
+
+              <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <GitCompare className="h-4 w-4 text-amber-400" />
-                  <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-200">NEEDS REVIEW (M6)</h2>
+                  <span className="h-2.5 w-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)] shrink-0" />
+                  <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-100">NEEDS REVIEW (M6)</h2>
                 </div>
                 <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
               </div>
 
-              <div className="bg-[#0D0D0D] border border-amber-500/30 rounded-lg p-3.5 space-y-2">
+              <p className="text-[11px] font-sans text-slate-400 leading-relaxed">
+                Pending human-in-the-loop validation for candidate alias attribution
+              </p>
+
+              <div className="mt-4 rounded-xl bg-white/[0.02] border border-amber-500/30 p-4 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono font-bold text-slate-200">PhantomOp ↔ NeonSpectre</span>
-                  <span className="text-[10px] font-mono bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-500/30">
+                  <span className="text-[10px] font-mono bg-amber-950 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30">
                     74% SCORE
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-400">
                   Vector 3 Stylometry: Identical punctuation cadence, Yule's K vocabulary richness, and diurnal posting hours (UTC+05:30).
                 </p>
-                <div className="pt-2 flex items-center gap-2">
-                  <Link
-                    href="/links"
-                    className="w-full py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 text-center font-mono text-xs font-bold rounded transition-colors"
-                  >
-                    Open Review Deck
-                  </Link>
-                </div>
               </div>
+
+              {/* Bottom Outline Pill Button (Reference Style) */}
+              <Link
+                href="/links"
+                className="mt-5 w-full py-2.5 px-4 rounded-full border border-white/15 bg-white/[0.02] hover:bg-white/10 hover:border-white/30 text-slate-200 text-xs font-semibold tracking-wide text-center block transition-all"
+              >
+                Open Review Deck
+              </Link>
             </div>
 
-            {/* Ingestion & Origin Status */}
-            <div className="bg-[#0F172A] border border-[#CBCBCB]/40 shadow-sm shadow-[#CBCBCB]/5 rounded-xl p-5 space-y-3">
+            {/* Ingestion & Origin Status (Checklist style like reference) */}
+            <div className="relative overflow-hidden rounded-2xl bg-[#13151D] border border-white/[0.08] p-6 shadow-2xl transition-all duration-300 hover:border-white/20 group">
+              {/* Top-Right Ambient Sheen */}
+              <div className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-white/[0.04] blur-2xl group-hover:bg-white/[0.07] transition-all" />
+
+              {/* Faint Watermark */}
+              <Activity className="pointer-events-none absolute -bottom-6 -right-6 h-36 w-36 text-white/[0.02] group-hover:text-white/[0.04] transition-all" />
+
               <div className="flex items-center gap-2">
-                <Activity className="h-4 w-4 text-emerald-400" />
-                <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-200">INGESTION PROVENANCE</h2>
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] shrink-0" />
+                <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-100">INGESTION PROVENANCE</h2>
               </div>
-              <div className="space-y-2 text-xs font-mono">
-                <div className="flex items-center justify-between p-2 rounded bg-[#0D0D0D]">
-                  <span className="text-slate-400">Ground Truth Corpus</span>
+
+              <p className="mt-1 text-[11px] font-sans text-slate-400 leading-relaxed">
+                Autonomous multi-vector data intake and legal compliance pipeline
+              </p>
+
+              {/* Reference-style bullet list with Checkmarks */}
+              <div className="mt-4 space-y-2.5 text-xs font-mono">
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <Check className="h-3.5 w-3.5 text-emerald-400" />
+                    <span>Ground Truth Corpus</span>
+                  </div>
                   <span className="text-emerald-400 font-bold">[SYNTHETIC M18]</span>
                 </div>
-                <div className="flex items-center justify-between p-2 rounded bg-[#0D0D0D]">
-                  <span className="text-slate-400">Tor Crawler Daemon</span>
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <Check className="h-3.5 w-3.5 text-emerald-400" />
+                    <span>Tor Crawler Daemon</span>
+                  </div>
                   <span className="text-emerald-400 font-bold">127.0.0.1:9050</span>
                 </div>
-                <div className="flex items-center justify-between p-2 rounded bg-[#0D0D0D]">
-                  <span className="text-slate-400">Legal Certification</span>
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <Check className="h-3.5 w-3.5 text-emerald-400" />
+                    <span>Legal Certification</span>
+                  </div>
                   <span className="text-sky-400 font-bold">SEC 65B READY</span>
                 </div>
               </div>
+
+              {/* Bottom Outline Pill Button (Reference Style) */}
+              <Link
+                href="/system"
+                className="mt-5 w-full py-2.5 px-4 rounded-full border border-white/15 bg-white/[0.02] hover:bg-white/10 hover:border-white/30 text-slate-200 text-xs font-semibold tracking-wide text-center block transition-all"
+              >
+                Launch Tor Crawler Console
+              </Link>
             </div>
           </div>
         </div>
