@@ -33,15 +33,14 @@ export function Sidebar() {
     <aside className="w-64 bg-[#0D0D0D] border-r border-[#1F2937] flex flex-col justify-between h-screen shrink-0 select-none">
       <div>
         {/* Brand Header */}
-        <div className="p-4 border-b border-[#1F2937]">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded bg-gradient-to-br from-emerald-500 to-sky-500 flex items-center justify-center font-mono font-bold text-slate-950 text-sm shadow-lg shadow-emerald-500/20">
+        <div className="h-14 px-4 border-b border-[#1F2937] flex items-center">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-500 to-sky-500 flex items-center justify-center font-mono font-bold text-slate-950 text-sm shadow-lg shadow-emerald-500/20">
               SG
             </div>
-            <div>
-              <div className="font-mono text-xs font-bold text-slate-100 tracking-wider">SUDHARSHAN</div>
-              <div className="font-sans text-[10px] text-emerald-400 font-semibold tracking-widest uppercase">SUDARSHAN // ATTRIBUTION</div>
-            </div>
+            <span className="font-mono text-sm font-bold text-slate-100 tracking-wider">
+              SUDHARSHAN
+            </span>
           </div>
         </div>
 

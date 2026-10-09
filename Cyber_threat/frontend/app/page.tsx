@@ -63,9 +63,8 @@ export default function OverviewPage() {
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top Header */}
         <header className="h-14 border-b border-[#1F2937] px-6 flex items-center justify-between bg-[#0D0D0D]/90 backdrop-blur sticky top-0 z-10">
-          <div>
+          <div className="flex items-center">
             <h1 className="text-sm font-mono font-bold tracking-wider text-slate-100">EXECUTIVE THREAT OVERVIEW</h1>
-            <p className="text-[11px] text-slate-400">Autonomous Dark Web Threat Attribution Console</p>
           </div>
           <div className="flex items-center gap-3">
             {/* Live Scan Input */}

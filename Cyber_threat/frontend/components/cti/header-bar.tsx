@@ -31,7 +31,7 @@ export function HeaderBar({ searchQuery = "", onSearchChange }: HeaderBarProps) 
     <header className="flex h-14 shrink-0 items-center justify-between border-b border-[#1F2937] bg-[#111827] px-5 gap-4">
       <div className="flex items-center gap-3 shrink-0">
         <span className="font-sans text-[15px] font-bold tracking-tight text-slate-100">
-          SUDARSHAN <span className="text-[#EF4444]">//</span> THREAT ATTRIBUTION
+          SUDHARSHAN
         </span>
         <span className="h-4 w-px bg-[#1F2937] hidden sm:inline-block" />
         <span className="font-sans text-[12px] font-semibold tracking-wider text-[#94A3B8] uppercase hidden sm:inline-block">
