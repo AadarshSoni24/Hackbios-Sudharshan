@@ -40,7 +40,7 @@ export function Sidebar() {
             </div>
             <div>
               <div className="font-mono text-xs font-bold text-slate-100 tracking-wider">SUDHARSHAN</div>
-              <div className="font-sans text-[10px] text-emerald-400 font-semibold tracking-widest uppercase">NTRO // SHADOWGRAPH</div>
+              <div className="font-sans text-[10px] text-emerald-400 font-semibold tracking-widest uppercase">SUDARSHAN // ATTRIBUTION</div>
             </div>
           </div>
         </div>
