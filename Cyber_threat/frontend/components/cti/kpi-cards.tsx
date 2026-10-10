@@ -19,7 +19,7 @@ const defaultKpis: Kpi[] = [
   {
     label: "TARGET PERSONAS",
     sublabel: "High-risk threat actors under continuous monitoring",
-    value: "10",
+    value: "0",
     unit: "/Active",
     dotColor: "bg-emerald-600 shadow-[0_0_8px_rgba(5,150,105,0.6)]",
     icon: Shield,
@@ -27,7 +27,7 @@ const defaultKpis: Kpi[] = [
   {
     label: "LINKED ENTITIES",
     sublabel: "Cross-vector wallet & PGP correlation bridges",
-    value: "4",
+    value: "0",
     unit: "/Linked",
     badge: "High Confidence",
     dotColor: "bg-sky-600 shadow-[0_0_8px_rgba(2,132,199,0.6)]",
@@ -36,7 +36,7 @@ const defaultKpis: Kpi[] = [
   {
     label: "IP LEAKS DISCOVERED",
     sublabel: "Clearnet origin server header misconfigurations",
-    value: "3",
+    value: "0",
     unit: "/Leaked",
     valueClass: "text-rose-950",
     dotColor: "bg-rose-600 shadow-[0_0_8px_rgba(225,29,72,0.6)]",
@@ -68,7 +68,7 @@ export function KpiCards() {
               {
                 label: "TARGET PERSONAS",
                 sublabel: "High-risk threat actors under continuous monitoring",
-                value: String(json.data.monitored_actors || 10),
+                value: String(json.data.monitored_actors ?? 0),
                 unit: "/Active",
                 dotColor: "bg-emerald-600 shadow-[0_0_8px_rgba(5,150,105,0.6)]",
                 icon: Shield,
@@ -76,7 +76,7 @@ export function KpiCards() {
               {
                 label: "LINKED ENTITIES",
                 sublabel: "Cross-vector wallet & PGP correlation bridges",
-                value: String(json.data.linked_entities || 4),
+                value: String(json.data.linked_entities ?? 0),
                 unit: "/Linked",
                 badge: "High Confidence",
                 dotColor: "bg-sky-600 shadow-[0_0_8px_rgba(2,132,199,0.6)]",
@@ -85,7 +85,7 @@ export function KpiCards() {
               {
                 label: "IP LEAKS DISCOVERED",
                 sublabel: "Clearnet origin server header misconfigurations",
-                value: String(json.data.ip_leaks_discovered || 3),
+                value: String(json.data.ip_leaks_discovered ?? 0),
                 unit: "/Leaked",
                 valueClass: "text-rose-950",
                 dotColor: "bg-rose-600 shadow-[0_0_8px_rgba(225,29,72,0.6)]",
