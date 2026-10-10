@@ -52,19 +52,7 @@ def get_graph_data(db: Session = Depends(get_db)):
                 "label": "uses_" + e.type.lower()
             })
 
-    # 3. Leaked Clearnet Host Nodes (Green)
-    infras = db.query(InfraFinding).all()
-    for inf in infras:
-        host_id = "host_" + inf.candidate_host
-        if host_id not in node_ids:
-            nodes.append({
-                "id": host_id,
-                "label": inf.candidate_host,
-                "sublabel": "Leaked Clearnet Origin",
-                "type": "ip",
-                "risk": "critical"
-            })
-            node_ids.add(host_id)
+    # 3. (Removed redundant Leaked Clearnet Host Nodes - natively handled by Entity layer)
 
     # 4. Correlation Links between Actors (e.g. ALIAS_OF, MULTI_INPUT_COSPEND)
     links = db.query(CorrelationLink).all()

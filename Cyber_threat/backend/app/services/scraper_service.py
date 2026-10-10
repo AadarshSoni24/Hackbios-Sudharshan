@@ -27,7 +27,7 @@ PATTERNS = {
     "pgp_keys": re.compile(r"-----BEGIN PGP PUBLIC KEY BLOCK-----[\s\S]*?-----END PGP PUBLIC KEY BLOCK-----"),
     "onion_links": re.compile(r"\b[a-z2-7]{56}\.onion\b", re.IGNORECASE),
     "ipv4_addresses": re.compile(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b"),
-    "handles": re.compile(r"(?:Author|User|Username|Profile|Member):\s*([a-zA-Z0-9_-]{3,20})|@([a-zA-Z0-9_-]{3,20})", re.IGNORECASE),
+    "handles": re.compile(r"(?:Author|User|Username|Profile|Member|Vendor|Hacker):\s*@?([a-zA-Z0-9_-]{3,20})", re.IGNORECASE),
 }
 
 def extract_entities(text: str) -> dict:
