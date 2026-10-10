@@ -6,7 +6,7 @@ def initialize_seed_data():
     db = SessionLocal()
     
     # Check if already seeded
-    if db.query(Actor).count() > 0:
+    if db.query(User).count() > 0:
         db.close()
         return
 
