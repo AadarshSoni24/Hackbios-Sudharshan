@@ -78,14 +78,6 @@ def get_graph_data(db: Session = Depends(get_db)):
                 "status": lnk.status
             })
 
-        # Merge live scraped nodes
-    for mn in MOCK_GRAPH_DB.get("nodes", []):
-        if mn["id"] not in node_ids:
-            nodes.append(mn)
-            node_ids.add(mn["id"])
-    for me in MOCK_GRAPH_DB.get("edges", []):
-        edges.append(me)
-
     return {
         "success": True,
         "data": {

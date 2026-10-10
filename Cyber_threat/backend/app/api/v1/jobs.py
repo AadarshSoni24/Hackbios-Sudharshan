@@ -74,9 +74,6 @@ def preview_extraction(req: TestTextExtractionRequest):
 
 @router.post("/ingest_scraper_data")
 def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get_db)):
-    # Mocking database insertion by using the in-memory store
-    global MOCK_GRAPH_DB
-    
     total_records = len(req.records)
     print(f"[*] Received {total_records} records from Scraper.")
 
@@ -90,28 +87,11 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
         for handle in handles:
             actor_id = handle.lower()
             actor_ids.append(actor_id)
-            # Add node if not exists
-            if not any(n["id"] == actor_id for n in MOCK_GRAPH_DB["nodes"]):
-                MOCK_GRAPH_DB["nodes"].append({
-                    "id": actor_id,
-                    "label": handle,
-                    "sublabel": "Threat Actor",
-                    "type": "actor",
-                    "risk": "critical"
-                })
 
         # If no handle found, use a default anonymous actor for this source
         if not actor_ids:
             actor_id = "anon_" + str(hash(source))[:6]
             actor_ids.append(actor_id)
-            if not any(n["id"] == actor_id for n in MOCK_GRAPH_DB["nodes"]):
-                MOCK_GRAPH_DB["nodes"].append({
-                    "id": actor_id,
-                    "label": "Unknown Actor",
-                    "sublabel": source[:20],
-                    "type": "actor",
-                    "risk": "medium"
-                })
 
         primary_actor = actor_ids[0]
         
@@ -119,24 +99,11 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
         if db:
             for act_id in actor_ids:
                 handle_lbl = handles[0] if handles else "Unknown Actor"
-                # Use merge to avoid IntegrityErrors for duplicates in the same session
                 db.merge(Actor(id=act_id, display_handle=handle_lbl, category="UNKNOWN", risk_level="HIGH", origin_badge="SCRAPER"))
 
         # 2. Add Wallets
         for w_type in ["bitcoin_wallets", "ethereum_wallets", "monero_wallets"]:
             for wallet in identifiers.get(w_type, []):
-                if not any(n["id"] == wallet for n in MOCK_GRAPH_DB["nodes"]):
-                    MOCK_GRAPH_DB["nodes"].append({
-                        "id": wallet,
-                        "label": wallet[:12] + "...",
-                        "sublabel": w_type.replace("_", " ").title(),
-                        "type": "wallet",
-                        "risk": "high"
-                    })
-                # Add edge
-                MOCK_GRAPH_DB["edges"].append({"source": primary_actor, "target": wallet, "label": "OWNS_WALLET"})
-                
-                # DB Integration
                 if db:
                     wtype = "WALLET_" + w_type.split("_")[0].upper()
                     db.merge(Entity(actor_id=primary_actor, type=wtype, value=wallet))
@@ -144,48 +111,16 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
         # 3. Add PGP Keys
         for pgp in identifiers.get("pgp_keys", []):
             pgp_short = pgp.replace("-----BEGIN PGP PUBLIC KEY BLOCK-----", "").strip()[:16]
-            if not any(n["id"] == pgp_short for n in MOCK_GRAPH_DB["nodes"]):
-                MOCK_GRAPH_DB["nodes"].append({
-                    "id": pgp_short,
-                    "label": "PGP Key",
-                    "sublabel": "RSA 4096",
-                    "type": "pgp",
-                    "risk": "high"
-                })
-            MOCK_GRAPH_DB["edges"].append({"source": primary_actor, "target": pgp_short, "label": "USES_KEY"})
-            
-            # DB Integration
             if db:
                 db.merge(Entity(actor_id=primary_actor, type="PGP_KEY", value=pgp_short))
 
-        # 4. Add Emails as IPs (for visual variety in mock)
+        # 4. Add Emails as Entities
         for email in identifiers.get("emails", []):
-            if not any(n["id"] == email for n in MOCK_GRAPH_DB["nodes"]):
-                MOCK_GRAPH_DB["nodes"].append({
-                    "id": email,
-                    "label": email,
-                    "sublabel": "Email Address",
-                    "type": "ip", # using IP color for emails in this mock
-                    "risk": "medium"
-                })
-            MOCK_GRAPH_DB["edges"].append({"source": primary_actor, "target": email, "label": "USES_EMAIL"})
-            
-            # DB Integration
             if db:
                 db.merge(Entity(actor_id=primary_actor, type="EMAIL", value=email))
 
         # 4.5 Add Phone Numbers
         for phone in identifiers.get("phone_numbers", []):
-            if not any(n["id"] == phone for n in MOCK_GRAPH_DB["nodes"]):
-                MOCK_GRAPH_DB["nodes"].append({
-                    "id": phone,
-                    "label": phone,
-                    "sublabel": "Phone Number",
-                    "type": "ip",
-                    "risk": "medium"
-                })
-            MOCK_GRAPH_DB["edges"].append({"source": primary_actor, "target": phone, "label": "USES_PHONE"})
-            
             if db:
                 db.merge(Entity(actor_id=primary_actor, type="PHONE_NUMBER", value=phone))
             
@@ -193,7 +128,6 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
         headers = record.get("infrastructure", {}).get("server_headers", {})
         server = headers.get("Server")
         
-        # Also extract IPv4 addresses found in text (like our demo file)
         ipv4_leaks = identifiers.get("ipv4_addresses", [])
         
         all_infra = []
@@ -204,18 +138,8 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
             
         for infra_type, infra_val in all_infra:
             infra_id = "infra_" + infra_val.replace(" ", "_")
-            if not any(n["id"] == infra_id for n in MOCK_GRAPH_DB["nodes"]):
-                MOCK_GRAPH_DB["nodes"].append({
-                    "id": infra_id,
-                    "label": infra_val[:15],
-                    "sublabel": "Leaked IP" if infra_type == "ip" else "Leaked Server",
-                    "type": "ip",
-                    "risk": "critical"
-                })
-            MOCK_GRAPH_DB["edges"].append({"source": primary_actor, "target": infra_id, "label": "HOSTED_ON"})
-            
-            # DB Integration
             if db:
+                # Add to InfraFinding for the KPI metric
                 db.merge(InfraFinding(
                     onion_address=source[:50],
                     finding_type="SERVER_BANNER_LEAK" if infra_type == "server" else "IP_LEAK",
@@ -223,6 +147,8 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
                     candidate_host=infra_id,
                     strength="STRONG"
                 ))
+                # Add as an Entity so it connects to the Actor in the graph
+                db.merge(Entity(actor_id=primary_actor, type="CLEARNET_IP" if infra_type == "ip" else "SERVER_HEADER", value=infra_val))
 
     if db:
         try:

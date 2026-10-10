@@ -106,9 +106,9 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
   useEffect(() => {
     if (fgRef.current) {
       const fg = fgRef.current
-      fg.d3Force("charge")?.strength(-800)?.distanceMax(800)
-      fg.d3Force("link")?.distance(160)
-      fg.d3Force("center")?.strength(0.5)
+      fg.d3Force("charge")?.strength(-250)?.distanceMax(400)
+      fg.d3Force("link")?.distance(80)
+      fg.d3Force("center")?.strength(1)
       fg.d3ReheatSimulation()
     }
   }, [graphData])
