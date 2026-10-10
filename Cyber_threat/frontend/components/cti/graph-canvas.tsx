@@ -84,17 +84,19 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
   )
   const visibleIds = useMemo(() => new Set(visibleNodes.map((n) => n.id)), [visibleNodes])
   
-  const visibleEdges = useMemo(
-    () =>
-      edges
-        .filter((e) => visibleIds.has(e.from) && visibleIds.has(e.to))
-        .map((e) => ({
-          ...e,
-          source: e.from,
-          target: e.to,
-        })),
-    [edges, visibleIds],
-  )
+  const visibleEdges = useMemo(() => {
+    return edges
+      .filter((e) => {
+        const fromId = typeof e.from === "object" ? e.from.id : (e.from || (typeof e.source === "object" ? e.source.id : e.source))
+        const toId = typeof e.to === "object" ? e.to.id : (e.to || (typeof e.target === "object" ? e.target.id : e.target))
+        return visibleIds.has(fromId) && visibleIds.has(toId)
+      })
+      .map((e) => ({
+        ...e,
+        source: typeof e.from === "object" ? e.from.id : (e.from || (typeof e.source === "object" ? e.source.id : e.source)),
+        target: typeof e.to === "object" ? e.to.id : (e.to || (typeof e.target === "object" ? e.target.id : e.target)),
+      }))
+  }, [edges, visibleIds])
 
   const graphData = useMemo(
     () => ({
