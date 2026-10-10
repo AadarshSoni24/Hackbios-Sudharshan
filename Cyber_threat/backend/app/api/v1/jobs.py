@@ -118,7 +118,7 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
         # DB Integration for Actors
         if db:
             for act_id in actor_ids:
-                handle_lbl = handle if handles else "Unknown Actor"
+                handle_lbl = handles[0] if handles else "Unknown Actor"
                 # Use merge to avoid IntegrityErrors for duplicates in the same session
                 db.merge(Actor(id=act_id, display_handle=handle_lbl, category="UNKNOWN", risk_level="HIGH", origin_badge="SCRAPER"))
 

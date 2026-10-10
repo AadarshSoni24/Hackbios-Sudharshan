@@ -28,7 +28,7 @@ export default function OverviewPage() {
         body: JSON.stringify({ url: scanUrl })
       })
       setScanUrl("")
-      setTimeout(() => window.location.reload(), 2000)
+      setTimeout(() => window.location.reload(), 4000)
     } catch (e) {
       console.error("Scan failed to start", e)
     } finally {
