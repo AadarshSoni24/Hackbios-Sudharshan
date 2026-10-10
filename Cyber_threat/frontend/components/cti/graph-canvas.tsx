@@ -379,6 +379,25 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
           </span>
         ))}
       </div>
+      
+      {/* Empty State Overlay */}
+      {graphData.nodes.length === 0 && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#0D0D0D]/80 backdrop-blur-sm">
+          <div className="p-4 rounded-full bg-zinc-900 border border-zinc-800 mb-4 shadow-[0_0_30px_rgba(34,211,238,0.15)]">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+          </div>
+          <h3 className="text-zinc-200 font-mono font-bold tracking-widest text-sm mb-1 uppercase">Awaiting Intelligence</h3>
+          <p className="text-zinc-500 font-sans text-xs max-w-xs text-center">
+            Database is currently empty. Run a Dark Web Scan from the Dashboard to populate the Attribution Graph.
+          </p>
+        </div>
+      )}
     </div>
   )
 }

@@ -8,7 +8,7 @@ import { BottomPanel } from "@/components/cti/bottom-panel"
 import { StylometryModal, MisconfigModal } from "@/components/cti/modals"
 
 export default function GraphExplorerPage() {
-  const [selectedId, setSelectedId] = useState<string | null>("34356e9b-5119-475d-bcf8-0f19a09f69bd")
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [globalSearch, setGlobalSearch] = useState("")
   const [isRightCollapsed, setIsRightCollapsed] = useState(false)
   const [isBottomCollapsed, setIsBottomCollapsed] = useState(false)
