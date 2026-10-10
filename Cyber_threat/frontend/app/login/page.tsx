@@ -22,8 +22,8 @@ export default function LoginPage() {
         <div className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full bg-white/20 blur-2xl" />
 
         <div className="flex flex-col items-center text-center space-y-2">
-          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#383838] via-[#242424] to-[#121212] border border-[#CBCBCB]/60 flex items-center justify-center text-white font-mono font-bold text-sm shadow-md">
-            SG
+          <div className="h-14 w-14 rounded-2xl bg-black/80 border border-[#CBCBCB]/80 flex items-center justify-center p-1 shadow-lg shadow-black/60">
+            <img src="/logo.png" alt="SUDHARSHAN Emblem" className="h-full w-full object-contain filter drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]" />
           </div>
           <h1 className="text-lg font-mono font-bold tracking-wider text-zinc-950 mt-1">SUDHARSHAN GATEWAY</h1>
           <p className="text-xs text-zinc-800 font-medium">Classified Threat Actor Attribution Console</p>

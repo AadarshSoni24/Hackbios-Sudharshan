@@ -34,8 +34,8 @@ export function Sidebar() {
         {/* Brand Header */}
         <div className="h-14 px-4 border-b border-[#CBCBCB] flex items-center bg-[#3A3A3A]">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#383838] via-[#242424] to-[#121212] border border-[#CBCBCB]/60 flex items-center justify-center font-mono font-bold text-white text-xs shadow-md shadow-black/50">
-              SG
+            <div className="h-8 w-8 rounded-lg bg-black/60 border border-[#CBCBCB]/60 flex items-center justify-center overflow-hidden shadow-md shadow-black/50 p-0.5">
+              <img src="/logo.png" alt="SUDHARSHAN Emblem" className="h-full w-full object-contain filter drop-shadow-[0_0_6px_rgba(255,215,0,0.5)]" />
             </div>
             <span className="font-mono text-sm font-bold text-white tracking-wider">
               SUDHARSHAN
