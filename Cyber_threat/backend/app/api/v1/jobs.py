@@ -189,16 +189,26 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
             if db:
                 db.merge(Entity(actor_id=primary_actor, type="PHONE_NUMBER", value=phone))
             
-        # 5. Infrastructure Headers
+        # 5. Infrastructure Headers & IP Leaks
         headers = record.get("infrastructure", {}).get("server_headers", {})
         server = headers.get("Server")
+        
+        # Also extract IPv4 addresses found in text (like our demo file)
+        ipv4_leaks = identifiers.get("ipv4_addresses", [])
+        
+        all_infra = []
         if server:
-            infra_id = "infra_" + server.replace(" ", "_")
+            all_infra.append(("server", server))
+        for ip in ipv4_leaks:
+            all_infra.append(("ip", ip))
+            
+        for infra_type, infra_val in all_infra:
+            infra_id = "infra_" + infra_val.replace(" ", "_")
             if not any(n["id"] == infra_id for n in MOCK_GRAPH_DB["nodes"]):
                 MOCK_GRAPH_DB["nodes"].append({
                     "id": infra_id,
-                    "label": server[:15],
-                    "sublabel": "Leaked Server",
+                    "label": infra_val[:15],
+                    "sublabel": "Leaked IP" if infra_type == "ip" else "Leaked Server",
                     "type": "ip",
                     "risk": "critical"
                 })
@@ -208,8 +218,8 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
             if db:
                 db.merge(InfraFinding(
                     onion_address=source[:50],
-                    finding_type="SERVER_BANNER_LEAK",
-                    banner=server,
+                    finding_type="SERVER_BANNER_LEAK" if infra_type == "server" else "IP_LEAK",
+                    banner=infra_val,
                     candidate_host=infra_id,
                     strength="STRONG"
                 ))
