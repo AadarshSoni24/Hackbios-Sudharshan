@@ -18,7 +18,7 @@ const navItems = [
   { label: "Overview", href: "/", icon: LayoutDashboard },
   { label: "Graph Explorer", href: "/graph", icon: Share2 },
   { label: "Threat Actors", href: "/actors", icon: Users },
-  { label: "Review Queue", href: "/links", icon: GitCompare, badge: "1 Pending" },
+  { label: "Review Queue", href: "/links", icon: GitCompare },
   { label: "Infrastructure", href: "/infrastructure", icon: Server },
   { label: "Timeline & Search", href: "/timeline", icon: Clock },
   { label: "Legal Dossiers", href: "/reports", icon: FileCheck2 },
