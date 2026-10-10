@@ -51,3 +51,14 @@ def root():
         "health": "/api/v1/system/health",
         "api_v1": settings.API_V1_STR
     }
+
+
+from fastapi.responses import HTMLResponse
+from pathlib import Path
+
+@app.get("/mock/alphabay", response_class=HTMLResponse)
+def get_mock_alphabay():
+    demo_file = Path(r"C:\Users\aadar\SIH 2026\demo_market_a - Copy.html")
+    if demo_file.exists():
+        return HTMLResponse(content=demo_file.read_text(encoding="utf-8", errors="ignore"))
+    return HTMLResponse(content="<h1>Demo market file not found</h1>")
