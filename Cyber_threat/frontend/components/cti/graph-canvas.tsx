@@ -206,6 +206,19 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
       ctx.lineWidth = isSelected || isMatched ? 3 : 1
       ctx.stroke()
 
+      // Draw Icon inside the node
+      const iconMap: Record<string, string> = {
+        actor: "👤",
+        ip: "🌐",
+        wallet: "₿",
+        pgp: "🔑",
+      }
+      ctx.fillStyle = "#FFFFFF"
+      ctx.font = `${radius * 1.1}px Arial`
+      ctx.textAlign = "center"
+      ctx.textBaseline = "middle"
+      ctx.fillText(iconMap[node.type] || "", node.x, node.y)
+
       // Node label directly below in clean monospace font
       const fontSize = (isMatched ? 12 : 11) / Math.max(globalScale, 0.5)
       ctx.font = `${isMatched || isSelected ? "700" : "500"} ${fontSize}px "JetBrains Mono", monospace`
@@ -292,6 +305,7 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
         linkWidth={(link: any) =>
           hoveredLink === link || isLinkConnectedToSelection(link) ? 2.5 : 1.2
         }
+        linkCurvature={0.25}
         linkLabel={(link: any) => link.label}
         linkCanvasObjectMode={(link: any) =>
           hoveredLink === link || isLinkConnectedToSelection(link) ? "after" : undefined
@@ -310,8 +324,9 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
         onLinkHover={(link: any) => setHoveredLink(link)}
         onEngineStop={handleEngineStop}
         cooldownTicks={100}
+        warmupTicks={100}
         d3AlphaDecay={0.02}
-        d3VelocityDecay={0.3}
+        d3VelocityDecay={0.15}
       />
 
       {/* Floating Toolbar (Silverish Design) */}
