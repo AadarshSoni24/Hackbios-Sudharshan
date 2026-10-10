@@ -127,12 +127,7 @@ export default function OverviewPage() {
 
               {/* Actor Rows with Dividers */}
               <div className="mt-5 divide-y divide-zinc-800/15">
-                {(actors.length > 0 ? actors : [
-                  { id: "1", handle: "Shadow99", category: "RANSOMWARE", risk_level: "CRITICAL", confidence_score: 0.91, primary_wallet: "1BoatSLR2mWMbt2kXNxC5v7gC28b96F" },
-                  { id: "2", handle: "SilkRouteX", category: "DATA_LEAKS", risk_level: "HIGH", confidence_score: 0.82, primary_wallet: "1BoatSLR2mWMbt2kXNxC5v7gC28b96F" },
-                  { id: "3", handle: "DarkVendor_01", category: "EXPLOIT_VENDOR", risk_level: "HIGH", confidence_score: 0.88, primary_wallet: "888tNkZrPN6JsEgekjMn..." },
-                  { id: "4", handle: "PhantomOp", category: "APT_PERSISTENT", risk_level: "CRITICAL", confidence_score: 0.94, primary_wallet: "phantom_opsec@mail2tor.com" }
-                ]).map((actor) => (
+                {actors.map((actor) => (
                   <div key={actor.handle} className="py-3.5 flex items-center justify-between hover:bg-black/5 px-2 rounded-xl transition-colors">
                     <div>
                       <div className="flex items-center gap-2">
@@ -198,7 +193,7 @@ export default function OverviewPage() {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <span className="h-2.5 w-2.5 rounded-full bg-amber-600 shadow-[0_0_8px_rgba(217,119,6,0.6)] shrink-0" />
-                  <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-950">NEEDS REVIEW (M6)</h2>
+                  <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-950">NEEDS REVIEW (0)</h2>
                 </div>
                 <span className="h-2 w-2 rounded-full bg-amber-600 animate-pulse" />
               </div>
@@ -208,14 +203,8 @@ export default function OverviewPage() {
               </p>
 
               <div className="mt-4 rounded-xl bg-black/10 border border-amber-950/20 p-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold text-zinc-950">PhantomOp ↔ NeonSpectre</span>
-                  <span className="text-[10px] font-mono bg-amber-950/20 text-amber-950 px-2 py-0.5 rounded-full border border-amber-950/30 font-bold">
-                    74% SCORE
-                  </span>
-                </div>
-                <p className="text-[11px] text-zinc-800 font-medium">
-                  Vector 3 Stylometry: Identical punctuation cadence, Yule's K vocabulary richness, and diurnal posting hours (UTC+05:30).
+                <p className="text-[11px] text-zinc-800 font-medium text-center">
+                  Review queue is currently empty.
                 </p>
               </div>
 

@@ -58,12 +58,12 @@ export default function ReportsPage() {
             <div className="grid grid-cols-2 gap-4 text-xs bg-black/10 p-4 rounded-xl border border-black/10">
               <div>
                 <span className="text-zinc-800 block text-[10px] font-bold">PRIMARY TARGET HANDLE</span>
-                <span className="font-bold text-zinc-950 text-sm mt-0.5 block">{dossier?.target?.handle || "Shadow99"}</span>
+                <span className="font-bold text-zinc-950 text-sm mt-0.5 block">{dossier?.target?.handle || "No target selected"}</span>
               </div>
               <div>
                 <span className="text-zinc-800 block text-[10px] font-bold">ATTRIBUTION CONFIDENCE</span>
                 <span className="font-bold text-emerald-950 text-sm mt-0.5 block">
-                  {Math.round((dossier?.target?.confidence || 0.91) * 100)}% (CONFIRMED)
+                  {Math.round((dossier?.target?.confidence || 0) * 100)}% (UNCONFIRMED)
                 </span>
               </div>
             </div>
@@ -71,7 +71,7 @@ export default function ReportsPage() {
             <div className="space-y-3">
               <h3 className="text-xs font-bold text-zinc-950 uppercase tracking-wider">CORRELATED CRYPTOGRAPHIC SIGNATURES</h3>
               <div className="divide-y divide-zinc-800/20 border border-black/10 rounded-xl overflow-hidden bg-black/5">
-                {(dossier?.associated_wallets || ["1BoatSLR2mWMbt2kXNxC5v7gC28b96F"]).map((w: string) => (
+                {(dossier?.associated_wallets || []).map((w: string) => (
                   <div key={w} className="py-2.5 px-3 flex items-center justify-between text-xs">
                     <span className="text-zinc-800 font-semibold">Bitcoin Wallet</span>
                     <span className="font-bold text-zinc-950">{w}</span>
