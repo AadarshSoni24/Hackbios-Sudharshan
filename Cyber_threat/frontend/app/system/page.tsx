@@ -1,5 +1,7 @@
 "use client"
 
+import { apiFetch } from "@/lib/api"
+
 import { useState } from "react"
 import { Sidebar } from "@/components/cti/sidebar"
 import { Terminal, Shield, Play, Activity } from "lucide-react"
@@ -12,7 +14,7 @@ export default function SystemPage() {
     if (!crawlUrl) return
     setStatusMsg("Initiating SOCKS5 crawl circuit via 127.0.0.1:9050...")
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/v1/jobs/ingest", {
+      const res = await apiFetch("/api/v1/jobs/ingest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ target_url: crawlUrl, max_depth: 2, correlation_enabled: true })

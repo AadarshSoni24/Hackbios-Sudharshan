@@ -1,5 +1,7 @@
 "use client"
 
+import { apiFetch } from "@/lib/api"
+
 import { useMemo, useState, useRef, useEffect, useCallback } from "react"
 import dynamic from "next/dynamic"
 import { ctiNodes, ctiEdges } from "@/lib/cti-data"
@@ -53,7 +55,7 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
   useEffect(() => {
     async function loadGraphData() {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/v1/graph/data")
+        const res = await apiFetch("/api/v1/graph/data")
         if (res.ok) {
           const json = await res.json()
           if (json.data?.nodes && json.data.nodes.length > 0) {

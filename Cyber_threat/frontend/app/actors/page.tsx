@@ -1,5 +1,7 @@
 "use client"
 
+import { apiFetch } from "@/lib/api"
+
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Sidebar } from "@/components/cti/sidebar"
@@ -13,7 +15,7 @@ export default function ActorsPage() {
   useEffect(() => {
     async function loadActors() {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/v1/actors")
+        const res = await apiFetch("/api/v1/actors")
         if (res.ok) {
           const json = await res.json()
           if (json.data) setActors(json.data)

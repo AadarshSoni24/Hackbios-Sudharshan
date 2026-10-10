@@ -1,5 +1,7 @@
 "use client"
 
+import { apiFetch } from "@/lib/api"
+
 import { useState, useEffect } from "react"
 import { Sidebar } from "@/components/cti/sidebar"
 import { GitCompare, CheckCircle, XCircle } from "lucide-react"
@@ -10,7 +12,7 @@ export default function LinksReviewPage() {
   useEffect(() => {
     async function loadLinks() {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/v1/links")
+        const res = await apiFetch("/api/v1/links")
         if (res.ok) {
           const json = await res.json()
           if (json.data) setLinks(json.data)
@@ -22,7 +24,7 @@ export default function LinksReviewPage() {
 
   const handleAction = async (id: string, action: "confirm" | "reject") => {
     try {
-      await fetch(`http://127.0.0.1:8000/api/v1/links/${id}/${action}`, { method: "POST" })
+      await apiFetch(`/api/v1/links/${id}/${action}`, { method: "POST" })
       setLinks((prev) => prev.filter((l) => l.id !== id))
     } catch (e) {}
   }

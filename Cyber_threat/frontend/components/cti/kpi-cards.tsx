@@ -1,5 +1,7 @@
 "use client"
 
+import { apiFetch } from "@/lib/api"
+
 import { useState, useEffect } from "react"
 import { Shield, Share2, AlertTriangle, Radio } from "lucide-react"
 
@@ -60,7 +62,7 @@ export function KpiCards() {
   useEffect(() => {
     async function fetchKpis() {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/v1/system/kpis")
+        const res = await apiFetch("/api/v1/system/kpis")
         if (res.ok) {
           const json = await res.json()
           if (json.data) {

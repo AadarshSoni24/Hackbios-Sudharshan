@@ -1,5 +1,7 @@
 "use client"
 
+import { apiFetch } from "@/lib/api"
+
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Sidebar } from "@/components/cti/sidebar"
@@ -22,7 +24,7 @@ export default function OverviewPage() {
     if (!scanUrl.trim()) return
     setIsScanning(true)
     try {
-      await fetch("http://localhost:8000/api/v1/jobs/scan", {
+      await apiFetch("/api/v1/jobs/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: scanUrl })
@@ -39,7 +41,7 @@ export default function OverviewPage() {
   useEffect(() => {
     async function loadData() {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/v1/actors")
+        const res = await apiFetch("/api/v1/actors")
         if (res.ok) {
           const json = await res.json()
           if (json.data) setActors(json.data.slice(0, 5))

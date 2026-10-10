@@ -1,5 +1,7 @@
 "use client"
 
+import { apiFetch } from "@/lib/api"
+
 import { useState, useEffect } from "react"
 import { Sidebar } from "@/components/cti/sidebar"
 import { FileCheck2, Printer, Shield, CheckCircle2 } from "lucide-react"
@@ -10,7 +12,7 @@ export default function ReportsPage() {
   useEffect(() => {
     async function loadDossier() {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/v1/reports/NTRO-DW-2026-004/dossier-preview")
+        const res = await apiFetch("/api/v1/reports/NTRO-DW-2026-004/dossier-preview")
         if (res.ok) {
           const json = await res.json()
           if (json.data) setDossier(json.data)

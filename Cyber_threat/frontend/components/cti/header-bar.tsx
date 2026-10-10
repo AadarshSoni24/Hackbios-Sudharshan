@@ -1,5 +1,7 @@
 "use client"
 
+import { apiFetch } from "@/lib/api"
+
 import { useState } from "react"
 
 interface HeaderBarProps {
@@ -15,7 +17,7 @@ export function HeaderBar({ searchQuery = "", onSearchChange }: HeaderBarProps) 
     if (!scanUrl.trim()) return
     setIsScanning(true)
     try {
-      await fetch("http://localhost:8000/api/v1/jobs/scan", {
+      await apiFetch("/api/v1/jobs/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: scanUrl })
