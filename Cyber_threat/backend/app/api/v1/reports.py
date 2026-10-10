@@ -67,8 +67,12 @@ def get_dossier_preview(case_id: str, db: Session = Depends(get_db)):
 
 from fastapi.responses import FileResponse
 import os
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
+try:
+    from reportlab.pdfgen import canvas
+    from reportlab.lib.pagesizes import letter
+except ImportError:
+    canvas = None
+    letter = None
 
 @router.post("/export/{handle}")
 def export_dossier_pdf(handle: str, db: Session = Depends(get_db)):

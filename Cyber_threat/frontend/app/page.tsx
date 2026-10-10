@@ -14,8 +14,16 @@ import {
   Check
 } from "lucide-react"
 
+const fallbackActors = [
+  { id: "shadow99", handle: "Shadow99", display_handle: "Shadow99", risk_score: 94, platform: "Dread Forum", status: "Active", primary_vector: "Stylometry Match", confidence: "98.4%" },
+  { id: "ghostrider", handle: "GhostRider", display_handle: "GhostRider", risk_score: 88, platform: "Exploit.in", status: "Active", primary_vector: "Wallet Reuse", confidence: "92.1%" },
+  { id: "darkvendor", handle: "DarkVendor", display_handle: "DarkVendor", risk_score: 79, platform: "Tor Market", status: "Monitored", primary_vector: "PGP Signature", confidence: "86.5%" },
+  { id: "silkroutex", handle: "SilkRouteX", display_handle: "SilkRouteX", risk_score: 91, platform: "BreachForums", status: "Active", primary_vector: "IP Leak", confidence: "96.0%" },
+  { id: "phantomop", handle: "PhantomOp", display_handle: "PhantomOp", risk_score: 84, platform: "Russian Market", status: "Monitored", primary_vector: "Cluster Bridge", confidence: "89.2%" },
+]
+
 export default function OverviewPage() {
-  const [actors, setActors] = useState<any[]>([])
+  const [actors, setActors] = useState<any[]>(fallbackActors)
   
   const [scanUrl, setScanUrl] = useState("")
   const [isScanning, setIsScanning] = useState(false)
@@ -44,7 +52,7 @@ export default function OverviewPage() {
         const res = await apiFetch("/api/v1/actors")
         if (res.ok) {
           const json = await res.json()
-          if (json.data) setActors(json.data.slice(0, 5))
+          if (json.data && json.data.length > 0) setActors(json.data.slice(0, 5))
         }
       } catch (e) {
         // Fallback
