@@ -39,9 +39,14 @@ def extract_entities(text: str) -> dict:
 def build_record(source: str, text: str, headers: dict = None) -> dict:
     entities = extract_entities(text)
     if "handles" in entities:
+        # findall with 1 capture group returns list of strings, with >1 returns list of tuples
+        raw_matches = entities["handles"]
         flat_handles = []
-        for match in entities["handles"]:
-            flat_handles.extend([m for m in match if m])
+        for match in raw_matches:
+            if isinstance(match, tuple):
+                flat_handles.extend([m for m in match if m])
+            else:
+                if match: flat_handles.append(match)
         entities["handles"] = sorted(set(flat_handles))
 
     total_identifiers = sum(len(v) for v in entities.values())
