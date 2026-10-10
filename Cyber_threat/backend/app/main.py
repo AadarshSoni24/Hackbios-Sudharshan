@@ -15,7 +15,7 @@ from app.api.v1.system import router as system_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Initialize DB & Seed Data
-    initialize_seed_data()
+    # initialize_seed_data() # Disabled to prevent fake data overriding live demo
     yield
 
 app = FastAPI(
@@ -27,8 +27,8 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS + ["https://*.vercel.app"],
-    allow_origin_regex=r".*",
+    allow_origins=settings.CORS_ORIGINS + ['https://*.vercel.app'],
+    allow_origin_regex=r'.*',
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -52,14 +52,3 @@ def root():
         "health": "/api/v1/system/health",
         "api_v1": settings.API_V1_STR
     }
-
-
-from fastapi.responses import HTMLResponse
-from pathlib import Path
-
-@app.get("/mock/alphabay", response_class=HTMLResponse)
-def get_mock_alphabay():
-    demo_file = Path(r"C:\Users\aadar\SIH 2026\demo_market_a - Copy.html")
-    if demo_file.exists():
-        return HTMLResponse(content=demo_file.read_text(encoding="utf-8", errors="ignore"))
-    return HTMLResponse(content="<h1>Demo market file not found</h1>")

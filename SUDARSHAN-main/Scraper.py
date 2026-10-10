@@ -4,7 +4,6 @@ import json
 import re
 import sys
 import time
-import hashlib
 from collections import deque
 from datetime import datetime, timezone
 from pathlib import Path
@@ -29,15 +28,16 @@ PATTERNS = {
         r"\b(?:[13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-zA-HJ-NP-Z0-9]{39,59})\b"
     ),
     "ethereum_wallets": re.compile(r"\b0x[a-fA-F0-9]{40}\b"),
-    "monero_wallets": re.compile(r"\b[48][0-9ABa-zA-Z]{94}\b"),
+    "monero_wallets": re.compile(r"\b[48][0-9AB][1-9A-HJ-NP-Za-km-z]{93}\b"),
     "emails": re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"),
     "phone_numbers": re.compile(r"\b(?:\+?\d{1,3}[-.●\s]?)?\(?\d{3}\)?[-.●\s]?\d{3}[-.●\s]?\d{4}\b"),
     "pgp_keys": re.compile(
         r"-----BEGIN PGP PUBLIC KEY BLOCK-----[\s\S]*?-----END PGP PUBLIC KEY BLOCK-----"
     ),
     "onion_links": re.compile(r"\b[a-z2-7]{56}\.onion\b", re.IGNORECASE),
-    "handles": re.compile(r"(?:Author|User|Username|Profile|Member):\s*([a-zA-Z0-9_-]{3,20})|@([a-zA-Z0-9_-]{3,20})", re.IGNORECASE),
-    "ipv4_addresses": re.compile(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b")
+    "handles": re.compile(r"(?:Author|User|Username|Profile|Member|Vendor):\s*([a-zA-Z0-9_-]{3,20})|(?<=\s)@([a-zA-Z0-9_-]{3,20})", re.IGNORECASE),
+    "ipv4_addresses": re.compile(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b"),
+    "ssl_certificates": re.compile(r"(?:SSL|TLS) Serial:\s*([A-Fa-f0-9:]+)", re.IGNORECASE),
 }
 
 SUPPORTED_LOCAL_EXTENSIONS = {".html", ".htm", ".txt", ".json", ".tsv", ".csv"}
@@ -50,8 +50,13 @@ def extract_entities(text: str) -> dict:
     }
 
 
-def build_record(source: str, text: str, headers: dict = None, sha256_hash: str = None) -> dict:
+import hashlib
+
+def build_record(source: str, text: str, headers: dict = None) -> dict:
     entities = extract_entities(text)
+    
+    # Calculate SHA256 of the text for evidence integrity
+    sha256_hash = hashlib.sha256(text.encode("utf-8")).hexdigest()
     
     # Flatten handles since regex returns tuples due to multiple capture groups
     if "handles" in entities:
@@ -104,7 +109,7 @@ def extract_links(base_url: str, raw_html: str, same_host_only: bool) -> list:
     return found
 
 
-def fetch_url(url: str, max_retries: int = 3) -> tuple[str, str, dict, str] | tuple[None, None, None, None]:
+def fetch_url(url: str, max_retries: int = 3) -> tuple[str, str, dict] | tuple[None, None, None]:
     print(f"[*] Connecting to {url} via Tor...")
     for attempt in range(1, max_retries + 1):
         try:
@@ -120,9 +125,7 @@ def fetch_url(url: str, max_retries: int = 3) -> tuple[str, str, dict, str] | tu
                     if key in response.headers:
                         important_headers[key] = response.headers[key]
                         
-                raw_text = html_to_text(response.text)
-                digest = hashlib.sha256(response.content).hexdigest()
-                return raw_text, response.text, important_headers, digest
+                return html_to_text(response.text), response.text, important_headers
             else:
                 print(f"[-] Unexpected status code {response.status_code} on attempt {attempt}.")
                 
@@ -134,7 +137,7 @@ def fetch_url(url: str, max_retries: int = 3) -> tuple[str, str, dict, str] | tu
             time.sleep(attempt * 3)
 
     print(f"[-] Max retries ({max_retries}) reached for {url}. Skipping.")
-    return None, None, None, None
+    return None, None, None
 
 
 def run_url_mode(
@@ -154,11 +157,11 @@ def run_url_mode(
             continue
         visited.add(url)
 
-        text, raw_html, headers, digest = fetch_url(url)
+        text, raw_html, headers = fetch_url(url)
         if text is None:
             continue
 
-        record = build_record(url, text, headers, digest)
+        record = build_record(url, text, headers)
         record["crawl_depth"] = depth
         records.append(record)
         print(f"    [+] {url} (depth {depth}): {record['identifier_count']} identifiers found")
@@ -174,13 +177,11 @@ def run_url_mode(
     return records
 
 
-def read_local_file(path: Path) -> tuple[str, str]:
-    raw_bytes = path.read_bytes()
-    digest = hashlib.sha256(raw_bytes).hexdigest()
-    raw = raw_bytes.decode("utf-8", errors="ignore")
+def read_local_file(path: Path) -> str:
+    raw = path.read_text(encoding="utf-8", errors="ignore")
     if path.suffix.lower() in {".html", ".htm"}:
-        return html_to_text(raw), digest
-    return raw, digest
+        return html_to_text(raw)
+    return raw
 
 
 def run_local_mode(input_path: Path) -> list:
@@ -204,8 +205,8 @@ def run_local_mode(input_path: Path) -> list:
     records = []
     for f in files:
         try:
-            text, digest = read_local_file(f)
-            record = build_record(str(f), text, sha256_hash=digest)
+            text = read_local_file(f)
+            record = build_record(str(f), text)
             records.append(record)
             print(f"    [+] {f.name}: {record['identifier_count']} identifiers found")
         except Exception as e:

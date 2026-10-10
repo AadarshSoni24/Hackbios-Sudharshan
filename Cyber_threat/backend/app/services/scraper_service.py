@@ -21,13 +21,14 @@ TIMEOUT_SECONDS = 30
 PATTERNS = {
     "bitcoin_wallets": re.compile(r"\b(?:[13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-zA-HJ-NP-Z0-9]{39,59})\b"),
     "ethereum_wallets": re.compile(r"\b0x[a-fA-F0-9]{40}\b"),
-    "monero_wallets": re.compile(r"\b[48][0-9ABa-zA-Z]{94}\b"),
+    "monero_wallets": re.compile(r"\b[48][0-9AB][1-9A-HJ-NP-Za-km-z]{93}\b"),
     "emails": re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"),
     "phone_numbers": re.compile(r"\b(?:\+?\d{1,3}[-.●\s]?)?\(?\d{3}\)?[-.●\s]?\d{3}[-.●\s]?\d{4}\b"),
     "pgp_keys": re.compile(r"-----BEGIN PGP PUBLIC KEY BLOCK-----[\s\S]*?-----END PGP PUBLIC KEY BLOCK-----"),
     "onion_links": re.compile(r"\b[a-z2-7]{56}\.onion\b", re.IGNORECASE),
+    "handles": re.compile(r"(?:Author|User|Username|Profile|Member|Vendor):\s*([a-zA-Z0-9_-]{3,20})|(?<=\s)@([a-zA-Z0-9_-]{3,20})", re.IGNORECASE),
     "ipv4_addresses": re.compile(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b"),
-    "handles": re.compile(r"(?:Author|User|Username|Profile|Member|Vendor|Hacker):\s*@?([a-zA-Z0-9_-]{3,20})", re.IGNORECASE),
+    "ssl_certificates": re.compile(r"(?:SSL|TLS) Serial:\s*([A-Fa-f0-9:]+)", re.IGNORECASE),
 }
 
 def extract_entities(text: str) -> dict:
@@ -36,17 +37,17 @@ def extract_entities(text: str) -> dict:
         for key, pattern in PATTERNS.items()
     }
 
+import hashlib
+
 def build_record(source: str, text: str, headers: dict = None) -> dict:
     entities = extract_entities(text)
+    
+    sha256_hash = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    
     if "handles" in entities:
-        # findall with 1 capture group returns list of strings, with >1 returns list of tuples
-        raw_matches = entities["handles"]
         flat_handles = []
-        for match in raw_matches:
-            if isinstance(match, tuple):
-                flat_handles.extend([m for m in match if m])
-            else:
-                if match: flat_handles.append(match)
+        for match in entities["handles"]:
+            flat_handles.extend([m for m in match if m])
         entities["handles"] = sorted(set(flat_handles))
 
     total_identifiers = sum(len(v) for v in entities.values())
@@ -55,6 +56,7 @@ def build_record(source: str, text: str, headers: dict = None) -> dict:
         "last_scan_date": datetime.now(timezone.utc).isoformat(),
         "category": "unclassified",
         "attribution_confidence": None,
+        "sha256_hash": sha256_hash,
         "identifiers": entities,
         "identifier_count": total_identifiers,
         "infrastructure": {
@@ -134,50 +136,15 @@ def run_url_mode(start_url: str, max_depth: int = 0, max_pages: int = 1) -> list
 
     return records
 
-def generate_synthetic_html(url: str) -> str:
-    import random
-    import hashlib
-    # Generate deterministic but random-looking data based on the URL
-    seed = int(hashlib.md5(url.encode()).hexdigest(), 16)
-    random.seed(seed)
-    
-    hacker_names = ["CyberGhost", "NetRunner", "DarkOverlord", "RansomKing", "ShadowBroker", "ZeroDayGod", "AnonSec"]
-    handle = random.choice(hacker_names) + str(random.randint(10, 99))
-    
-    btc = "bc1q" + "".join(random.choices("0123456789abcdefghijklmnopqrstuvwxyz", k=38))
-    ip = f"{random.randint(11,250)}.{random.randint(11,250)}.{random.randint(11,250)}.{random.randint(11,250)}"
-    
-    return f'''
-    <html>
-      <body>
-        <h2>Author: @{handle}</h2>
-        <p>Selling zero-day exploits. Contact me immediately.</p>
-        <p>Payment wallet: <strong>{btc}</strong></p>
-        <p>Admin Server IP: {ip}</p>
-        <p>Email: {handle.lower()}@onionmail.org</p>
-      </body>
-    </html>
-    '''
-
 def run_integrated_scan(url: str) -> list:
     """Entrypoint for FastAPI Background Task"""
     print(f"[*] Starting integrated scan on: {url}")
-    
-    # 1. Check if it's a local file
+    # If URL is local file path (for testing)
     path = Path(url)
     if path.exists():
         raw = path.read_text(encoding="utf-8", errors="ignore")
         text = html_to_text(raw) if path.suffix.lower() in {".html", ".htm"} else raw
         return [build_record(str(path), text)]
-        
-    # 2. Try actual URL scraping
-    records = run_url_mode(url, max_depth=1, max_pages=3)
-    
-    # 3. HACKATHON FAILSAFE: If no records found (or URL/file doesn't exist), auto-generate!
-    if not records:
-        print(f"[!] Failsafe triggered for {url}. Generating synthetic demo page.")
-        raw_html = generate_synthetic_html(url)
-        text = html_to_text(raw_html)
-        records = [build_record(url, text)]
-        
-    return records
+    else:
+        # It's a real URL
+        return run_url_mode(url, max_depth=1, max_pages=3)

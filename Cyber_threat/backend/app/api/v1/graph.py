@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.models.database import get_db, Actor, Entity, InfraFinding, CorrelationLink
+import uuid
 
 router = APIRouter(prefix="/graph", tags=["Graph Visualizer"])
 
-# In-memory store for live scraped nodes/edges
+# IN-MEMORY MOCK DB FOR TESTING SCRAPER
 MOCK_GRAPH_DB = {
     "nodes": [],
     "edges": []
@@ -12,59 +13,69 @@ MOCK_GRAPH_DB = {
 
 @router.get("/data")
 def get_graph_data(db: Session = Depends(get_db)):
-    # Build nodes & links formatted for react-force-graph-2d / Cytoscape
     nodes = []
     edges = []
-    node_ids = set()
-
-    # 1. Actor Nodes (Red)
+    
+    # 1. Add Actors
     actors = db.query(Actor).all()
     for a in actors:
         nodes.append({
             "id": a.id,
             "label": a.display_handle,
-            "sublabel": f"{a.category} · {int(a.confidence_score * 100)}%",
-            "type": "actor",
-            "risk": a.risk_level.lower(),
-            "confidence": a.confidence_score
+            "type": "actor"
         })
-        node_ids.add(a.id)
-
-    # 2. Entity Nodes (Wallets: Blue, PGP: Purple, IP: Green)
+        
+    # 2. Add Entities and link to Actors
     entities = db.query(Entity).all()
     for e in entities:
-        if e.value not in node_ids:
-            node_type = "wallet" if "WALLET" in e.type else ("pgp" if "PGP" in e.type else "ip")
+        node_type = "unknown"
+        if "WALLET" in e.type:
+            node_type = "wallet"
+        elif "PGP" in e.type:
+            node_type = "pgp"
+        elif "IP" in e.type:
+            node_type = "ip"
+            
+        # Add entity node if not exists
+        if not any(n["id"] == e.value for n in nodes):
+            # Try to shorten label
+            label = e.value
+            if node_type == "pgp" and len(label) > 15:
+                label = f"Version: G..." # matching UI format for long keys, or just short
+            elif node_type == "wallet" and len(label) > 20:
+                label = label[:16] + "..."
+                
             nodes.append({
                 "id": e.value,
-                "label": e.value[:14] + "..." if len(e.value) > 16 else e.value,
-                "sublabel": e.type,
-                "type": node_type,
-                "full_value": e.value
+                "label": label,
+                "type": node_type
             })
-            node_ids.add(e.value)
+            
+        # Add edge from actor to entity
+        edges.append({
+            "source": e.actor_id,
+            "target": e.value,
+            "label": f"HAS_{node_type.upper()}"
+        })
+        
+    # 3. Add CorrelationLinks
+    correlations = db.query(CorrelationLink).all()
+    for link in correlations:
+        edges.append({
+            "source": link.actor_a_id,
+            "target": link.actor_b_id,
+            "label": link.vector
+        })
 
-        # Connect Actor to Entity
-        if e.actor_id and e.actor_id in node_ids:
-            edges.append({
-                "source": e.actor_id,
-                "target": e.value,
-                "label": "uses_" + e.type.lower()
-            })
-
-    # 3. (Removed redundant Leaked Clearnet Host Nodes - natively handled by Entity layer)
-
-    # 4. Correlation Links between Actors (e.g. ALIAS_OF, MULTI_INPUT_COSPEND)
-    links = db.query(CorrelationLink).all()
-    for lnk in links:
-        if lnk.actor_a_id in node_ids and lnk.actor_b_id in node_ids:
-            edges.append({
-                "source": lnk.actor_a_id,
-                "target": lnk.actor_b_id,
-                "label": f"LINK: {int(lnk.score * 100)}% ({lnk.band})",
-                "strength": lnk.strength,
-                "status": lnk.status
-            })
+    # Combine with MOCK_GRAPH_DB (if any)
+    for n in MOCK_GRAPH_DB["nodes"]:
+        if not any(node["id"] == n["id"] for node in nodes):
+            nodes.append(n)
+            
+    for e in MOCK_GRAPH_DB["edges"]:
+        # check for duplicates
+        if not any(edge["source"] == e["source"] and edge["target"] == e["target"] for edge in edges):
+            edges.append(e)
 
     return {
         "success": True,
@@ -77,3 +88,19 @@ def get_graph_data(db: Session = Depends(get_db)):
             }
         }
     }
+
+@router.get("/nodes/{node_id}")
+def get_node_details(node_id: str, db: Session = Depends(get_db)):
+    # Try DB first
+    actor = db.query(Actor).filter(Actor.id == node_id).first()
+    if actor:
+        return {"success": True, "data": {"id": actor.id, "label": actor.display_handle, "type": "actor"}}
+    
+    entity = db.query(Entity).filter(Entity.value == node_id).first()
+    if entity:
+        return {"success": True, "data": {"id": entity.value, "label": entity.value, "type": entity.type}}
+        
+    node = next((n for n in MOCK_GRAPH_DB["nodes"] if n["id"] == node_id), None)
+    if not node:
+        return {"success": False, "message": "Node not found"}
+    return {"success": True, "data": node}
