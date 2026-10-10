@@ -36,3 +36,10 @@ def get_graph_data(db: Session = Depends(get_db)):
             "counts": {"total_nodes": 0, "total_edges": 0}
         }
     }
+
+@router.get("/nodes/{node_id}")
+def get_node_details(node_id: str):
+    node = next((n for n in MOCK_GRAPH_DB["nodes"] if n["id"] == node_id), None)
+    if not node:
+        return {"success": False, "message": "Node not found"}
+    return {"success": True, "data": node}

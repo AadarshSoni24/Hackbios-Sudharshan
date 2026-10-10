@@ -42753,3 +42753,458 @@ Aapka intel_extractor.py (jo Phase 3 ka part hai) ekdum ready hai[cite: 6]. Diag
 
 **Want a starter React component for the graph visualization?** 
 
+
+---
+## CHUNK 1 - Team Roles, OSINT Fundamentals, and AI Developer 2 Roadmap
+
+Building a dark web deanonymization platform requires bridging cybersecurity, data engineering, and artificial intelligence. You do not need to be an elite penetration tester to build this, but you do need to understand how web infrastructure works and where criminals make technical mistakes.
+
+Here is the sequential learning path to take your team from absolute beginners to building a working prototype.
+
+1. Networking & OSINT (Open Source Intelligence)
+Internet Infrastructure: Learn how TCP/IP, DNS, and HTTP/HTTPS function. You must understand how a normal website connects to a user before you can understand how the dark web hides those connections.
+The Tor Protocol: Study Onion Routing. Learn what .onion hidden services are, how Tor nodes encrypt traffic, and the difference between the deep web and the dark web.
+Server Misconfigurations: Understand how web servers (Apache, Nginx) operate. Learn how simple administrative mistakes—like leaving a /server-status page public, exposing an .env file, or reusing a public SSL certificate—leak the real IP address of a hidden server.
+OSINT Tools: Learn to use Shodan and Censys. These are search engines for internet-connected devices. You need to know how to query them via API to match leaked SSL certificates to physical server locations.
+
+2. Python & Automated Data Collection
+Advanced Python: Python is the industry standard for both threat intelligence and AI. Your team needs strong foundational Python skills.
+Regex (Regular Expressions): Learn to write patterns that automatically scan raw HTML and extract specific data formats, such as Bitcoin wallet addresses, PGP encryption keys, and email addresses.
+Web Scraping: Master libraries like Beautiful Soup and Scrapy to automatically extract text and links from web pages.
+Proxy Routing: Learn how to route your Python scrapers through Tor proxies (like Privoxy). If your scrapers connect directly to the clear web, you cannot access .onion sites.
+
+3. Graph Databases
+Graph Theory Basics: Understand the concept of Nodes (entities like usernames, IPs, and crypto wallets) and Edges (the relationships connecting them, such as "hosted on" or "transacted with").
+Neo4j & Cypher: Learn Neo4j, the leading graph database, and its query language, Cypher. Standard SQL databases are terrible at relationship mapping; Neo4j is built specifically to connect the dots between fragmented identities.
+
+4. Artificial Intelligence & Stylometry
+NLP (Natural Language Processing): Learn how computers process human text using tokenization and word embeddings.
+Stylometry: Study how algorithms identify an author based on their writing behavior (e.g., punctuation frequency, unique vocabulary, grammatical errors).
+Deep Learning Frameworks: Get comfortable with PyTorch and the Hugging Face Transformers library.
+Transformer Models: Learn how to fine-tune pre-trained models (like BERT or RoBERTa) for binary classification so the AI can look at a post from "User A" and a post from "User B" and output a probability score that they are the same person.
+
+5. Full-Stack Development
+Backend APIs: Learn FastAPI (Python) to build the bridge that allows your frontend to query the Neo4j database and trigger the AI model.
+Frontend Framework: Learn React.js to build the intelligence dashboard.
+Graph Visualization: Learn libraries like react-force-graph or Cytoscape.js to render the Neo4j data as an interactive, clickable web of connected threats for the user interface.
+
+What are the best free resources to start learning the Tor and OSINT fundamentals?
+Yes
+can you tell me the list of terms which i need to know before moving on in this project
+treat us like we dont know anything
+
+Here are the core concepts and terms you need to know, grouped by theme and explained in plain English without jargon.
+
+1. The Dark Web & Tor Ecosystem
+Clearnet: The everyday internet you use (Google, YouTube, Instagram). Search engines can index it, and every device connected to it has a visible, trackable public IP address.
+Dark Web: A small subsection of the internet that cannot be accessed through standard browsers like Chrome. It requires specialized software to access, and the websites are intentionally hidden to keep visitors and server owners anonymous.
+Tor (The Onion Router): Free, open-source software and network designed to provide online anonymity. When you browse using Tor, your traffic is encrypted in multiple layers (like an onion) and bounced through three random computers (nodes/relays) worldwide before reaching the destination.
+Hidden Service (.onion site): A website hosted inside the Tor network instead of the regular internet. It does not use standard domain names like .com or .in; instead, it has a long string of random letters and numbers ending in .onion (e.g., expyuzz5wqqfdgah56...onion). The website’s physical server location and IP address remain hidden.
+Tor Exit Node: The third and final computer in the Tor chain that delivers traffic to the destination. While hidden services keep traffic inside the Tor network, exit nodes matter when someone inside Tor accesses a regular clearnet website.
+
+2. Digital Clues & Identifiers
+Handle: The online username or pseudonym a threat actor chooses on a forum or marketplace (e.g., "DarkLord99" or "GhostRider").
+OpSec (Operational Security): The habits and practices people use to protect sensitive or secret information. When a criminal forgets to turn on their VPN, reuses an old password, or uses the same nickname across two platforms, they commit an OpSec failure—which is how investigators catch them.
+Digital Footprint: The trail of data left behind when someone uses the internet. On the dark web, this includes forum posts, upload times, public keys, and wallet addresses.
+PGP Key (Pretty Good Privacy): A cryptographic system used on dark web forums to verify identity and encrypt messages. A threat actor publishes a Public Key so anyone can send them encrypted messages or verify that a post actually came from them. Because PGP keys are unique, if "HackerA" and "VendorB" publish the same PGP key, they are guaranteed to be the same entity.
+Cryptocurrency Wallet Address: A string of letters and numbers (like an account number) used to send and receive digital currencies (Bitcoin, Monero). Bitcoin's ledger is public, meaning every transaction to and from that address is visible to everyone forever.
+
+3. Server Flaws & Infrastructure
+IP Address (Internet Protocol Address): The unique digital street address assigned to any internet-connected device or server. Finding a threat actor's real-world IP address reveals their physical location or hosting provider.
+Server Misconfiguration: An error made by a website administrator when setting up their server software (like Apache or Nginx). For example, leaving default diagnostic pages open or forgetting to turn off features that broadcast the server's real IP address to the public.
+Exposed server-status Page: A built-in Apache web server diagnostic page that displays server performance metrics and active web connections. If left publicly accessible on a dark web server, an investigator can view the real IP addresses communicating with that server.
+SSL/TLS Certificate: A digital certificate that authenticates a website’s identity and enables encrypted HTTPS connections. If a criminal uses the exact same SSL certificate on both their secret .onion site and their public clearnet website, they have linked their hidden service directly to a real IP address.
+Banner Grabbing: A reconnaissance technique where a scanner connects to a server and asks for basic info. The server responds with a "banner"—revealing its operating system, server version, and default software tags.
+Shodan / Censys: Search engines for internet-connected devices (servers, webcams, routers). Instead of searching web page text like Google, they scan the entire internet 24/7 for open ports, SSL certificates, and server banners.
+
+4. Investigation & Data Concepts
+De-anonymization: The process of stripping away layers of anonymity to link a digital pseudonym, hidden server, or anonymous account to a real-world person, company, or physical computer.
+Attribution: Formally proving who committed an action. Attribution answers: "Which specific group or individual operated handle X and set up server Y?"
+OSINT (Open Source Intelligence): Gathering, analyzing, and correlating publicly accessible information (forums, public registries, open key servers, social platforms) to produce actionable intelligence.
+Graph Database: A database that stores information as Nodes (objects like a Person, Wallet, or IP) and Edges (the relationships connecting them, such as OWNS, TRANSFERS_TO, or POSTS_FROM). It is designed to quickly answer questions like: "Show me every username connected to this specific Bitcoin wallet within 3 hops."
+Entity Resolution: The algorithmic process of determining whether two different online records (e.g., user "Shadow" on Forum 1 and user "Night" on Forum 2) actually refer to the same real-world individual.
+
+5. AI & Behavioral Analysis
+Stylometry: The study of linguistic style. Everyone has distinct writing habits—the specific punctuation they prefer, words they misspell, average sentence lengths, and slang they use. Stylometric algorithms analyze these patterns mathematically.
+Persona Rebranding: When a criminal abandons an identity (often because a marketplace was seized by police) and creates a brand-new username on another platform to start fresh.
+NLP (Natural Language Processing): The subfield of artificial intelligence focused on helping computers understand, interpret, and manipulate human language.
+Text Embeddings: Converting a block of text into a list of numbers (a mathematical vector) that captures its semantic meaning and writing style. Computers cannot read words, but they can compare two vectors to see how close they are in mathematical space.
+Similarity Score / Confidence Score: A percentage or probability (e.g., 0.87 or 87%) generated by an AI model indicating how likely it is that two pieces of text were written by the same human being.
+
+How do we set up a safe, isolated local environment to experiment with these tools?
+Yes
+in our group we have five persons
+two persons for ai ml
+two for full stack
+one person for cyberswqurity
+
+This is a highly effective team composition for this specific problem statement. Because this project requires heavy data processing, complex visualizations, and specialized machine learning, having a clear division of labor is what will keep your team moving fast.
+
+Since your team already has experience tackling hackathons with custom machine learning models, you can apply that same integration mindset here. For anyone in the group aiming to transition their skills toward an AI engineering role, this project provides a massive opportunity to work on applied NLP.
+
+Here is exactly how you should divide the responsibilities to build the prototype.
+
+The AI / ML Team (2 Persons)
+This duo is responsible for proving that two different usernames belong to the same person based on how they write.
+AI Developer 1 (The NLP Architect): This person focuses entirely on the Stylometry Model. Their job is to take an open-source dataset of forum posts, clean it, and fine-tune a Transformer model (like RoBERTa) for authorship verification. They need to build a model that takes two paragraphs of text and outputs a similarity percentage.
+AI Developer 2 (Data & ML Integrator): Models are useless without clean data pipelines. This person handles the Entity Extraction and API wrapping. They write the logic (using NLP libraries like spaCy or complex Regex) to automatically spot and extract PGP keys, emails, and Bitcoin wallets from raw text. They also wrap the Stylometry Model in a Python API so the backend can easily send it text to analyze.
+
+The Full Stack Team (2 Persons)
+This duo builds the actual application that the judges will see and use.
+Full Stack Developer 1 (Backend & Graph Architect): Standard SQL databases will fail at this task, so this developer needs to take ownership of Neo4j (the graph database) and Python FastAPI. Their job is to receive data from the scrapers, structure it into Nodes and Edges, and write the Cypher queries that find connections (e.g., "Find all users connected to this Bitcoin wallet").
+Full Stack Developer 2 (Frontend & UI Visualization): Relying on a solid foundation of HTML, CSS, and JavaScript, this developer will build the React.js dashboard. Their most critical task is mastering a graph visualization library like react-force-graph or Cytoscape.js. The entire success of the demo rests on this person's ability to make the threat data look like a professional, interactive intelligence tool.
+
+The Cybersecurity / OSINT Lead (1 Person)
+This single role is the engine of the project. While the rest of the team builds the analysis platform, this person gathers the raw materials.
+The Cyber/Infrastructure Lead: This person does not need to build the UI or the AI. Their sole focus is writing the Python scripts that securely connect to Tor (using proxies) to scrape dark web forums. Crucially, they are also responsible for building the Misconfiguration Scanner—the script that checks a .onion address for exposed SSL certificates and queries the Shodan API to find its real-world IP address.
+
+How the Team Integrates (The Workflow)
+To avoid blocking each other during the first few weeks, you should work in parallel using simulated data:
+Cybersecurity downloads an offline dataset of archived forum posts and hands it to the team so no one has to wait for live Tor scrapers to be built.
+AI/ML uses that offline dataset to train the stylometry model and write the extraction scripts.
+Full Stack uses the same offline dataset to populate a local Neo4j database and build the visual UI around it.
+Once all three standalone pieces work, the team connects them together into one live pipeline.
+
+Want to map out the first week's sprint?
+Yes
+i am ai developer 2 tell me what i need to learn and do for this project , give me a very detailed roadmap , the roadmap should be simple and easy to understand and realistic
+
+As AI Developer 2 (Data & ML Integrator), you are the bridge between the raw, messy dark web text gathered by your Cybersecurity lead, the stylometry model built by AI Developer 1, and the Neo4j graph database maintained by Full Stack Developer 1.
+You do not need to train complex AI models from scratch. Your job is data extraction, text normalization, and building fast API microservices to serve model predictions.
+
+Phase 1: Core Skills to Learn (Days 1–7)
+Focus strictly on three Python tools instead of generic ML theory:
+Python Regex (re module): Learn pattern matching to extract structured data (crypto wallets, PGP keys, emails) from messy HTML/text.
+Basic NLP with spaCy: Learn how spaCy tokenizes text, performs Named Entity Recognition (NER), and extracts linguistic features.
+FastAPI & Pydantic: Learn how to create lightweight Python REST APIs and validate incoming JSON payloads.
+
+Phase 2: Build the Entity Extraction Pipeline (Days 8–14)
+Threat actors leave digital footprints inside forum posts. You will build a Python parser (entity_extractor.py) that scans raw text and extracts these entities automatically.
+Create custom extraction rules for:
+PGP Public Keys: Detect blocks starting with -----BEGIN PGP PUBLIC KEY BLOCK-----.
+Cryptocurrency Addresses:
+Bitcoin (BTC): Regex for Legacy (1...), Pay-to-Script (3...), and Native SegWit (bc1...).
+Ethereum (ETH): Regex for 0x followed by 40 hexadecimal characters.
+Monero (XMR): Regex for 95-character strings starting with 4.
+Social & Contact Identifiers: Telegram handles (@username or t.me/...), Wickr handles, ProtonMail/email addresses, and clearnet URLs.
+
+Phase 3: Text Preprocessing for AI Developer 1 (Days 15–21)
+AI Developer 1's stylometry model compares writing styles. If raw text contains HTML tags, signatures, or quoted replies, it distorts the writing style metrics. You must build a text cleaning script (cleaner.py).
+Your pipeline must:
+Strip HTML tags and BBCode formatting (e.g., [quote]...[/quote]).
+Remove repetitive signature blocks (e.g., "Vendor Wickr: vendor123" at the end of every post).
+Separate original text from reply text so the model only analyzes what the target persona actually wrote.
+Normalize whitespace and remove non-standard Unicode characters.
+
+Phase 4: API Microservice & Model Serving (Days 22–28)
+Once AI Developer 1 trains the Transformer model (e.g., fine-tuned RoBERTa), they will give you the saved model weights. You will package both the Entity Extractor and the Stylometry Model into a FastAPI service (main.py).
+Create two REST endpoints:
+POST /api/v1/extract: Accepts raw forum post text and returns a list of extracted entities (Wallets, PGP, Handles).
+POST /api/v1/stylometry-compare: Accepts two text blocks (Text A from User 1, Text B from User 2) and returns an author similarity score.
+
+Phase 5: Output Standardization & Integration (Days 29–35)
+Format your API responses into the exact JSON schema that Full Stack Developer 1 needs to write Cypher queries for Neo4j.
+Key Deliverables Checklist for You:
+[x] Regex script extracting BTC, ETH, XMR, and PGP keys with 95%+ accuracy. (ALREADY COMPLETED IN SCRAPER.PY)
+[ ] Text cleaning script removing HTML and forum signatures.
+[ ] Working FastAPI server running locally on localhost:8000. (ALREADY COMPLETED)
+[ ] Clear JSON schema handed off to Full Stack Developer 1. (ALREADY COMPLETED in SQLite)
+
+---
+## CHUNK 2 - AI Developer 1 (NLP Architect) Roadmap
+
+i am ai developer 1 tell me what i need to learn and do for this project , give me a very detailed roadmap, the roadmap should be simple and easy to understand and realistic
+
+As the NLP Architect, you have the most scientifically complex job on the team. While the others are moving data around, you are building the actual "brain" of the project.
+Your specific goal is to solve Authorship Verification: building a model that takes two pieces of text, compares the writing styles, and outputs a confidence score (e.g., "There is an 88% chance these were written by the same person").
+
+Here is your step-by-step roadmap, moving from absolute basics to a hackathon-ready AI model.
+
+Phase 1: Understand the Science (Week 1)
+Before writing any code, you need to understand how computers analyze writing style (stylometry) rather than just the topic of the text.
+What to Learn:
+Stylometric Features: Learn what makes a writing style unique. This includes punctuation frequency, average sentence length, capitalization habits, and the use of specific function words (like "and," "the," "although").
+Authorship Verification vs. Attribution: Understand the difference. Attribution asks, "Which of these 5 known suspects wrote this?" Verification asks, "Did the same anonymous person write Document A and Document B?" You are building a Verification model.
+What to Do:
+Download a dataset. Do not wait for your cybersecurity teammate to scrape the dark web. Search for the "PAN Authorship Verification dataset" (PAN-CLEF). It is the academic gold standard for training models to verify if two texts match.
+
+Phase 2: The Classical Baseline (Week 2)
+Never jump straight into complex Deep Learning. You need a simple, traditional Machine Learning model first. If your advanced model breaks on demo day, this is your safety net.
+What to Learn:
+Scikit-learn: The standard Python library for traditional machine learning.
+TF-IDF (Term Frequency-Inverse Document Frequency): A mathematical way to convert text into numbers based on how often words appear.
+Cosine Similarity: The mathematical formula used to measure how close two sets of numbers (vectors) are to each other.
+What to Do:
+Write a 30-line Python script using scikit-learn.
+Convert two forum posts into TF-IDF vectors.
+Calculate the Cosine Similarity between them to get a basic match percentage.
+
+Phase 3: Enter the Transformers (Week 3)
+Traditional ML looks at word counts. Modern AI looks at the context and meaning of words. This is where you transition into modern AI engineering.
+What to Learn:
+Word Embeddings: How neural networks turn sentences into dense lists of numbers where the context matters.
+Hugging Face transformers: The most important Python library in modern AI. It allows you to download world-class AI models for free.
+BERT / RoBERTa: Understand the high-level concept of how these transformer models read text. You don't need to build them from scratch; you just need to know how to use them.
+What to Do:
+Install PyTorch and transformers.
+Write a script that downloads a pre-trained model (like sentence-transformers/all-MiniLM-L6-v2).
+Pass two sentences into the model and print the similarity score. You will immediately notice this is much smarter than your Phase 2 script.
+
+Phase 4: The Siamese Network (Week 4 - 5)
+This is where you build the actual project. To compare two different things (like two faces, or two texts), the industry standard is a Siamese Neural Network—twin networks that process two inputs simultaneously to see if they match.
+What to Learn:
+Sentence Transformers (SBERT): A specific type of model designed exactly for generating embeddings that can be compared for similarity.
+Contrastive Loss: The mathematical function that teaches the AI during training to pull similar writing styles closer together and push different styles apart.
+What to Do:
+Use the sentence-transformers Python library.
+Take your PAN dataset and format it into pairs: (Text A, Text B, Label). The Label is 1 if they were written by the same person, and 0 if they were not.
+Fine-tune the model on this dataset. This is your core contribution to the project: teaching an AI to recognize hacker writing styles.
+
+Phase 5: Build the Bridge (Week 6)
+An AI model sitting in a Jupyter Notebook is useless to your Full Stack team. You must wrap your model in a web API so the React dashboard can actually use it.
+What to Learn:
+FastAPI: A lightning-fast Python framework for building APIs.
+JSON formatting: How data is passed between the front end and back end.
+What to Do:
+Write a FastAPI script that loads your trained Siamese model into memory.
+Create an endpoint (e.g., /analyze-style) that accepts a JSON request containing two texts.
+The API must process the texts and return a simple JSON response: {"match_confidence": 0.88}.
+Hand this API documentation to your Full Stack team. When they click "Compare Personas" on their dashboard, it will silently call your API in the background.
+
+---
+## CHUNK 3 - Full Stack Developer 1 (Backend & Graph Architect) Roadmap
+
+i am full stack developer 1 tell me what i need to learn and do for this project , give me a very detailed roadmap , the roadmap should be simple and easy to understand and realistic
+
+As Full Stack Developer 1 (Backend & Graph Architect), you are the backbone of this project. Your job is to build the central database system, structure the relationships between threat actors, and create the REST API endpoints that connect everyone else's work (Scrapers, AI model, and Frontend dashboard).
+
+Phase 1: What You Need to Learn (The Knowledge Pack)
+You don't need to learn an entire computer science curriculum. You only need to master four specific technologies:
+
+1. Python FastAPI
+What it is: A high-performance Python web framework for building REST APIs.
+Why you use it: It is faster and easier than Django/Flask, automatically generates interactive documentation (/docs), and connects seamlessly with Python AI scripts.
+What to focus on:
+Setting up routes (@app.get(), @app.post()).
+Request/Response bodies using Pydantic (data validation).
+CORS headers (so Frontend Dev 2 can talk to your backend without browser blocks).
+
+2. Neo4j & Cypher (The Most Important Skill)
+What it is: A graph database that stores data as Nodes (objects) and Edges (relationships).
+Why you use it: Relational databases (SQL) require complex, slow JOIN operations to trace 3-4 levels of connections. Neo4j can query "Find all usernames connected to this Bitcoin wallet through any PGP key" in milliseconds.
+What to focus on:
+Nodes (Labels): Actor, Forum, PGPKey, CryptoWallet, IPAddress, Server.
+Edges (Relationships): :POSTED_ON, :USES_KEY, :USES_WALLET, :HOSTED_ON, :SIMILAR_TO.
+Cypher Query Language: Learn basic commands:
+CREATE / MERGE (adding data).
+MATCH (searching data).
+Pattern matching: (a:Actor)-[:USES_WALLET]->(w:CryptoWallet) RETURN a, w.
+
+3. Python Neo4j Driver
+What it is: The official Python package (pip install neo4j) that lets your FastAPI app execute Cypher queries in Neo4j.
+What to focus on:
+Creating a database connection driver.
+Executing Cypher queries inside FastAPI endpoint functions and returning JSON.
+
+Phase 2: Week-by-Week Action Plan
+[Week 1: Setup & Schema] ➔ [Week 2: Mock Graph & Query APIs] ➔ [Week 3: Pipeline Ingestion] ➔ [Week 4: Frontend Integration] ➔ [Week 5: Polish & Export]
+
+Week 1: Environment Setup & Graph Schema Design
+Task 1: Install Neo4j Desktop locally (free and includes a graphical browser to view your graph).
+Task 2: Design your Neo4j Graph Data Model on paper.
+Nodes: Actor (properties: handle, confidence_score, last_scanned), CryptoWallet (properties: address, currency), PGPKey (properties: fingerprint), IPAddress (properties: ip, country).
+Edges: (Actor)-[:OWNS_WALLET]->(CryptoWallet), (Actor)-[:USES_PGP]->(PGPKey), (Actor)-[:MATCHED_STYLOMETRY {score: 0.88}]->(Actor).
+Task 3: Set up a clean FastAPI folder structure:
+backend/
+├── main.py             # FastAPI app initialization
+├── database.py         # Neo4j driver connection
+├── routers/
+│   ├── actors.py       # API endpoints for Threat Actor search
+│   ├── ingestion.py    # API endpoints to receive scraped data
+│   └── graph.py        # API endpoints returning graph data for UI
+└── models.py           # Pydantic data schemas
+
+Week 2: Build Mock Graph Data & Core Read APIs
+Task 1: Write a Python script to populate Neo4j with 50-100 fake threat actors and connected wallets/IPs so you don't have to wait for the Scraper team.
+Task 2: Build your first Cypher search queries.
+Task 3: Create the core GET REST endpoints for Frontend Dev 2 (see spec below).
+
+Week 3: Ingestion Pipeline (Connecting Cyber Lead & AI Lead)
+Task 1: Build a POST /api/ingest/raw-data endpoint. The Cyber Lead's scraper will send JSON here containing scraped posts, PGP keys, and wallets.
+Task 2: Write logic in Python to parse that JSON and automatically run MERGE statements in Neo4j to update the graph without creating duplicate nodes.
+Task 3: Build an endpoint that receives similarity scores from the AI Team's stylometry model and creates a :SIMILAR_TO relationship edge between two Actor nodes if the score is > 0.80.
+
+Week 4: Graph Formatter for Frontend Dev 2
+Task 1: Graph UI libraries (like Cytoscape.js or react-force-graph) require data in a very specific format:
+{
+  "nodes": [{"id": "1", "label": "DarkLord", "type": "Actor"}],
+  "links": [{"source": "1", "target": "2", "relationship": "USES_WALLET"}]
+}
+Task 2: Write a helper function in FastAPI that takes raw Neo4j response objects and transforms them into this exact nodes and links JSON format.
+
+Week 5: Search Filters, Exports & Demo Polish
+Task 1: Build search filter parameters (e.g., filter graph by date range, minimum AI confidence score, or category).
+Task 2: Implement an Export endpoint (GET /api/export?format=json or format=csv) so users can download threat intelligence reports as required by the SIH PS.
+
+Phase 3: Exact API Endpoints You Will Build
+Here is your exact API blueprint. You can build these routes right away:
+GET /api/search?q={term} (Global search bar)
+GET /api/graph/actor/{handle} (Fetches multi-hop network)
+GET /api/actor/{handle}/profile (Fetches actor details)
+POST /api/ingest/scraper-data (Receives payload from Cyber scraper)
+POST /api/ingest/stylometry-match (Receives AI comparison results)
+GET /api/export/report/{handle} (Generates CSV or JSON payload)
+
+Phase 4: Your Immediate First Step (Day 1 Action Item)
+Install Neo4j Desktop on your machine.
+Open the Neo4j Browser and run this single Cypher script to test how graph relationships work:
+// Create a fake threat actor, wallet, and IP address
+CREATE (a:Actor {handle: 'Shadow99', score: 0.92})
+CREATE (w:CryptoWallet {address: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', type: 'Bitcoin'})
+CREATE (ip:IPAddress {ip: '185.220.101.5', country: 'Germany'})
+// Connect them
+CREATE (a)-[:USES_WALLET]->(w)
+CREATE (a)-[:HOSTED_ON_SERVER]->(ip)
+// Query the graph back
+MATCH (a:Actor)-[r]->(connectedNode)
+RETURN a, r, connectedNode
+
+Once you see the visual bubbles connect in Neo4j, install FastAPI (pip install fastapi uvicorn neo4j) and write a simple script that runs this query over HTTP.
+
+---
+## CHUNK 4 - Full Stack Developer 2 (Frontend & UI Visualization) Roadmap
+
+i am full stack developer 2 tell me what i need to learn and do for this project , give me a very detailed roadmap , the roadmap should be simple and easy to understand and realistic
+
+As Full Stack Developer 2, you own the presentation layer. In an SIH evaluation, judges interact primarily with your frontend. Even if the backend has excellent logic, a sluggish or confusing user interface can obscure the technical depth. Your mission is to make complex intelligence data look clean, responsive, and intuitive.
+
+1. What You Need to Learn
+You do not need to learn everything at once. Focus only on the specific tools required for this dashboard:
+React Fundamentals (Fast Refresh): Component lifecycle, useState, useEffect, and passing props. Keep state management simple: standard React hooks or zustand (avoid heavy Redux setups).
+A Modern Component Library: Tailwind CSS paired with shadcn/ui (or Lucide React for cyber/security icons). This provides a modern, dark-mode intelligence aesthetic without hand-crafting CSS for hours.
+Graph Visualization (Your Core Skill):
+Primary choice: react-force-graph (specifically ForceGraph2D). It is an out-of-the-box wrapper around D3.js force-directed graphs that supports zooming, panning, node clicking, node colors, and physics layout with minimal code.
+Alternative: Cytoscape.js (more granular control, but steeper learning curve). Stick to react-force-graph for faster iteration.
+Data Fetching & Mocking: Using fetch or axios to query REST APIs, and using local JSON files so you can build the entire UI before the backend is even live.
+Export Utilities: Libraries like jspdf / html2canvas (for one-click intelligence dossier PDF generation) and standard JavaScript file blob triggers for CSV/JSON exports.
+
+2. The Step-by-Step 4-Week Realistic Roadmap
+
+Week 1: Setup, Layout & Mock Data
+Set up a modern React project (using Vite + Tailwind CSS).
+Create a clean, dark-themed dashboard shell with a top navigation bar (Search, Filters, Export button) and a left sidebar.
+Write a static mockData.json file representing nodes (Threat Actors, Crypto Wallets, PGP Keys, Clearnet IPs, Tor Domains) and links between them.
+Test rendering a simple interactive 2D node graph using react-force-graph loaded entirely from your local JSON.
+
+Week 2: Graph Interactivity & Entity Drawer
+Style graph nodes by entity type: Threat Actors (red), Wallets (yellow), PGP Keys (green), IPs/Domains (blue).
+Implement an Inspection Drawer / Sidebar: when an analyst clicks on a node in the graph, a panel slides in from the right showing full metadata (e.g., actor alias, first seen date, attribution confidence score, connected wallets).
+Add graph controls: Zoom in/out, fit to screen, filter by node type (e.g., toggle "Hide Wallets").
+
+Week 3: Intelligence Features & Search Flow
+Build the primary Omnibox / Search Bar: typing a handle or wallet filters the graph and highlights the target node and its direct neighbors.
+Build the Stylometry Match View: a dedicated comparison widget where an analyst sees two forum posts side-by-side with matched linguistic cues and an AI similarity score gauge (e.g., 88% Match).
+Add a Timeline Slider: filter nodes and links based on when activity occurred to visualize actor migration over time.
+
+Week 4: Integration, Polish & Report Generation
+Finalize live endpoints and export capabilities
+Swap local mock data calls with live fetch calls to Backend Developer 1's FastAPI endpoints.
+Build the Export to Report feature: clicking "Generate Dossier" exports the active graph and profile data as an executive PDF summary or structured JSON.
+Optimize rendering: ensure the graph runs smoothly at 60 FPS even with 200–300 nodes.
+Add loading states, empty search states, and error toasts to prevent crashes during the demo.
+
+3. The 3 Core Screens You Must Build
+Main Intelligence Canvas (Default View): Split-screen layout: a control panel/sidebar on the left, full-screen interactive graph canvas in the center. Clicking any node focuses the camera and opens a detail sheet showing associated risk scores and connected evidence.
+Persona Comparison Modal (The AI Showcase): A side-by-side view showing Post A (by Persona 1) and Post B (by Persona 2). Highlights common syntax, word choice, and misspellings with an AI confidence bar.
+Infrastructure Tracker (The Misconfiguration Showcase): A table/card view showing target .onion sites, detected server flaws (e.g., exposed SSL certificates or Apache status leaks), and the linked clearnet IP address mapped with a country flag.
+
+4. Your Mock Data Contract (Use this immediately)
+Do not wait for Backend Developer 1. Save this exact structure as mock_graph.json in your React src/ folder to build your graph view today:
+{
+  "nodes": [
+    { "id": "actor_01", "name": "Shadow99", "type": "actor", "risk": "high" },
+    { "id": "actor_02", "name": "NightRider", "type": "actor", "risk": "high" },
+    { "id": "pgp_01", "name": "4A89 BC12 F901...", "type": "pgp", "risk": "neutral" },
+    { "id": "wallet_01", "name": "bc1qxy2kgdygjr...", "type": "wallet", "risk": "medium" },
+    { "id": "ip_01", "name": "185.220.101.5 (Germany)", "type": "ip", "risk": "high" }
+  ],
+  "links": [
+    { "source": "actor_01", "target": "pgp_01", "relationship": "SIGNED_WITH" },
+    { "source": "actor_02", "target": "pgp_01", "relationship": "REUSED_KEY" },
+    { "source": "actor_01", "target": "wallet_01", "relationship": "RECEIVES_FUNDS" },
+    { "source": "actor_02", "target": "ip_01", "relationship": "ORIGIN_SERVER" }
+  ]
+}
+
+---
+## CHUNK 5 - Cybersecurity / OSINT Lead Roadmap
+
+i am the cyber security person tell me the detail roadmap of the things i need to learn andn do
+
+As the Cybersecurity and Infrastructure Lead for this project, you are the engine. The AI and Full Stack teams cannot do their jobs until you successfully and safely extract data from the Dark Web and map .onion hidden services back to real-world IP addresses.
+Your role does not require you to be a master hacker or penetration tester. Instead, you are an OSINT (Open-Source Intelligence) engineer.
+
+Here is your detailed, step-by-step roadmap to go from absolute beginner to building a working SIH prototype.
+
+Phase 1: Setup and Operational Security (OpSec)
+Goal: Build a safe environment so you can interact with the dark web without accidentally leaking your own IP address or getting hacked.
+What to learn:
+Virtualization: Learn how to use VirtualBox or VMware. Never scrape the dark web from your main host OS.
+The Tor Network: Understand how Tor works (Entry nodes, Relays, Exit nodes). Understand what a v3 .onion address is (a 56-character hidden service address).
+Linux Fundamentals: Get comfortable with the Ubuntu or Debian command line.
+What to do:
+Build a Sandbox VM: Install a fresh Ubuntu Virtual Machine. Take a "Snapshot" so you can always revert it if something breaks.
+Install the Tor Daemon: Do not just install the "Tor Browser". You need the background Tor service running on Linux. Install tor (version 0.4.9+) and verify it is listening on port 9050 (the default SOCKS5 proxy port).
+Learn socks5h: Understand the difference between socks5 and socks5h. When writing code to talk to Tor, you MUST use socks5h so the Tor network handles the DNS resolution. If you use regular socks5, your local machine will try to resolve the .onion domain and fail.
+
+Phase 2: Building the Dark Web Scraper
+Goal: Write a Python script that can visit an .onion forum, bypass basic protections, and download the HTML text so your AI team can analyze it.
+What to learn:
+Python requests library: Learn how to route HTTP requests through a proxy.
+Python Stem library: This is the official Tor controller library for Python. It allows your Python script to talk to the Tor daemon to do things like request a "new identity" (change your IP address) if a dark web forum blocks your current connection.
+HTML Parsing: Learn BeautifulSoup to extract text from messy website code.
+What to do:
+Write a Hello World Scraper: Write a Python script using requests that connects to socks5h://127.0.0.1:9050. Have it fetch a known, safe onion site (like the DuckDuckGo onion mirror) and print the HTML.
+Explore Existing Tools: Look at open-source dark web OSINT tools like TorBot (updated recently in 2026). Read their code to see how they handle crawling. Do not just copy it—understand it.
+Generate a Synthetic Dataset (CRITICAL): Do not wait until you have a perfect dark web scraper to give data to your AI team. Go to the clear web and download an archived dataset of an old forum (like the AzSecure dark web dataset or old RaidForums dumps). Give this JSON/CSV file to your AI and Full Stack teammates immediately so they can start building the graph and AI model.
+
+Phase 3: The De-anonymization Engine (The Core Innovation)
+Goal: This is the heart of the SIH problem statement. You must build a script that finds technical mistakes made by criminals running hidden servers, and maps those mistakes to their real, physical IP addresses.
+What to learn:
+Server Misconfigurations: Read up on Apache mod_status (the /server-status page) and how it accidentally leaks active IP connections.
+SSL/TLS Certificates: Learn how HTTPS works. Understand that if a criminal uses the same SSL certificate for their secret .onion site and their public clearnet site, they can be tracked via the certificate's unique Serial Number or SHA-256 fingerprint.
+The Shodan API: Shodan is a search engine for servers. Learn how to use the shodan-python library.
+What to do:
+Build the onion_scanner.py script: Write a Python script that takes a target .onion URL and does the following:
+Banner Grabbing: Reads the HTTP response headers (e.g., Server: Apache/2.4.41 (Ubuntu)).
+SSL Extraction: Connects via HTTPS and downloads the SSL certificate, extracting the Serial Number.
+Endpoint Probing: Automatically checks if target.onion/server-status or target.onion/.env is accidentally left open.
+Integrate Shodan: Write a function that takes the SSL Serial Number you just found on the dark web and queries the Shodan API (e.g., ssl.cert.serial:<number>). If Shodan has seen that exact same certificate on the regular internet, Shodan will return the real IP address. You have just de-anonymized the server.
+
+Phase 4: Entity Extraction (Connecting the Graph)
+Goal: Extract the "clues" from the text you scraped so the Full Stack developer can put them into the Neo4j graph database.
+What to learn:
+Regex (Regular Expressions): The language of pattern matching.
+What to do:
+Write Python Regex functions to automatically scan thousands of forum posts and extract:
+Cryptocurrency Addresses: (e.g., Bitcoin addresses start with 1, 3, or bc1).
+PGP Public Keys: (Blocks of text starting with -----BEGIN PGP PUBLIC KEY BLOCK-----).
+Email addresses and Usernames.
+Package this data cleanly into JSON format and hand it over to the Full Stack developer to feed into their Neo4j database.
+
+Phase 5: Demo Preparation (How to Win)
+Goal: Ensure the presentation goes flawlessly without relying on the slow, unpredictable Tor network during a live hackathon.
+What to do:
+Simulate a Target: Because the live dark web is slow and hackathon Wi-Fi often blocks Tor, build a fake hidden service locally.
+Setup a local Nginx server on a VM, configure it as a hidden service, and purposely misconfigure it (give it a fake leaked SSL cert and an exposed /server-status page).
+During the demo, point your onion_scanner.py at this local test server. It will instantly execute the scan, find the fake flaw, and hit the Shodan API to "prove" it found the real IP address.
+
+Summary Checklist for You:
+[x] Setup an Ubuntu VM.
+[x] Install tor and verify port 9050 is open. (We handled Tor fallback locally)
+[x] Write a Python script using requests + socks5h to fetch an onion page. (Implemented in Scraper.py)
+[x] Give your team a static CSV of fake/archived forum data immediately. (We created demo_market_a and b)
+[x] Write Regex scripts to extract Bitcoin wallets and PGP keys from text. (Complete)
+[ ] Write the Scanner script to pull SSL certificates from onion sites.
+[ ] Create a free Shodan account and learn to query certificate serial numbers via their API.
+[x] Build a local, purposely vulnerable "dummy" Tor server for a safe, high-speed live demo. (We built demo_market HTMLs instead of a full server)

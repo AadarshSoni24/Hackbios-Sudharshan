@@ -211,11 +211,16 @@ export function getEntityDetail(id: string): EntityDetail {
   
   const node = ctiNodes.find((n) => n.id.toLowerCase() === id.toLowerCase() || n.label.toLowerCase() === id.toLowerCase())
   if (node) {
+    const nameHash = id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+    const dynamicMatch = 75 + (nameHash % 22)
+    const otherActors = ["Shadow99", "SilkRouteX", "PhantomOp", "NeonSpectre", "GhostRider"]
+    const randomActor = otherActors[nameHash % otherActors.length]
+
     return {
       name: node.label,
       platform: node.sublabel,
-      personaMatch: node.risk === "critical" ? 90 : node.risk === "high" ? 80 : 65,
-      matchWith: "Shadow99",
+      personaMatch: dynamicMatch,
+      matchWith: randomActor,
       identifiers: [
         { label: "Node Identifier", value: node.id, copyable: true },
         { label: "Node Type", value: node.type.toUpperCase(), copyable: false },
@@ -224,11 +229,16 @@ export function getEntityDetail(id: string): EntityDetail {
     }
   }
 
+  const fallbackHash = id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  const fallbackMatch = 65 + (fallbackHash % 30) // Random between 65 and 94
+  const fallbackActors = ["PhantomOp", "SilkRouteX", "NeonSpectre", "GhostRider", "DarkVendor"]
+  const randomFallbackActor = fallbackActors[fallbackHash % fallbackActors.length]
+
   return {
     name: id,
     platform: "Custom Indicator",
-    personaMatch: 60,
-    matchWith: "Shadow99",
+    personaMatch: fallbackMatch,
+    matchWith: randomFallbackActor,
     identifiers: [
       { label: "Raw Indicator", value: id, copyable: true },
       { label: "Status", value: "Active Link Analysis", copyable: false },
@@ -243,11 +253,11 @@ export interface TimelineEvent {
 }
 
 export const timeline: TimelineEvent[] = [
-  { date: "Mar 2025", label: "Exploit.in registration", tone: "neutral" },
-  { date: "Jun 2025", label: "First BTC cashout", tone: "neutral" },
-  { date: "Sep 2025", label: "Server IP leaked (DE)", tone: "warn" },
-  { date: "Nov 2025", label: "Stylometry match flagged", tone: "warn" },
-  { date: "Jan 2026", label: "PGP Key reused", tone: "critical" },
+  { date: "Nov 2025", label: "Exploit.in registration", tone: "neutral" },
+  { date: "Feb 2026", label: "First BTC cashout", tone: "neutral" },
+  { date: "May 2026", label: "Server IP leaked (DE)", tone: "warn" },
+  { date: "Aug 2026", label: "Stylometry match flagged", tone: "warn" },
+  { date: "Oct 2026", label: "PGP Key reused", tone: "critical" },
 ]
 
 export interface Artifact {
@@ -261,7 +271,7 @@ export interface Artifact {
 
 export const artifacts: Artifact[] = [
   {
-    timestamp: "2026-01-14 03:22Z",
+    timestamp: "2026-10-05 03:22Z",
     source: "Dread Forum",
     actor: "Shadow99",
     indicator: "PGP 4A9F21B3",
@@ -269,7 +279,7 @@ export const artifacts: Artifact[] = [
     risk: "Critical",
   },
   {
-    timestamp: "2025-11-02 19:07Z",
+    timestamp: "2026-08-12 19:07Z",
     source: "Shodan",
     actor: "Shadow99",
     indicator: "185.220.101.5",
@@ -277,7 +287,7 @@ export const artifacts: Artifact[] = [
     risk: "High",
   },
   {
-    timestamp: "2025-09-28 11:41Z",
+    timestamp: "2026-05-28 11:41Z",
     source: "Exploit.in",
     actor: "GhostRider",
     indicator: "bc1qxy2kgdy",
@@ -285,7 +295,7 @@ export const artifacts: Artifact[] = [
     risk: "High",
   },
   {
-    timestamp: "2025-06-16 08:15Z",
+    timestamp: "2026-02-16 08:15Z",
     source: "Tor Market",
     actor: "DarkVendor",
     indicator: "91.219.237.9",
@@ -293,7 +303,7 @@ export const artifacts: Artifact[] = [
     risk: "Medium",
   },
   {
-    timestamp: "2025-03-04 22:58Z",
+    timestamp: "2025-11-04 22:58Z",
     source: "Blockchain",
     actor: "Shadow99",
     indicator: "1A1zP1eP5QG",

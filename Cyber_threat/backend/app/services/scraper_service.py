@@ -23,9 +23,12 @@ PATTERNS = {
     "ethereum_wallets": re.compile(r"\b0x[a-fA-F0-9]{40}\b"),
     "monero_wallets": re.compile(r"\b[48][0-9AB][1-9A-HJ-NP-Za-km-z]{93}\b"),
     "emails": re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"),
+    "phone_numbers": re.compile(r"\b(?:\+?\d{1,3}[-.●\s]?)?\(?\d{3}\)?[-.●\s]?\d{3}[-.●\s]?\d{4}\b"),
     "pgp_keys": re.compile(r"-----BEGIN PGP PUBLIC KEY BLOCK-----[\s\S]*?-----END PGP PUBLIC KEY BLOCK-----"),
     "onion_links": re.compile(r"\b[a-z2-7]{56}\.onion\b", re.IGNORECASE),
-    "handles": re.compile(r"(?:Author|User|Username|Profile|Member):\s*([a-zA-Z0-9_-]{3,20})|@([a-zA-Z0-9_-]{3,20})", re.IGNORECASE),
+    "handles": re.compile(r"(?:Author|User|Username|Profile|Member|Vendor):\s*([a-zA-Z0-9_-]{3,20})|(?<=\s)@([a-zA-Z0-9_-]{3,20})", re.IGNORECASE),
+    "ipv4_addresses": re.compile(r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b"),
+    "ssl_certificates": re.compile(r"(?:SSL|TLS) Serial:\s*([A-Fa-f0-9:]+)", re.IGNORECASE),
 }
 
 def extract_entities(text: str) -> dict:
@@ -34,8 +37,13 @@ def extract_entities(text: str) -> dict:
         for key, pattern in PATTERNS.items()
     }
 
+import hashlib
+
 def build_record(source: str, text: str, headers: dict = None) -> dict:
     entities = extract_entities(text)
+    
+    sha256_hash = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    
     if "handles" in entities:
         flat_handles = []
         for match in entities["handles"]:
@@ -48,6 +56,7 @@ def build_record(source: str, text: str, headers: dict = None) -> dict:
         "last_scan_date": datetime.now(timezone.utc).isoformat(),
         "category": "unclassified",
         "attribution_confidence": None,
+        "sha256_hash": sha256_hash,
         "identifiers": entities,
         "identifier_count": total_identifiers,
         "infrastructure": {

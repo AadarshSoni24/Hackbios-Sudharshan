@@ -28,7 +28,15 @@ class ScanRequest(BaseModel):
 from app.models.database import SessionLocal
 
 def background_scan_task(url: str):
-    """Runs the scraper and ingests data into the mock DB and SQLite DB."""
+    """Runs the scraper and ingests data into the mock DB and SQLite DB. Handles non-URL indicators."""
+    
+    # If the user enters an indicator (e.g. a Wallet or PGP) instead of a URL
+    if not url.startswith("http") and not url.endswith(".html"):
+        print(f"[*] Indicator Pivot Search triggered for: {url}")
+        # In a real system, we would query the Graph DB for this indicator here.
+        # For the demo, we just simulate a successful search to refresh the graph.
+        return
+        
     records = run_integrated_scan(url)
     if records:
         # Connect to DB for background task
@@ -117,22 +125,39 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
         
         # DB Integration for Actors
         if db:
-            for act_id in actor_ids:
-                handle_lbl = handle if handles else "Unknown Actor"
+            for handle_val in handles:
+                act_id = handle_val.lower()
+                handle_lbl = handle_val
                 # Check if exists
                 if not db.query(Actor).filter(Actor.id == act_id).first():
                     db.add(Actor(id=act_id, display_handle=handle_lbl, category="UNKNOWN", risk_level="HIGH", origin_badge="SCRAPER"))
+                    
+            if not handles and actor_ids:
+                # Fallback for anonymous
+                for act_id in actor_ids:
+                    if not db.query(Actor).filter(Actor.id == act_id).first():
+                        db.add(Actor(id=act_id, display_handle="Unknown Actor", category="UNKNOWN", risk_level="HIGH", origin_badge="SCRAPER"))
 
         # 2. Add Wallets
+        from app.services.crypto_service import enrich_wallet
+        
         for w_type in ["bitcoin_wallets", "ethereum_wallets", "monero_wallets"]:
             for wallet in identifiers.get(w_type, []):
                 if not any(n["id"] == wallet for n in MOCK_GRAPH_DB["nodes"]):
+                    # Query Blockchain API
+                    crypto_name = w_type.split("_")[0]
+                    wallet_data = enrich_wallet(wallet, crypto_name)
+                    
+                    balance_str = wallet_data.get("balance", "Unknown") if wallet_data else "Unknown"
+                    tx_count = wallet_data.get("transactions", "?") if wallet_data else "?"
+                    
                     MOCK_GRAPH_DB["nodes"].append({
                         "id": wallet,
                         "label": wallet[:12] + "...",
-                        "sublabel": w_type.replace("_", " ").title(),
+                        "sublabel": f"{balance_str} ({tx_count} TXs)",
                         "type": "wallet",
-                        "risk": "high"
+                        "risk": "high",
+                        "wallet_data": wallet_data
                     })
                 # Add edge
                 MOCK_GRAPH_DB["edges"].append({"source": primary_actor, "target": wallet, "label": "OWNS_WALLET"})
@@ -171,7 +196,29 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
                 })
             MOCK_GRAPH_DB["edges"].append({"source": primary_actor, "target": email, "label": "USES_EMAIL"})
             
-        # 5. Infrastructure Headers
+        # 5. Infrastructure Headers & IPs
+        from app.services.shodan_service import enrich_ip_with_shodan
+        
+        for ip in identifiers.get("ipv4_addresses", []):
+            if not any(n["id"] == ip for n in MOCK_GRAPH_DB["nodes"]):
+                # Hit Shodan API
+                shodan_data = enrich_ip_with_shodan(ip)
+                country = shodan_data.get("country_name", "Unknown") if shodan_data else "Unknown"
+                isp = shodan_data.get("isp", "Unknown ISP") if shodan_data else "Unknown ISP"
+                
+                MOCK_GRAPH_DB["nodes"].append({
+                    "id": ip,
+                    "label": ip,
+                    "sublabel": f"{country} ({isp[:10]})",
+                    "type": "ip",
+                    "risk": "critical",
+                    "shodan_data": shodan_data
+                })
+            MOCK_GRAPH_DB["edges"].append({"source": primary_actor, "target": ip, "label": "HOSTED_ON_SERVER"})
+            
+            if db:
+                db.add(Entity(actor_id=primary_actor, type="IPV4_ADDRESS", value=ip))
+
         headers = record.get("infrastructure", {}).get("server_headers", {})
         server = headers.get("Server")
         if server:
@@ -195,6 +242,19 @@ def ingest_scraper_data(req: ScraperDataIngestRequest, db: Session = Depends(get
                     candidate_host=infra_id,
                     strength="STRONG"
                 ))
+        
+        # Add SSL Certificates
+        for ssl in identifiers.get("ssl_certificates", []):
+            ssl_id = f"ssl_{ssl}"
+            if not any(n["id"] == ssl_id for n in MOCK_GRAPH_DB["nodes"]):
+                MOCK_GRAPH_DB["nodes"].append({
+                    "id": ssl_id,
+                    "label": "SSL Cert",
+                    "sublabel": f"Serial: {ssl[:8]}...",
+                    "type": "ip",
+                    "risk": "high"
+                })
+            MOCK_GRAPH_DB["edges"].append({"source": primary_actor, "target": ssl_id, "label": "USED_SSL_CERT"})
 
     if db:
         try:
@@ -216,4 +276,19 @@ def start_scan(req: ScanRequest, background_tasks: BackgroundTasks):
     return {
         "success": True,
         "message": f"Background scan started for {req.url}. Graph will update automatically."
+    }
+
+class StylometryRequest(BaseModel):
+    text_a: str
+    text_b: str
+
+@router.post("/analyze-style")
+def analyze_style(req: StylometryRequest):
+    """Uses Gemini API to compare two texts for authorship stylometry."""
+    from app.services.gemini_service import analyze_stylometry
+    
+    result = analyze_stylometry(req.text_a, req.text_b)
+    return {
+        "success": True,
+        "data": result
     }

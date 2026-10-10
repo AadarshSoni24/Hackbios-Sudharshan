@@ -15,7 +15,7 @@ from app.api.v1.system import router as system_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Initialize DB & Seed Data
-    initialize_seed_data()
+    # initialize_seed_data() # Disabled to prevent fake data overriding live demo
     yield
 
 app = FastAPI(

@@ -30,39 +30,13 @@ def get_actors():
                 "confidence_score": 0.94 if pgp else 0.82
             })
     
-    # Add some static ones if empty to show the UI
-    if not actors:
-        actors = [
-            {
-                "id": "shadow99", "handle": "Shadow99", "risk_level": "CRITICAL", 
-                "category": "RANSOMWARE", "primary_wallet": "1BoatSLR2mMmb...", 
-                "pgp_fingerprint": "C543 B981 7892...", "confidence_score": 0.91
-            },
-            {
-                "id": "silkroutex", "handle": "SilkRouteX", "risk_level": "HIGH", 
-                "category": "DATA_LEAKS", "primary_wallet": "1BoatSLR2mMmb...", 
-                "pgp_fingerprint": None, "confidence_score": 0.82
-            }
-        ]
-
     return {"success": True, "data": actors}
 
 @router.get("/links")
 def get_links():
     return {
         "success": True,
-        "data": [
-            {
-                "id": "link1", "actor_a": {"handle": "Shadow99"}, "actor_b": {"handle": "SilkRouteX"},
-                "vector": "V1_IDENTIFIERS", "score": 0.88, "band": "HIGH", "status": "CONFIRMED",
-                "evidence": "Multi-input transaction co-spend: Shared BTC wallet [1BoatSL...]"
-            },
-            {
-                "id": "link2", "actor_a": {"handle": "PhantomOp"}, "actor_b": {"handle": "NeonSpectre"},
-                "vector": "V3_STYLOMETRY", "score": 0.74, "band": "MEDIUM", "status": "PROPOSED",
-                "evidence": "MiniLM sentence embedding cosine similarity: 0.84. Identical punctuation cadence."
-            }
-        ]
+        "data": []
     }
 
 @router.post("/links/{link_id}/{action}")
@@ -84,15 +58,4 @@ def get_infra_findings():
                 "strength": "STRONG"
             })
             
-    if not findings:
-        findings = [
-            {
-                "id": "i1", "onion_address": "apexleaks478...", "finding_type": "EXACT_CERT_MATCH",
-                "banner": "Nginx/1.24.0 (Ubuntu)", "candidate_host": "185.220.101.5", "strength": "STRONG"
-            },
-            {
-                "id": "i2", "onion_address": "darktumbler887...", "finding_type": "FAVICON_HASH_MATCH",
-                "banner": "Python/3.10 aiohttp", "candidate_host": "45.154.255.89", "strength": "MEDIUM"
-            }
-        ]
     return {"success": True, "data": findings}

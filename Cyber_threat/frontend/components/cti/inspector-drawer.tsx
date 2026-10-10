@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { X, PanelRightOpen } from "lucide-react"
+import { X, PanelRightOpen, Shield, Copy, Check } from "lucide-react"
 import { entityDetails, getEntityDetail, type EntityDetail } from "@/lib/cti-data"
 
 interface InspectorDrawerProps {
@@ -25,16 +25,16 @@ export function InspectorDrawer({
 
   if (isCollapsed) {
     return (
-      <div className="flex h-full w-10 flex-col items-center justify-between border-l border-[#1F2937] bg-[#111827] py-4">
+      <div className="flex h-full w-10 flex-col items-center justify-between border-l border-[#CBCBCB] bg-[#1C1C1C] py-4">
         <button
           onClick={onToggleCollapse}
           aria-label="Expand inspector drawer"
           title="Expand Inspector"
-          className="p-1.5 rounded-md text-[#22D3EE] hover:bg-[#1F2937] hover:text-slate-100 transition"
+          className="p-1.5 rounded-md text-[#CBCBCB] hover:bg-zinc-800 hover:text-white transition"
         >
           <PanelRightOpen className="h-5 w-5" />
         </button>
-        <span className="font-sans text-[12px] font-semibold tracking-wider text-[#94A3B8] uppercase -rotate-90 whitespace-nowrap">
+        <span className="font-sans text-[12px] font-semibold tracking-wider text-zinc-400 uppercase -rotate-90 whitespace-nowrap">
           INSPECTOR DRAWER
         </span>
         <div className="h-4" />
@@ -44,22 +44,24 @@ export function InspectorDrawer({
 
   if (!detail) {
     return (
-      <div className="flex h-full flex-col border-l border-[#1F2937] bg-[#111827]">
-        <div className="flex items-center justify-between border-b border-[#1F2937] px-5 py-3.5 bg-[#111827]">
-          <span className="font-sans text-[14px] font-bold tracking-tight text-slate-100 uppercase">
+      <div className="flex h-full flex-col border-l border-[#CBCBCB] bg-[#181818]">
+        <div className="flex items-center justify-between border-b border-[#CBCBCB] px-5 py-3.5 bg-[#1C1C1C]">
+          <span className="font-sans text-[14px] font-bold tracking-tight text-white uppercase">
             ENTITY INSPECTOR
           </span>
           <button
             onClick={onClose}
             aria-label="Close inspector"
             title="Close Inspector"
-            className="p-1 rounded-md text-slate-400 hover:bg-[#1F2937] hover:text-[#22D3EE] transition"
+            className="p-1 rounded-md text-zinc-400 hover:bg-zinc-800 hover:text-white transition"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
         <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
-          <div className="border border-dashed border-[#1F2937] bg-[#080D16]/50 p-6 rounded-lg font-sans text-[14px] text-slate-400 max-w-[240px]">
+          <div className="relative overflow-hidden rounded-xl border border-[#CBCBCB] bg-[#949494] p-6 text-zinc-950 font-bold max-w-[260px] shadow-md">
+            <div className="pointer-events-none absolute -top-16 -right-16 h-36 w-36 rounded-full bg-white/20 blur-xl" />
+            <Shield className="h-8 w-8 text-zinc-950 mx-auto mb-2 opacity-80" />
             SELECT A THREAT NODE TO INSPECT
           </div>
         </div>
@@ -68,60 +70,61 @@ export function InspectorDrawer({
   }
 
   return (
-    <div className="flex h-full flex-col border-l border-[#1F2937] bg-[#111827]">
+    <div className="flex h-full flex-col border-l border-[#CBCBCB] bg-[#181818]">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#1F2937] px-5 py-3.5 bg-[#111827]">
+      <div className="flex items-center justify-between border-b border-[#CBCBCB] px-5 py-3.5 bg-[#1C1C1C]">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2.5">
-            <h3 className="font-sans text-[18px] font-bold tracking-tight text-slate-100">{detail.name}</h3>
-            <span className="border border-[#EF4444]/40 bg-[#EF4444]/10 px-2 py-0.5 font-sans text-[11px] font-semibold text-[#EF4444] uppercase tracking-wider rounded">
+            <h3 className="font-sans text-[18px] font-bold tracking-tight text-white">{detail.name}</h3>
+            <span className="border border-red-500/50 bg-red-950/40 px-2 py-0.5 font-sans text-[11px] font-bold text-red-300 uppercase tracking-wider rounded">
               CRITICAL
             </span>
           </div>
-          <p className="font-sans text-[13px] text-slate-400 mt-0.5">{detail.platform}</p>
+          <p className="font-sans text-[13px] text-zinc-400 mt-0.5">{detail.platform}</p>
         </div>
         <button
           onClick={onClose}
           aria-label="Close inspector"
           title="Close Inspector"
-          className="p-1 rounded-md text-slate-400 hover:bg-[#1F2937] hover:text-[#22D3EE] transition"
+          className="p-1 rounded-md text-zinc-400 hover:bg-zinc-800 hover:text-white transition"
         >
           <X className="h-5 w-5" />
         </button>
       </div>
 
       <div className="flex-1 space-y-5 overflow-y-auto p-5">
-        {/* Prominent Risk Score Box (AI Analysis Card -> Cyan Left Border) */}
-        <div className="border-l-4 border-l-[#22D3EE] border-y border-r border-[#1F2937] bg-[#162032] p-4 rounded-r-lg shadow-sm">
+        {/* Prominent Risk Score Box (#949494 Silver/Grey Card) */}
+        <div className="relative overflow-hidden rounded-xl border border-[#CBCBCB] bg-[#949494] p-4 text-zinc-950 shadow-md">
+          <div className="pointer-events-none absolute -top-16 -right-16 h-36 w-36 rounded-full bg-white/20 blur-xl" />
           <div className="flex items-center justify-between">
-            <span className="font-sans text-[12px] font-semibold uppercase tracking-wider text-[#94A3B8]">
+            <span className="font-sans text-[12px] font-bold uppercase tracking-wider text-zinc-800">
               RISK SCORE & MATCH CONFIDENCE
             </span>
-            <span className="font-sans text-[11px] font-semibold text-[#22D3EE] uppercase tracking-wider">
+            <span className="font-sans text-[11px] font-extrabold text-zinc-950 uppercase tracking-wider bg-white/30 px-2 py-0.5 rounded border border-white/40">
               HIGH CONFIDENCE
             </span>
           </div>
 
-          <div className="mt-3 flex items-center gap-4 border border-[#1F2937] bg-[#080D16] p-3.5 rounded-md">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-[#22D3EE]/40 bg-[#22D3EE]/10 rounded-md">
-              <span className="font-sans text-[28px] font-extrabold text-[#22D3EE] leading-none">
+          <div className="mt-3 flex items-center gap-4 border border-zinc-950/20 bg-zinc-950/10 p-3.5 rounded-lg">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-zinc-950/30 bg-zinc-950/15 rounded-lg">
+              <span className="font-sans text-[28px] font-black text-zinc-950 leading-none">
                 {detail.personaMatch}%
               </span>
             </div>
             <div className="min-w-0 flex-1">
-              <p className="font-sans text-[14px] font-bold text-slate-100">
+              <p className="font-sans text-[14px] font-bold text-zinc-950">
                 PERSONA MATCH CONFIDENCE
               </p>
-              <p className="mt-0.5 font-sans text-[13px] text-slate-400">
-                LINKED WITH <span className="font-bold text-[#22D3EE]">{detail.matchWith}</span>
+              <p className="mt-0.5 font-sans text-[13px] text-zinc-800">
+                LINKED WITH <span className="font-bold underline decoration-zinc-950">{detail.matchWith}</span>
               </p>
             </div>
           </div>
         </div>
 
-        {/* Extracted Identifiers in Monospace Key-Value Blocks (Raw Evidence -> Neutral Slate Left Border) */}
+        {/* Extracted Identifiers in Monospace Key-Value Blocks */}
         <div>
-          <p className="mb-2.5 font-sans text-[12px] font-semibold uppercase tracking-wider text-[#94A3B8]">
+          <p className="mb-2.5 font-sans text-[12px] font-semibold uppercase tracking-wider text-zinc-400">
             EXTRACTED IDENTIFIERS
           </p>
           <div className="space-y-2.5">
@@ -133,15 +136,40 @@ export function InspectorDrawer({
 
         {/* Action Buttons */}
         <div className="space-y-2.5 pt-2">
-          <ActionButton onClick={onOpenStylometry} accent="cyan">
+          <button
+            onClick={onOpenStylometry}
+            className="flex w-full items-center justify-center gap-2 border border-[#CBCBCB] bg-[#CBCBCB] hover:bg-white text-zinc-950 font-bold p-3 font-sans text-[13px] rounded-lg transition-all shadow-sm"
+          >
             COMPARE STYLOMETRY TEXT
-          </ActionButton>
-          <ActionButton onClick={onOpenMisconfig} accent="emerald">
+          </button>
+          <button
+            onClick={onOpenMisconfig}
+            className="flex w-full items-center justify-center gap-2 border border-[#4A4A4A] bg-gradient-to-r from-[#4D4D4D] to-[#4A4A4A] hover:from-[#585858] hover:to-[#525252] text-white font-bold p-3 font-sans text-[13px] rounded-lg transition-all shadow-sm"
+          >
             INSPECT TOR MISCONFIGURATIONS
-          </ActionButton>
-          <ActionButton onClick={() => {}} accent="slate">
+          </button>
+          <button
+            onClick={async () => {
+              try {
+                const res = await fetch(`http://127.0.0.1:8000/api/v1/reports/export/${detail.name}`, { method: 'POST' });
+                if (res.ok) {
+                  const blob = await res.blob();
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `SUDARSHAN_DOSSIER_${detail.name}.pdf`;
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+                }
+              } catch (e) {
+                console.error("Failed to export PDF", e);
+              }
+            }}
+            className="flex w-full items-center justify-center gap-2 border border-[#CBCBCB]/60 bg-transparent hover:bg-zinc-800 text-zinc-200 font-bold p-3 font-sans text-[13px] rounded-lg transition-all"
+          >
             EXPORT DOSSIER PDF
-          </ActionButton>
+          </button>
         </div>
       </div>
     </div>
@@ -168,46 +196,20 @@ function IdentifierRow({
     }
   }
   return (
-    <div className="flex items-center justify-between gap-2 border-l-4 border-l-slate-600 border-y border-r border-[#1F2937] bg-[#080D16] p-3 rounded-r-md transition hover:border-[#1F2937]">
+    <div className="flex items-center justify-between gap-2 border border-[#CBCBCB]/40 bg-[#242424] hover:border-[#CBCBCB] p-3 rounded-lg transition">
       <div className="min-w-0 flex-1">
-        <p className="font-sans text-[12px] font-semibold uppercase tracking-wider text-[#94A3B8]">{label}</p>
-        <p className="truncate font-mono text-[14px] font-medium tracking-normal text-slate-100 mt-0.5">{value}</p>
+        <p className="font-sans text-[11px] font-semibold uppercase tracking-wider text-zinc-400">{label}</p>
+        <p className="truncate font-mono text-[13px] font-medium tracking-normal text-white mt-0.5">{value}</p>
       </div>
       {copyable && (
         <button
           onClick={copy}
           aria-label={`Copy ${label}`}
-          className="shrink-0 font-mono text-[12px] font-semibold text-slate-400 transition hover:text-[#22D3EE] ml-2"
+          className="shrink-0 font-mono text-[11px] font-bold text-[#CBCBCB] hover:text-white transition ml-2 border border-[#CBCBCB]/30 px-2 py-0.5 rounded bg-zinc-800"
         >
-          {copied ? "[COPIED]" : "[COPY]"}
+          {copied ? "COPIED" : "COPY"}
         </button>
       )}
     </div>
   )
 }
-
-function ActionButton({
-  children,
-  onClick,
-  accent,
-}: {
-  children: React.ReactNode
-  onClick: () => void
-  accent: "cyan" | "emerald" | "slate"
-}) {
-  const styles = {
-    cyan: "border-[#22D3EE]/40 bg-[#22D3EE]/10 text-[#22D3EE] hover:bg-[#22D3EE]/20 hover:border-[#22D3EE] focus-visible:ring-2 focus-visible:ring-[#22D3EE]",
-    emerald: "border-[#10B981]/40 bg-[#10B981]/10 text-[#10B981] hover:bg-[#10B981]/20 hover:border-[#10B981] focus-visible:ring-2 focus-visible:ring-[#10B981]",
-    slate: "border-[#1F2937] bg-[#1E293B] text-slate-200 hover:bg-[#334155] hover:border-slate-500 focus-visible:ring-2 focus-visible:ring-slate-400",
-  }[accent]
-  return (
-    <button
-      onClick={onClick}
-      className={`flex w-full items-center justify-center gap-2 border p-3 font-sans text-[13px] font-semibold tracking-wide rounded-md transition-all outline-none ${styles}`}
-    >
-      {children}
-    </button>
-  )
-}
-
-

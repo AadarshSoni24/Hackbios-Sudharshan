@@ -64,3 +64,40 @@ def get_dossier_preview(case_id: str, db: Session = Depends(get_db)):
             ]
         }
     }
+
+from fastapi.responses import FileResponse
+import os
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+
+@router.post("/export/{handle}")
+def export_dossier_pdf(handle: str, db: Session = Depends(get_db)):
+    # Create an exports directory if it doesn't exist
+    os.makedirs("exports", exist_ok=True)
+    pdf_path = f"exports/Dossier_{handle.upper()}.pdf"
+    
+    actor = db.query(Actor).filter(Actor.id == handle.lower()).first()
+    if not actor:
+        actor = db.query(Actor).filter(Actor.display_handle == handle).first()
+        
+    c = canvas.Canvas(pdf_path, pagesize=letter)
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(100, 750, "NTRO CYBER INTELLIGENCE DOSSIER")
+    
+    c.setFont("Helvetica", 12)
+    c.drawString(100, 720, "Sec 65B Evidence Act - Certified Copy")
+    
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(100, 680, f"Target Handle: {actor.display_handle if actor else handle}")
+    
+    c.setFont("Helvetica", 12)
+    c.drawString(100, 660, f"Risk Level: {actor.risk_level if actor else 'UNKNOWN'}")
+    c.drawString(100, 640, f"Category: {actor.category if actor else 'UNKNOWN'}")
+    c.drawString(100, 620, f"Confidence Score: {int(actor.confidence_score * 100) if actor else 0}%")
+    
+    c.drawString(100, 580, "This is an automatically generated statutory report.")
+    c.drawString(100, 560, f"Timestamp: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}")
+    
+    c.save()
+    
+    return FileResponse(path=pdf_path, filename=f"Dossier_{handle.upper()}.pdf", media_type='application/pdf')

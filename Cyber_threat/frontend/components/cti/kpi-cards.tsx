@@ -1,32 +1,56 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { Shield, Share2, AlertTriangle, Radio } from "lucide-react"
 
 interface Kpi {
   label: string
+  sublabel: string
   value: string
+  unit?: string
   valueClass?: string
+  dotColor: string
   badge?: string
   pulse?: boolean
+  icon: any
 }
 
 const defaultKpis: Kpi[] = [
-  { label: "TARGET PERSONAS", value: "10" },
+  {
+    label: "TARGET PERSONAS",
+    sublabel: "High-risk threat actors under continuous monitoring",
+    value: "0",
+    unit: "/Active",
+    dotColor: "bg-emerald-600 shadow-[0_0_8px_rgba(5,150,105,0.6)]",
+    icon: Shield,
+  },
   {
     label: "LINKED ENTITIES",
-    value: "4",
+    sublabel: "Cross-vector wallet & PGP correlation bridges",
+    value: "0",
+    unit: "/Linked",
     badge: "High Confidence",
+    dotColor: "bg-sky-600 shadow-[0_0_8px_rgba(2,132,199,0.6)]",
+    icon: Share2,
   },
   {
     label: "IP LEAKS DISCOVERED",
-    value: "3",
-    valueClass: "text-[#EF4444]",
+    sublabel: "Clearnet origin server header misconfigurations",
+    value: "0",
+    unit: "/Leaked",
+    valueClass: "text-rose-950",
+    dotColor: "bg-rose-600 shadow-[0_0_8px_rgba(225,29,72,0.6)]",
+    icon: AlertTriangle,
   },
   {
     label: "NETWORK STATUS",
-    value: "Tor Online",
-    valueClass: "text-[#22C55E]",
+    sublabel: "SOCKS5 routing daemon active on 127.0.0.1:9050",
+    value: "TOR ONLINE",
+    unit: "/Daemon",
+    valueClass: "text-[#494950]",
     pulse: true,
+    dotColor: "bg-emerald-600 shadow-[0_0_8px_rgba(5,150,105,0.6)]",
+    icon: Radio,
   },
 ]
 
@@ -41,61 +65,115 @@ export function KpiCards() {
           const json = await res.json()
           if (json.data) {
             setKpis([
-              { label: "TARGET PERSONAS", value: String(json.data.monitored_actors || 10) },
+              {
+                label: "TARGET PERSONAS",
+                sublabel: "High-risk threat actors under continuous monitoring",
+                value: String(json.data.monitored_actors ?? 0),
+                unit: "/Active",
+                dotColor: "bg-emerald-600 shadow-[0_0_8px_rgba(5,150,105,0.6)]",
+                icon: Shield,
+              },
               {
                 label: "LINKED ENTITIES",
-                value: String(json.data.linked_entities || 4),
+                sublabel: "Cross-vector wallet & PGP correlation bridges",
+                value: String(json.data.linked_entities ?? 0),
+                unit: "/Linked",
                 badge: "High Confidence",
+                dotColor: "bg-sky-600 shadow-[0_0_8px_rgba(2,132,199,0.6)]",
+                icon: Share2,
               },
               {
                 label: "IP LEAKS DISCOVERED",
-                value: String(json.data.ip_leaks_discovered || 3),
-                valueClass: "text-[#EF4444]",
+                sublabel: "Clearnet origin server header misconfigurations",
+                value: String(json.data.ip_leaks_discovered ?? 0),
+                unit: "/Leaked",
+                valueClass: "text-rose-950",
+                dotColor: "bg-rose-600 shadow-[0_0_8px_rgba(225,29,72,0.6)]",
+                icon: AlertTriangle,
               },
               {
                 label: "NETWORK STATUS",
-                value: "Tor Online",
-                valueClass: "text-[#22C55E]",
+                sublabel: "SOCKS5 routing daemon active on 127.0.0.1:9050",
+                value: "TOR ONLINE",
+                unit: "/Daemon",
+                valueClass: "text-[#494950]",
                 pulse: true,
+                dotColor: "bg-emerald-600 shadow-[0_0_8px_rgba(5,150,105,0.6)]",
+                icon: Radio,
               },
             ])
           }
         }
       } catch (e) {
-        // Fallback to default state
+        // Fallback to default
       }
     }
     fetchKpis()
   }, [])
 
   return (
-    <div className="grid grid-cols-2 gap-4 px-5 py-3 lg:grid-cols-4 bg-[#080D16]">
-      {kpis.map((kpi) => (
-        <div
-          key={kpi.label}
-          className="relative bg-[#0F172A] border border-[#1F2937] p-4 lg:p-5 rounded-lg transition-all duration-300 hover:border-[#22C55E]/50 hover:shadow-lg hover:shadow-[#22C55E]/10 group"
-        >
-          <div className="flex items-start justify-between">
-            <p className="font-sans text-[11px] font-semibold tracking-wider text-slate-400 uppercase">{kpi.label}</p>
-          </div>
-          <div className="mt-2 flex items-baseline justify-between gap-2">
-            <span className={`font-mono text-[28px] font-bold tracking-tight leading-tight ${kpi.valueClass ?? "text-slate-100"}`}>
-              {kpi.value}
-            </span>
-            {kpi.pulse && (
-              <span className="flex h-2.5 w-2.5 relative">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#22C55E] opacity-75" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#22C55E]" />
+    <div className="grid grid-cols-1 gap-4 px-6 py-4 sm:grid-cols-2 lg:grid-cols-4 bg-[#0D0D0D]">
+      {kpis.map((kpi) => {
+        const Icon = kpi.icon
+        return (
+          <div
+            key={kpi.label}
+            className="relative overflow-hidden rounded-2xl bg-[#949494] border border-[#CBCBCB] p-5 lg:p-6 shadow-xl transition-all duration-300 hover:border-white hover:shadow-2xl group"
+          >
+            {/* Top-Right Ambient Highlight Sheen */}
+            <div className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-white/20 blur-2xl group-hover:bg-white/30 transition-all" />
+
+            {/* Faint Background Watermark Emblem */}
+            <Icon className="pointer-events-none absolute -bottom-4 -right-4 h-24 w-24 text-black/[0.06] group-hover:text-black/[0.1] transition-all" />
+
+            {/* Header: Glowing Dot + Label */}
+            <div className="flex items-center gap-2">
+              <span className={`h-2.5 w-2.5 rounded-full ${kpi.dotColor} shrink-0`} />
+              <h3 className="font-sans text-xs font-bold tracking-wide text-zinc-950 uppercase">
+                {kpi.label}
+              </h3>
+            </div>
+
+            {/* Subtitle */}
+            <p className="mt-1.5 text-[11px] font-sans text-zinc-800 font-medium leading-relaxed line-clamp-2">
+              {kpi.sublabel}
+            </p>
+
+            {/* Big Metric Display */}
+            <div className="mt-4 flex items-baseline gap-1.5">
+              <span className={`font-mono text-3xl font-bold tracking-tight ${kpi.valueClass ?? "text-zinc-950"}`}>
+                {kpi.value}
               </span>
+              {kpi.unit && (
+                <span className="font-sans text-xs text-zinc-800 font-bold">
+                  {kpi.unit}
+                </span>
+              )}
+            </div>
+
+            {/* Bottom Status / Pill */}
+            {kpi.badge && (
+              <div className="mt-3">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-950/30 bg-sky-950/15 px-2.5 py-0.5 text-[10px] font-mono font-bold text-sky-950">
+                  <span className="h-1.5 w-1.5 rounded-full bg-sky-600" />
+                  {kpi.badge}
+                </span>
+              </div>
+            )}
+            {kpi.pulse && (
+              <div className="mt-3 flex items-center gap-1.5">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-700 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-700" />
+                </span>
+                <span className="text-[10px] font-mono text-emerald-950 font-bold uppercase tracking-wider">
+                  Active Circuit
+                </span>
+              </div>
             )}
           </div>
-          {kpi.badge && (
-            <span className="mt-2 inline-block border border-[#38BDF8]/40 bg-[#38BDF8]/10 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-[#38BDF8] rounded">
-              {kpi.badge}
-            </span>
-          )}
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
