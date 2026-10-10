@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -34,8 +35,8 @@ export function Sidebar() {
         {/* Brand Header */}
         <div className="h-14 px-4 border-b border-[#CBCBCB] flex items-center bg-[#3A3A3A]">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#383838] via-[#242424] to-[#121212] border border-[#CBCBCB]/60 flex items-center justify-center font-mono font-bold text-white text-xs shadow-md shadow-black/50">
-              SG
+            <div className="relative h-8 w-8 flex items-center justify-center drop-shadow-md">
+              <Image src="/logo.png" alt="Sudarshan Logo" width={32} height={32} className="object-contain" />
             </div>
             <span className="font-mono text-sm font-bold text-white tracking-wider">
               SUDHARSHAN

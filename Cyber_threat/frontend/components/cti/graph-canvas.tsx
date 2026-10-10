@@ -102,13 +102,16 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
     [visibleNodes, visibleEdges],
   )
 
-  // Configure d3 force physics
+  // Configure d3 force physics (Option 3: Physics & Gravity Adjustments)
   useEffect(() => {
     if (fgRef.current) {
       const fg = fgRef.current
-      fg.d3Force("charge")?.strength(-800)?.distanceMax(800)
-      fg.d3Force("link")?.distance(160)
-      fg.d3Force("center")?.strength(0.5)
+      // Adjusted forces for neater arrangement and less clutter
+      fg.d3Force("charge")?.strength(-1200)?.distanceMax(1200)
+      fg.d3Force("link")?.distance(200)
+      fg.d3Force("collide", null) // reset
+      fg.d3Force("collide", window.d3 ? window.d3.forceCollide(30) : null) // Adds some collision padding if d3 is available, else handled by charge
+      fg.d3Force("center")?.strength(0.3)
       fg.d3ReheatSimulation()
     }
   }, [graphData])
@@ -170,7 +173,7 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
       const isSelected = selectedId === node.id
       const isMatched = isNodeMatched(node)
       const isActor = node.type === "actor"
-      const radius = isSelected || isMatched ? 9.5 : 7.5
+      const radius = isSelected || isMatched ? 14 : 10 // Slightly larger for icons
 
       const nodeColorMap: Record<string, string> = {
         actor: "#EF4444",   // Red for threat actors
@@ -178,7 +181,16 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
         wallet: "#CBCBCB",  // Shiny Silver for wallets
         pgp: "#22D3EE",     // Cyan for PGP
       }
+      
+      const nodeIconMap: Record<string, string> = {
+        actor: "🎭",
+        ip: "🌐",
+        wallet: "₿",
+        pgp: "🔑"
+      }
+      
       const fill = nodeColorMap[node.type] || "#EF4444"
+      const icon = nodeIconMap[node.type] || "🔹"
 
       ctx.save()
 
@@ -190,21 +202,28 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
         ctx.shadowColor = "#EF4444"
         ctx.shadowBlur = 12
       } else {
-        ctx.shadowColor = "transparent"
-        ctx.shadowBlur = 0
+        ctx.shadowColor = fill
+        ctx.shadowBlur = 6 // Base subtle glow for all nodes
       }
 
-      // Draw node circle
+      // Draw node circle background
       ctx.beginPath()
       ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false)
-      ctx.fillStyle = fill
+      ctx.fillStyle = "#111827" // Dark inner background for the icon
       ctx.fill()
 
       // Crisp stroke border
-      ctx.shadowBlur = 0
-      ctx.strokeStyle = isSelected || isMatched ? "#22D3EE" : "#1F2937"
-      ctx.lineWidth = isSelected || isMatched ? 3 : 1
+      ctx.strokeStyle = isSelected || isMatched ? "#22D3EE" : fill
+      ctx.lineWidth = isSelected || isMatched ? 3 : 2
       ctx.stroke()
+
+      // Draw Icon (Option 2: Node Icons)
+      ctx.shadowBlur = 0
+      const iconSize = radius * 1.2
+      ctx.font = `${iconSize}px Arial`
+      ctx.textAlign = "center"
+      ctx.textBaseline = "middle"
+      ctx.fillText(icon, node.x, node.y)
 
       // Node label directly below in clean monospace font
       const fontSize = (isMatched ? 12 : 11) / Math.max(globalScale, 0.5)
@@ -232,7 +251,7 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
     [selectedId],
   )
 
-  // Link canvas object for hovered or selected links
+  // Link canvas object for hovered or selected links (Option 4: Curved & Glowing Edges label placement)
   const drawLinkCanvasObject = useCallback(
     (link: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
       const label = link.label
@@ -241,8 +260,24 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
       const end = link.target
       if (typeof start !== "object" || typeof end !== "object") return
 
+      // Since we use linkCurvature, the midpoint for the label must account for the curve
+      // A simple approximation for curvature = 0.25 (which we set below)
+      const curvature = 0.25
       const midX = start.x + (end.x - start.x) / 2
       const midY = start.y + (end.y - start.y) / 2
+      
+      // Calculate normal vector to apply curvature offset
+      const dx = end.x - start.x
+      const dy = end.y - start.y
+      const distance = Math.sqrt(dx * dx + dy * dy)
+      
+      const nx = -dy / distance
+      const ny = dx / distance
+      
+      const offset = distance * curvature
+      
+      const labelX = midX + nx * offset
+      const labelY = midY + ny * offset
 
       const fontSize = 10 / Math.max(globalScale, 0.5)
       ctx.save()
@@ -255,17 +290,25 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
       const padY = 2.5 / Math.max(globalScale, 0.5)
 
       ctx.fillStyle = "#111827"
-      ctx.fillRect(midX - textWidth / 2 - padX, midY - fontSize / 2 - padY, textWidth + padX * 2, fontSize + padY * 2)
+      ctx.fillRect(labelX - textWidth / 2 - padX, labelY - fontSize / 2 - padY, textWidth + padX * 2, fontSize + padY * 2)
 
-      ctx.strokeStyle = "#1F2937"
+      const isHoveredOrSelected = hoveredLink === link || isLinkConnectedToSelection(link)
+      ctx.strokeStyle = isHoveredOrSelected ? "#22D3EE" : "#1F2937"
+      
+      if (isHoveredOrSelected) {
+        ctx.shadowColor = "#22D3EE"
+        ctx.shadowBlur = 8
+      }
+      
       ctx.lineWidth = 1
-      ctx.strokeRect(midX - textWidth / 2 - padX, midY - fontSize / 2 - padY, textWidth + padX * 2, fontSize + padY * 2)
+      ctx.strokeRect(labelX - textWidth / 2 - padX, labelY - fontSize / 2 - padY, textWidth + padX * 2, fontSize + padY * 2)
 
-      ctx.fillStyle = "#22D3EE"
-      ctx.fillText(label, midX, midY)
+      ctx.shadowBlur = 0
+      ctx.fillStyle = isHoveredOrSelected ? "#22D3EE" : "#9CA3AF"
+      ctx.fillText(label, labelX, labelY)
       ctx.restore()
     },
-    [],
+    [hoveredLink, isLinkConnectedToSelection],
   )
 
   return (
@@ -287,15 +330,14 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
           ctx.fill()
         }}
         linkColor={(link: any) =>
-          hoveredLink === link || isLinkConnectedToSelection(link) ? "#22D3EE" : "#1F2937"
+          hoveredLink === link || isLinkConnectedToSelection(link) ? "rgba(34, 211, 238, 0.8)" : "rgba(31, 41, 55, 0.6)"
         }
         linkWidth={(link: any) =>
-          hoveredLink === link || isLinkConnectedToSelection(link) ? 2.5 : 1.2
+          hoveredLink === link || isLinkConnectedToSelection(link) ? 3 : 1.5
         }
+        linkCurvature={0.25} // Option 4: Curved Edges
         linkLabel={(link: any) => link.label}
-        linkCanvasObjectMode={(link: any) =>
-          hoveredLink === link || isLinkConnectedToSelection(link) ? "after" : undefined
-        }
+        linkCanvasObjectMode={(link: any) => "after"}
         linkCanvasObject={drawLinkCanvasObject}
         onNodeClick={(node: any) => {
           if (node && node.id) {
