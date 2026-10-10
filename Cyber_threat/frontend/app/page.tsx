@@ -128,7 +128,7 @@ export default function OverviewPage() {
               {/* Actor Rows with Dividers */}
               <div className="mt-5 divide-y divide-zinc-800/15">
                 {actors.map((actor) => (
-                  <div key={actor.handle} className="py-3.5 flex items-center justify-between hover:bg-black/5 px-2 rounded-xl transition-colors">
+                  <div key={actor.id} className="py-3.5 flex items-center justify-between hover:bg-black/5 px-2 rounded-xl transition-colors">
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-sm font-bold text-zinc-950">{actor.handle}</span>
