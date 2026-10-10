@@ -144,7 +144,7 @@ export default function OverviewPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-xs font-mono font-bold text-emerald-950">{int(actor.confidence_score * 100) || 85}% CONFIDENCE</div>
+                      <div className="text-xs font-mono font-bold text-emerald-950">{Math.round((actor.confidence_score || 0.85) * 100)}% CONFIDENCE</div>
                       <Link href={`/actors`} className="text-[11px] text-zinc-800 hover:text-zinc-950 font-semibold underline mt-0.5 block">
                         Open Dossier
                       </Link>
