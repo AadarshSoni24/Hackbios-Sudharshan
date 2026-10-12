@@ -74,7 +74,14 @@ export function Sidebar() {
       </div>
 
       {/* Footer / Officer Badge */}
-      <div className="p-3 border-t border-white/10 bg-[#353535]">
+      <div className="p-3 border-t border-white/10 bg-[#353535] space-y-2">
+        <div className="px-2.5 py-1.5 rounded-lg bg-[#222222] border border-[#CBCBCB]/30 flex items-center justify-between text-[10px] font-mono">
+          <span className="text-zinc-400 font-semibold">CLASSIFICATION:</span>
+          <span className="text-emerald-400 font-bold flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            TOP SECRET // NTRO
+          </span>
+        </div>
         <div className="flex items-center justify-between p-2 rounded-xl bg-[#2A2A2A] border border-white/10">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="h-7 w-7 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center font-mono font-bold text-xs text-emerald-300 shrink-0">

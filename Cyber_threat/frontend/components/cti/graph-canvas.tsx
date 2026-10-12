@@ -318,6 +318,10 @@ export function GraphCanvas({ selectedId, onSelect, searchQuery = "" }: GraphCan
         onNodeClick={(node: any) => {
           if (node && node.id) {
             onSelect(node.id)
+            if (node.x != null && node.y != null && fgRef.current) {
+              fgRef.current.centerAt(node.x, node.y, 600)
+              fgRef.current.zoom(1.8, 600)
+            }
           }
         }}
         onNodeDragEnd={(node: any) => {

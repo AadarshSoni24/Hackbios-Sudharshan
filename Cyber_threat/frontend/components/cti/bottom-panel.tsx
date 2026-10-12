@@ -82,7 +82,7 @@ export function BottomPanel({
           {/* Timeline */}
           <div className="flex items-center gap-0 overflow-x-auto pb-1">
             {timeline.map((ev, i) => (
-              <div key={ev.date} className="flex shrink-0 items-center">
+              <div key={`${ev.date}-${i}`} className="flex shrink-0 items-center">
                 <div className="flex flex-col items-center gap-1.5">
                   <span
                     className={`h-3 w-3 rounded-full ${

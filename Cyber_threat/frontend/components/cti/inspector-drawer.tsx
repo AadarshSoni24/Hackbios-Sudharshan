@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { X, PanelRightOpen, Shield, Copy, Check } from "lucide-react"
+import { X, PanelRightOpen, Shield, Download } from "lucide-react"
 import { entityDetails, getEntityDetail, type EntityDetail } from "@/lib/cti-data"
+import { apiFetch } from "@/lib/api"
 
 interface InspectorDrawerProps {
   selectedId: string | null
@@ -21,7 +22,33 @@ export function InspectorDrawer({
   isCollapsed,
   onToggleCollapse,
 }: InspectorDrawerProps) {
+  const [isExporting, setIsExporting] = useState(false)
   const detail: EntityDetail | undefined = selectedId ? getEntityDetail(selectedId) : undefined
+
+  const handleExportPdf = async () => {
+    if (!detail) return
+    setIsExporting(true)
+    try {
+      const targetHandle = detail.name || selectedId || "SHADOW99"
+      const res = await apiFetch(`/api/v1/reports/export/${encodeURIComponent(targetHandle)}`, { method: "POST" })
+      if (res.ok) {
+        const blob = await res.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = `NTRO_DOSSIER_${targetHandle.toUpperCase()}.pdf`
+        document.body.appendChild(a)
+        a.click()
+        a.remove()
+      } else {
+        window.open("/reports", "_blank")
+      }
+    } catch {
+      window.open("/reports", "_blank")
+    } finally {
+      setIsExporting(false)
+    }
+  }
 
   if (isCollapsed) {
     return (
@@ -149,10 +176,12 @@ export function InspectorDrawer({
             INSPECT TOR MISCONFIGURATIONS
           </button>
           <button
-            onClick={() => {}}
-            className="flex w-full items-center justify-center gap-2 border border-[#CBCBCB]/60 bg-transparent hover:bg-zinc-800 text-zinc-200 font-bold p-3 font-sans text-[13px] rounded-lg transition-all"
+            onClick={handleExportPdf}
+            disabled={isExporting}
+            className="flex w-full items-center justify-center gap-2 border border-[#CBCBCB] bg-[#222222] hover:bg-[#333333] text-white font-mono text-[12px] font-bold p-3 rounded-lg transition-all shadow-sm disabled:opacity-50"
           >
-            EXPORT DOSSIER PDF
+            <Download className="h-4 w-4 text-cyan-400" />
+            {isExporting ? "GENERATING DOSSIER..." : "EXPORT NTRO FORENSIC DOSSIER (PDF)"}
           </button>
         </div>
       </div>

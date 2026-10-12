@@ -192,8 +192,8 @@ export interface TimelineEvent {
 }
 
 export const timeline: TimelineEvent[] = [
-  { date: "Oct 2026", label: "Autonomous Crawler Ingestion Active", tone: "critical" },
-  { date: "Oct 2026", label: "SilkRouteX & Shadow99 Cluster Correlated", tone: "critical" },
+  { date: "10 Oct 2026", label: "Autonomous Crawler Ingestion Active", tone: "critical" },
+  { date: "08 Oct 2026", label: "SilkRouteX & Shadow99 Cluster Correlated", tone: "critical" },
   { date: "Sep 2026", label: "Clearnet IP Leaked (AS20860 Germany)", tone: "warn" },
   { date: "Aug 2026", label: "BTC Mixer Cashout Identified", tone: "warn" },
   { date: "Jul 2026", label: "Initial Forum Threat Actor Profile Created", tone: "neutral" },

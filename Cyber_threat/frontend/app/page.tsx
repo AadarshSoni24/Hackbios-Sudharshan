@@ -103,6 +103,35 @@ export default function OverviewPage() {
           </div>
         </header>
 
+        {/* Quick Demo Target Presets Strip */}
+        <div className="bg-[#121212] border-b border-[#CBCBCB]/30 px-6 py-2 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+          <div className="flex flex-wrap items-center gap-2 text-zinc-400 text-[11px]">
+            <span className="text-zinc-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-ping" />
+              DEMO TARGETS:
+            </span>
+            <button
+              onClick={() => setScanUrl("SUDARSHAN-main/demo_market_a.html")}
+              className="px-2.5 py-1 rounded-md bg-[#222222] hover:bg-[#333333] text-zinc-200 hover:text-white border border-[#CBCBCB]/40 hover:border-[#CBCBCB] transition-all flex items-center gap-1.5 shadow-sm"
+            >
+              <span className="text-rose-400 font-bold">●</span> AlphaBay Listing (Shadow99)
+            </button>
+            <button
+              onClick={() => setScanUrl("SUDARSHAN-main/demo_market_b.html")}
+              className="px-2.5 py-1 rounded-md bg-[#222222] hover:bg-[#333333] text-zinc-200 hover:text-white border border-[#CBCBCB]/40 hover:border-[#CBCBCB] transition-all flex items-center gap-1.5 shadow-sm"
+            >
+              <span className="text-amber-400 font-bold">●</span> Exploit.in Broker (GhostRider)
+            </button>
+            <button
+              onClick={() => setScanUrl("SUDARSHAN-main/demo_market_c.html")}
+              className="px-2.5 py-1 rounded-md bg-[#222222] hover:bg-[#333333] text-zinc-200 hover:text-white border border-[#CBCBCB]/40 hover:border-[#CBCBCB] transition-all flex items-center gap-1.5 shadow-sm"
+            >
+              <span className="text-cyan-400 font-bold">●</span> Dread Forum (SilkRouteX)
+            </button>
+          </div>
+          <span className="text-[10px] text-zinc-500 hidden xl:inline tracking-wider">NTRO CTI CORRELATION ENGINE // AUTO-PIVOT READY</span>
+        </div>
+
         {/* KPI Strip */}
         <KpiCards />
 
